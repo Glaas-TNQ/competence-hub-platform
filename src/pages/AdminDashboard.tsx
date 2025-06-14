@@ -1,19 +1,21 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Users, BookOpen, Target, BarChart3, Shield } from 'lucide-react';
+import { Users, BookOpen, Target, BarChart3, Shield } from 'lucide-react';
 import { useCompetenceAreas, useCourses } from '@/hooks/useSupabase';
 import { CourseManager } from '@/components/admin/CourseManager';
 import { CompetenceAreaManager } from '@/components/admin/CompetenceAreaManager';
 import { UserManager } from '@/components/admin/UserManager';
 
+type ActiveSection = 'overview' | 'courses' | 'areas' | 'users';
+
 export const AdminDashboard = () => {
   const { user, profile, loading } = useAuth();
   const { data: competenceAreas } = useCompetenceAreas();
   const { data: courses } = useCourses();
+  const [activeSection, setActiveSection] = useState<ActiveSection>('overview');
 
   console.log('AdminDashboard - User:', user?.email);
   console.log('AdminDashboard - Profile:', profile);
@@ -102,6 +104,86 @@ export const AdminDashboard = () => {
     }
   ];
 
+  const navigationItems = [
+    { id: 'overview', label: 'Panoramica', icon: BarChart3 },
+    { id: 'areas', label: 'Aree di Competenza', icon: Target },
+    { id: 'courses', label: 'Gestione Corsi', icon: BookOpen },
+    { id: 'users', label: 'Gestione Utenti', icon: Users }
+  ];
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'courses':
+        return <CourseManager />;
+      case 'areas':
+        return <CompetenceAreaManager />;
+      case 'users':
+        return <UserManager />;
+      default:
+        return (
+          <div className="space-y-4 md:space-y-6">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              {stats.map((stat, index) => {
+                const Icon = stat.icon;
+                return (
+                  <Card key={index}>
+                    <CardContent className="p-4 md:p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-slate-600">{stat.title}</p>
+                          <p className="text-xl md:text-2xl font-bold text-slate-800">{stat.value}</p>
+                        </div>
+                        <div className={`p-2 md:p-3 rounded-full ${stat.color}`}>
+                          <Icon className="h-4 w-4 md:h-6 md:w-6 text-white" />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+
+            {/* Quick Actions */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Azioni Rapide</CardTitle>
+                <CardDescription>Accedi velocemente alle funzioni principali</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <Button 
+                    onClick={() => setActiveSection('areas')} 
+                    variant="outline" 
+                    className="h-20 flex-col space-y-2"
+                  >
+                    <Target className="h-6 w-6" />
+                    <span>Gestisci Aree</span>
+                  </Button>
+                  <Button 
+                    onClick={() => setActiveSection('courses')} 
+                    variant="outline" 
+                    className="h-20 flex-col space-y-2"
+                  >
+                    <BookOpen className="h-6 w-6" />
+                    <span>Gestisci Corsi</span>
+                  </Button>
+                  <Button 
+                    onClick={() => setActiveSection('users')} 
+                    variant="outline" 
+                    className="h-20 flex-col space-y-2"
+                  >
+                    <Users className="h-6 w-6" />
+                    <span>Gestisci Utenti</span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -119,48 +201,32 @@ export const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        {stats.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={index}>
-              <CardContent className="p-4 md:p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-slate-600">{stat.title}</p>
-                    <p className="text-xl md:text-2xl font-bold text-slate-800">{stat.value}</p>
-                  </div>
-                  <div className={`p-2 md:p-3 rounded-full ${stat.color}`}>
-                    <Icon className="h-4 w-4 md:h-6 md:w-6 text-white" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+      {/* Navigation */}
+      <div className="border-b border-slate-200">
+        <nav className="flex space-x-1 overflow-x-auto">
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeSection === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveSection(item.id as ActiveSection)}
+                className={`flex items-center space-x-2 px-3 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap transition-colors ${
+                  isActive
+                    ? 'bg-white text-blue-600 border-b-2 border-blue-600'
+                    : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50'
+                }`}
+              >
+                <Icon size={16} />
+                <span className="hidden sm:inline">{item.label}</span>
+              </button>
+            );
+          })}
+        </nav>
       </div>
 
-      {/* Management Tabs */}
-      <Tabs defaultValue="courses" className="space-y-4 md:space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="courses" className="text-xs md:text-sm">Gestione Corsi</TabsTrigger>
-          <TabsTrigger value="areas" className="text-xs md:text-sm">Aree di Competenza</TabsTrigger>
-          <TabsTrigger value="users" className="text-xs md:text-sm">Gestione Utenti</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="courses">
-          <CourseManager />
-        </TabsContent>
-
-        <TabsContent value="areas">
-          <CompetenceAreaManager />
-        </TabsContent>
-
-        <TabsContent value="users">
-          <UserManager />
-        </TabsContent>
-      </Tabs>
+      {/* Content */}
+      {renderContent()}
     </div>
   );
 };
