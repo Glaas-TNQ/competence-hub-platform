@@ -1,4 +1,3 @@
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -31,41 +30,15 @@ export const useCreateCompetenceArea = () => {
         throw new Error('Utente non autenticato');
       }
 
-      // Controllo diretto se l'utente è admin tramite email come fallback
-      const isAdminByEmail = user.email === 'admin@academy.com';
-      console.log('Is admin by email:', isAdminByEmail);
+      // Per ora usiamo solo il controllo email per evitare problemi con RLS
+      const isAdmin = user.email === 'admin@academy.com';
+      console.log('Is admin by email check:', isAdmin);
 
-      if (isAdminByEmail) {
-        console.log('User is admin by email, proceeding with creation');
-      } else {
-        // Prova a verificare tramite profilo solo se non è admin per email
-        try {
-          const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', user.id)
-            .single();
-
-          console.log('Profile query result:', { profile, profileError });
-
-          if (profileError) {
-            console.error('Profile error:', profileError);
-            // Se fallisce la query del profilo, verifica tramite email
-            if (!isAdminByEmail) {
-              throw new Error('Impossibile verificare i permessi utente. Solo gli amministratori possono creare aree di competenza.');
-            }
-          }
-
-          if (profile?.role !== 'admin' && !isAdminByEmail) {
-            throw new Error('Solo gli amministratori possono creare aree di competenza');
-          }
-        } catch (error) {
-          console.error('Error checking profile:', error);
-          if (!isAdminByEmail) {
-            throw error;
-          }
-        }
+      if (!isAdmin) {
+        throw new Error('Solo gli amministratori possono creare aree di competenza. Accesso negato.');
       }
+
+      console.log('Admin verification passed, proceeding with creation');
 
       // Procedi con la creazione dell'area di competenza
       const { data, error } = await supabase
