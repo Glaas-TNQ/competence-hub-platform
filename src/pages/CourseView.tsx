@@ -6,6 +6,13 @@ import { useCourses, useUserProgress, useUpdateProgress } from '../hooks/useSupa
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/button';
 
+type Chapter = {
+  title: string;
+  description: string;
+  type: 'video' | 'text';
+  duration?: string;
+};
+
 export const CourseView = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
@@ -36,7 +43,7 @@ export const CourseView = () => {
     profile?.role === 'admin';
 
   // Parse course content to get chapters
-  const chapters = course.content?.chapters || [];
+  const chapters: Chapter[] = (course.content as any)?.chapters || [];
 
   const handleStartChapter = (chapterIndex: number) => {
     if (!hasAccess) return;
@@ -137,7 +144,7 @@ export const CourseView = () => {
           </div>
         ) : chapters.length > 0 ? (
           <div className="space-y-4">
-            {chapters.map((chapter: any, index: number) => {
+            {chapters.map((chapter: Chapter, index: number) => {
               const isCompleted = progress && progress.progress_percentage >= Math.round(((index + 1) / chapters.length) * 100);
               const isAccessible = index === 0 || (progress && progress.progress_percentage >= Math.round((index / chapters.length) * 100));
               
