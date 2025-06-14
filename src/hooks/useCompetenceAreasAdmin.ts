@@ -1,3 +1,4 @@
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -16,31 +17,9 @@ export const useCreateCompetenceArea = () => {
   return useMutation({
     mutationFn: async (areaData: CompetenceAreaData) => {
       console.log('Creating competence area with data:', areaData);
-      
-      // Verifica l'utente corrente
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      console.log('Current user:', user?.email);
-      
-      if (userError) {
-        console.error('User error:', userError);
-        throw userError;
-      }
 
-      if (!user) {
-        throw new Error('Utente non autenticato');
-      }
-
-      // Per ora usiamo solo il controllo email per evitare problemi con RLS
-      const isAdmin = user.email === 'admin@academy.com';
-      console.log('Is admin by email check:', isAdmin);
-
-      if (!isAdmin) {
-        throw new Error('Solo gli amministratori possono creare aree di competenza. Accesso negato.');
-      }
-
-      console.log('Admin verification passed, proceeding with creation');
-
-      // Procedi con la creazione dell'area di competenza
+      // Rimosso il controllo manuale. L'autorizzazione è ora gestita da RLS.
+      // Se l'utente non è un admin, Supabase restituirà un errore di violazione della policy.
       const { data, error } = await supabase
         .from('competence_areas')
         .insert([areaData])
@@ -64,9 +43,12 @@ export const useCreateCompetenceArea = () => {
     },
     onError: (error) => {
       console.error('Mutation error:', error);
+      const isRlsError = error.message.includes('violates row-level security policy');
       toast({
-        title: "Errore",
-        description: `Si è verificato un errore: ${error.message}`,
+        title: "Errore nella creazione",
+        description: isRlsError
+          ? "Accesso negato. Solo gli amministratori possono creare aree di competenza."
+          : `Si è verificato un errore: ${error.message}`,
         variant: "destructive",
       });
     },
@@ -97,12 +79,15 @@ export const useUpdateCompetenceArea = () => {
       });
     },
     onError: (error) => {
+      console.error('Error updating competence area:', error);
+      const isRlsError = error.message.includes('violates row-level security policy');
       toast({
-        title: "Errore",
-        description: "Si è verificato un errore durante l'aggiornamento dell'area di competenza.",
+        title: "Errore nell'aggiornamento",
+        description: isRlsError
+          ? "Accesso negato. Solo gli amministratori possono aggiornare aree di competenza."
+          : `Si è verificato un errore: ${error.message}`,
         variant: "destructive",
       });
-      console.error('Error updating competence area:', error);
     },
   });
 };
@@ -128,12 +113,15 @@ export const useDeleteCompetenceArea = () => {
       });
     },
     onError: (error) => {
+      console.error('Error deleting competence area:', error);
+      const isRlsError = error.message.includes('violates row-level security policy');
       toast({
-        title: "Errore",
-        description: "Si è verificato un errore durante l'eliminazione dell'area di competenza.",
+        title: "Errore nell'eliminazione",
+        description: isRlsError
+          ? "Accesso negato. Solo gli amministratori possono eliminare aree di competenza."
+          : `Si è verificato un errore: ${error.message}`,
         variant: "destructive",
       });
-      console.error('Error deleting competence area:', error);
     },
   });
 };
