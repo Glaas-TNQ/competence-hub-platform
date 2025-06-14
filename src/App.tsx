@@ -42,6 +42,7 @@ const App = () => (
                           <Route path="/progress" element={<Dashboard />} />
                           <Route path="/certificates" element={<Dashboard />} />
                           <Route path="/settings" element={<Dashboard />} />
+                          <Route path="/admin" element={<AdminDashboard />} />
                           <Route path="*" element={<NotFound />} />
                         </Routes>
                       </main>
