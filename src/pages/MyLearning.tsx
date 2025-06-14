@@ -1,4 +1,5 @@
 
+
 import { CourseCard } from '../components/CourseCard';
 import { useUserProgress, useCourses } from '../hooks/useSupabase';
 
@@ -58,7 +59,19 @@ export const MyLearning = () => {
           <h2 className="text-2xl font-bold text-slate-800 mb-6">Corsi in Corso</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {inProgressCourses.map((course) => (
-              <CourseCard key={course.id} {...course} />
+              <CourseCard 
+                key={course.id} 
+                title={course.title}
+                description={course.description}
+                duration={course.duration}
+                progress={course.progress}
+                type={course.course_type as 'text' | 'video' | 'arcade'}
+                image="photo-1516321318423-f06f85e504b3"
+                level={course.level as 'Principiante' | 'Intermedio' | 'Avanzato'}
+                requiresPayment={course.requires_payment}
+                price={course.price}
+                courseId={course.id}
+              />
             ))}
           </div>
         </div>
@@ -70,7 +83,19 @@ export const MyLearning = () => {
           <h2 className="text-2xl font-bold text-slate-800 mb-6">Corsi Completati</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {completedCourses.map((course) => (
-              <CourseCard key={course.id} {...course} />
+              <CourseCard 
+                key={course.id} 
+                title={course.title}
+                description={course.description}
+                duration={course.duration}
+                progress={course.progress}
+                type={course.course_type as 'text' | 'video' | 'arcade'}
+                image="photo-1516321318423-f06f85e504b3"
+                level={course.level as 'Principiante' | 'Intermedio' | 'Avanzato'}
+                requiresPayment={course.requires_payment}
+                price={course.price}
+                courseId={course.id}
+              />
             ))}
           </div>
         </div>
@@ -93,3 +118,4 @@ export const MyLearning = () => {
     </div>
   );
 };
+
