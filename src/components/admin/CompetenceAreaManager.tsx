@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,13 +42,26 @@ export const CompetenceAreaManager = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (editingId) {
-      await updateMutation.mutateAsync({ id: editingId, updates: formData });
-    } else {
-      await createMutation.mutateAsync(formData);
+    console.log('Form submitted with data:', formData);
+    
+    if (!formData.name.trim()) {
+      console.error('Name is required');
+      return;
     }
     
-    resetForm();
+    try {
+      if (editingId) {
+        console.log('Updating area with ID:', editingId);
+        await updateMutation.mutateAsync({ id: editingId, updates: formData });
+      } else {
+        console.log('Creating new area');
+        await createMutation.mutateAsync(formData);
+      }
+      
+      resetForm();
+    } catch (error) {
+      console.error('Error in handleSubmit:', error);
+    }
   };
 
   const handleEdit = (area: any) => {
@@ -163,7 +175,7 @@ export const CompetenceAreaManager = () => {
               <div className="flex flex-col sm:flex-row gap-2">
                 <Button 
                   type="submit" 
-                  disabled={createMutation.isPending || updateMutation.isPending}
+                  disabled={createMutation.isPending || updateMutation.isPending || !formData.name.trim()}
                   className="w-full sm:w-auto"
                 >
                   <Save className="h-4 w-4 mr-2" />
@@ -182,6 +194,12 @@ export const CompetenceAreaManager = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Debug info */}
+      <div className="text-xs text-gray-500 p-2 bg-gray-50 rounded">
+        Debug: {createMutation.isPending ? 'Creating...' : ''} 
+        {createMutation.error ? `Error: ${createMutation.error.message}` : ''}
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {competenceAreas?.map((area) => (

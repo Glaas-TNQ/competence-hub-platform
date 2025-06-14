@@ -1,4 +1,3 @@
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -16,13 +15,29 @@ export const useCreateCompetenceArea = () => {
   
   return useMutation({
     mutationFn: async (areaData: CompetenceAreaData) => {
+      console.log('Creating competence area with data:', areaData);
+      
+      // Verifica l'utente corrente
+      const { data: user, error: userError } = await supabase.auth.getUser();
+      console.log('Current user:', user?.user?.email);
+      
+      if (userError) {
+        console.error('User error:', userError);
+        throw userError;
+      }
+
       const { data, error } = await supabase
         .from('competence_areas')
         .insert([areaData])
         .select()
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Database error creating competence area:', error);
+        throw error;
+      }
+      
+      console.log('Successfully created competence area:', data);
       return data;
     },
     onSuccess: () => {
@@ -33,12 +48,12 @@ export const useCreateCompetenceArea = () => {
       });
     },
     onError: (error) => {
+      console.error('Mutation error:', error);
       toast({
         title: "Errore",
-        description: "Si è verificato un errore durante la creazione dell'area di competenza.",
+        description: `Si è verificato un errore: ${error.message}`,
         variant: "destructive",
       });
-      console.error('Error creating competence area:', error);
     },
   });
 };
