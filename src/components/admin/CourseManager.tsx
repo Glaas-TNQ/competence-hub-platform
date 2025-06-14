@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Edit, Trash2, Eye, FileText } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, FileText, Euro, Lock } from 'lucide-react';
 import { useCourses, useCompetenceAreas, useCreateCourse, useUpdateCourse } from '@/hooks/useSupabase';
 import { CourseContentEditor } from './CourseContentEditor';
 import { toast } from '@/hooks/use-toast';
@@ -28,7 +29,9 @@ export const CourseManager = () => {
     level: '',
     duration: '',
     image_url: '',
-    is_published: false
+    is_published: false,
+    requires_payment: false,
+    price: 0
   });
 
   const handleCreateCourse = async (e: React.FormEvent) => {
@@ -59,7 +62,9 @@ export const CourseManager = () => {
         level: '',
         duration: '',
         image_url: '',
-        is_published: false
+        is_published: false,
+        requires_payment: false,
+        price: 0
       });
     } catch (error) {
       toast({
@@ -243,6 +248,32 @@ export const CourseManager = () => {
                 />
               </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="requires_payment"
+                    checked={formData.requires_payment}
+                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, requires_payment: checked }))}
+                  />
+                  <Label htmlFor="requires_payment">Corso a pagamento</Label>
+                </div>
+                
+                {formData.requires_payment && (
+                  <div className="space-y-2">
+                    <Label htmlFor="price">Prezzo (€)</Label>
+                    <Input
+                      id="price"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formData.price}
+                      onChange={(e) => setFormData(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
+                      placeholder="0.00"
+                    />
+                  </div>
+                )}
+              </div>
+
               <div className="flex items-center space-x-2">
                 <Switch
                   id="published"
@@ -306,10 +337,22 @@ export const CourseManager = () => {
                 <Badge variant={course.is_published ? "default" : "secondary"}>
                   {course.is_published ? "Pubblicato" : "Bozza"}
                 </Badge>
+                {course.requires_payment && (
+                  <Badge className="bg-purple-100 text-purple-800">
+                    <Lock className="h-3 w-3 mr-1" />
+                    Premium
+                  </Badge>
+                )}
               </div>
               <div className="text-sm text-slate-600">
                 <p>Durata: {course.duration}</p>
                 <p>Area: {course.competence_areas?.name}</p>
+                {course.requires_payment && course.price > 0 && (
+                  <p className="flex items-center gap-1 text-purple-600 font-medium">
+                    <Euro className="h-3 w-3" />
+                    {course.price}
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>

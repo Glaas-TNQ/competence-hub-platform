@@ -108,6 +108,8 @@ export type Database = {
           image_url: string | null
           is_published: boolean | null
           level: string
+          price: number | null
+          requires_payment: boolean | null
           title: string
           updated_at: string
         }
@@ -122,6 +124,8 @@ export type Database = {
           image_url?: string | null
           is_published?: boolean | null
           level: string
+          price?: number | null
+          requires_payment?: boolean | null
           title: string
           updated_at?: string
         }
@@ -136,6 +140,8 @@ export type Database = {
           image_url?: string | null
           is_published?: boolean | null
           level?: string
+          price?: number | null
+          requires_payment?: boolean | null
           title?: string
           updated_at?: string
         }
@@ -222,6 +228,7 @@ export type Database = {
           email: string
           full_name: string | null
           id: string
+          purchased_courses: string[] | null
           role: string | null
           updated_at: string
         }
@@ -232,6 +239,7 @@ export type Database = {
           email: string
           full_name?: string | null
           id: string
+          purchased_courses?: string[] | null
           role?: string | null
           updated_at?: string
         }
@@ -242,6 +250,7 @@ export type Database = {
           email?: string
           full_name?: string | null
           id?: string
+          purchased_courses?: string[] | null
           role?: string | null
           updated_at?: string
         }
