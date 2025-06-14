@@ -59,12 +59,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Fetch user profile
+          // Fetch user profile with a small delay to ensure the trigger has run
           setTimeout(async () => {
             const profile = await fetchProfile(session.user.id);
             setProfile(profile);
             setLoading(false);
-          }, 0);
+          }, 100);
         } else {
           setProfile(null);
           setLoading(false);

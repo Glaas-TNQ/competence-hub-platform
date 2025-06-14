@@ -1,3 +1,4 @@
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -17,13 +18,35 @@ export const useCreateCompetenceArea = () => {
     mutationFn: async (areaData: CompetenceAreaData) => {
       console.log('Creating competence area with data:', areaData);
       
-      // Verifica l'utente corrente
-      const { data: user, error: userError } = await supabase.auth.getUser();
-      console.log('Current user:', user?.user?.email);
+      // Verifica l'utente corrente e il suo profilo
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      console.log('Current user:', user?.email);
       
       if (userError) {
         console.error('User error:', userError);
         throw userError;
+      }
+
+      if (!user) {
+        throw new Error('Utente non autenticato');
+      }
+
+      // Verifica il profilo dell'utente per controllare il ruolo
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) {
+        console.error('Profile error:', profileError);
+        throw new Error('Impossibile verificare i permessi utente');
+      }
+
+      console.log('User profile:', profile);
+
+      if (profile?.role !== 'admin') {
+        throw new Error('Solo gli amministratori possono creare aree di competenza');
       }
 
       const { data, error } = await supabase
