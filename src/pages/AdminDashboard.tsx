@@ -4,28 +4,72 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Users, BookOpen, Target, BarChart3 } from 'lucide-react';
+import { Plus, Users, BookOpen, Target, BarChart3, Shield } from 'lucide-react';
 import { useCompetenceAreas, useCourses } from '@/hooks/useSupabase';
 import { CourseManager } from '@/components/admin/CourseManager';
 import { CompetenceAreaManager } from '@/components/admin/CompetenceAreaManager';
 import { UserManager } from '@/components/admin/UserManager';
 
 export const AdminDashboard = () => {
-  const { profile } = useAuth();
+  const { user, profile, loading } = useAuth();
   const { data: competenceAreas } = useCompetenceAreas();
   const { data: courses } = useCourses();
 
-  // Redirect non-admin users
-  if (profile?.role !== 'admin') {
+  console.log('AdminDashboard - User:', user?.email);
+  console.log('AdminDashboard - Profile:', profile);
+  console.log('AdminDashboard - Loading:', loading);
+  console.log('AdminDashboard - Is Admin:', profile?.role === 'admin');
+
+  // Show loading state while profile is being fetched
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Accesso Negato</CardTitle>
+            <CardTitle className="flex items-center space-x-2">
+              <Shield className="h-5 w-5" />
+              <span>Verifica Permessi Admin</span>
+            </CardTitle>
             <CardDescription>
-              Non hai i permessi per accedere a questa area.
+              Caricamento del profilo utente in corso...
             </CardDescription>
           </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Check if user is admin (either by role or by email as fallback)
+  const isAdmin = profile?.role === 'admin' || user?.email === 'admin@academy.com';
+
+  // Redirect non-admin users
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-red-600">Accesso Negato</CardTitle>
+            <CardDescription>
+              Non hai i permessi per accedere a questa area amministrativa.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="text-sm text-slate-600">
+              <p><strong>Email corrente:</strong> {user?.email}</p>
+              <p><strong>Ruolo profilo:</strong> {profile?.role || 'Non assegnato'}</p>
+            </div>
+            <Button 
+              onClick={() => window.location.href = '/'}
+              className="w-full"
+            >
+              Torna alla Dashboard
+            </Button>
+          </CardContent>
         </Card>
       </div>
     );
@@ -64,6 +108,14 @@ export const AdminDashboard = () => {
         <div>
           <h1 className="text-3xl font-bold text-slate-800">Admin Dashboard</h1>
           <p className="text-slate-600">Gestisci la piattaforma di formazione</p>
+          <div className="mt-2 flex items-center space-x-2">
+            <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">
+              ✓ Accesso Amministratore Confermato
+            </span>
+            <span className="text-xs text-slate-500">
+              {user?.email}
+            </span>
+          </div>
         </div>
       </div>
 
