@@ -1,16 +1,30 @@
 
 import { CourseCard } from '../components/CourseCard';
-import { competenceAreas } from '../data/mockData';
+import { useUserProgress, useCourses } from '../hooks/useSupabase';
 
 export const MyLearning = () => {
-  const myCourses = competenceAreas.flatMap(area => 
-    area.topics.flatMap(topic => 
-      topic.courses.filter(course => course.progress !== undefined)
-    )
-  );
+  const { data: userProgress = [], isLoading: progressLoading } = useUserProgress();
+  const { data: allCourses = [], isLoading: coursesLoading } = useCourses();
+
+  if (progressLoading || coursesLoading) {
+    return (
+      <div className="p-6 bg-slate-50 min-h-screen">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-800 mb-2">I Miei Corsi</h1>
+          <p className="text-slate-600">Caricamento in corso...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Get courses with progress
+  const myCourses = userProgress.map(progress => {
+    const course = allCourses.find(c => c.id === progress.course_id);
+    return course ? { ...course, progress: progress.progress_percentage } : null;
+  }).filter(Boolean);
 
   const completedCourses = myCourses.filter(course => course.progress === 100);
-  const inProgressCourses = myCourses.filter(course => course.progress! > 0 && course.progress! < 100);
+  const inProgressCourses = myCourses.filter(course => course.progress > 0 && course.progress < 100);
 
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
