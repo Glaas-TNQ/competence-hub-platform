@@ -19,9 +19,9 @@ export const competenceAreas = [
             duration: "2h 30min",
             participants: 1250,
             progress: 65,
-            type: "video",
+            type: "video" as const,
             image: "photo-1611224923853-80b023f02d71",
-            level: "Intermedio"
+            level: "Intermedio" as const
           },
           {
             id: 2,
@@ -30,9 +30,9 @@ export const competenceAreas = [
             duration: "1h 45min",
             participants: 890,
             progress: 30,
-            type: "arcade",
+            type: "arcade" as const,
             image: "photo-1516321318423-f06f85e504b3",
-            level: "Principiante"
+            level: "Principiante" as const
           }
         ]
       },
@@ -47,9 +47,9 @@ export const competenceAreas = [
             description: "L'arte del racconto applicata al marketing aziendale",
             duration: "3h 15min",
             participants: 750,
-            type: "text",
+            type: "text" as const,
             image: "photo-1552664730-d307ca884978",
-            level: "Avanzato"
+            level: "Avanzato" as const
           }
         ]
       }
@@ -74,9 +74,9 @@ export const competenceAreas = [
             duration: "2h 20min",
             participants: 650,
             progress: 80,
-            type: "video",
+            type: "video" as const,
             image: "photo-1600880292203-757bb62b4baf",
-            level: "Intermedio"
+            level: "Intermedio" as const
           }
         ]
       }
@@ -100,9 +100,9 @@ export const competenceAreas = [
             description: "Come l'intelligenza artificiale può trasformare la tua azienda",
             duration: "4h 10min",
             participants: 420,
-            type: "arcade",
+            type: "arcade" as const,
             image: "photo-1677442136019-21780ecad995",
-            level: "Avanzato"
+            level: "Avanzato" as const
           }
         ]
       }

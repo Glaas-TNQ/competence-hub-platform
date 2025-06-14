@@ -66,6 +66,89 @@ export type Database = {
         }
         Relationships: []
       }
+      competence_areas: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      courses: {
+        Row: {
+          competence_area_id: string | null
+          content: Json | null
+          course_type: string
+          created_at: string
+          description: string
+          duration: string
+          id: string
+          image_url: string | null
+          is_published: boolean | null
+          level: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          competence_area_id?: string | null
+          content?: Json | null
+          course_type: string
+          created_at?: string
+          description: string
+          duration: string
+          id?: string
+          image_url?: string | null
+          is_published?: boolean | null
+          level: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          competence_area_id?: string | null
+          content?: Json | null
+          course_type?: string
+          created_at?: string
+          description?: string
+          duration?: string
+          id?: string
+          image_url?: string | null
+          is_published?: boolean | null
+          level?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courses_competence_area_id_fkey"
+            columns: ["competence_area_id"]
+            isOneToOne: false
+            referencedRelation: "competence_areas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       html_content: {
         Row: {
           created_at: string
@@ -131,6 +214,39 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          accessible_courses: string[] | null
+          company: string | null
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          role: string | null
+          updated_at: string
+        }
+        Insert: {
+          accessible_courses?: string[] | null
+          company?: string | null
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          role?: string | null
+          updated_at?: string
+        }
+        Update: {
+          accessible_courses?: string[] | null
+          company?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          role?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ricette_salvate: {
         Row: {
           analisi_nutrizionale: Json | null
@@ -187,6 +303,51 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      user_progress: {
+        Row: {
+          completed_at: string | null
+          course_id: string
+          created_at: string
+          id: string
+          progress_percentage: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          course_id: string
+          created_at?: string
+          id?: string
+          progress_percentage?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          course_id?: string
+          created_at?: string
+          id?: string
+          progress_percentage?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_progress_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_progress_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_settings: {
         Row: {
