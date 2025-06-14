@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,16 +7,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Edit, Trash2, Eye } from 'lucide-react';
-import { useCourses, useCompetenceAreas, useCreateCourse } from '@/hooks/useSupabase';
+import { Plus, Edit, Trash2, Eye, FileText } from 'lucide-react';
+import { useCourses, useCompetenceAreas, useCreateCourse, useUpdateCourse } from '@/hooks/useSupabase';
+import { CourseContentEditor } from './CourseContentEditor';
 import { toast } from '@/hooks/use-toast';
 
 export const CourseManager = () => {
   const { data: courses, isLoading: coursesLoading } = useCourses();
   const { data: competenceAreas } = useCompetenceAreas();
   const createCourseMutation = useCreateCourse();
+  const updateCourseMutation = useUpdateCourse();
   
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingCourse, setEditingCourse] = useState<any>(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -68,6 +70,26 @@ export const CourseManager = () => {
     }
   };
 
+  const handleSaveCourseContent = async (courseId: string, content: any) => {
+    try {
+      await updateCourseMutation.mutateAsync({
+        id: courseId,
+        updates: { content }
+      });
+      
+      toast({
+        title: "Successo", 
+        description: "Contenuto del corso salvato con successo"
+      });
+    } catch (error) {
+      toast({
+        title: "Errore",
+        description: "Errore nel salvataggio del contenuto",
+        variant: "destructive"
+      });
+    }
+  };
+
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'video': return 'bg-red-100 text-red-800';
@@ -88,6 +110,27 @@ export const CourseManager = () => {
 
   if (coursesLoading) {
     return <div>Caricamento corsi...</div>;
+  }
+
+  // Se stiamo modificando il contenuto di un corso
+  if (editingCourse) {
+    return (
+      <div className="space-y-4">
+        <Button 
+          variant="outline" 
+          onClick={() => setEditingCourse(null)}
+          className="mb-4"
+        >
+          ← Torna alla lista corsi
+        </Button>
+        <CourseContentEditor
+          courseId={editingCourse.id}
+          courseTitle={editingCourse.title}
+          initialContent={editingCourse.content}
+          onSave={(content) => handleSaveCourseContent(editingCourse.id, content)}
+        />
+      </div>
+    );
   }
 
   return (
@@ -234,6 +277,14 @@ export const CourseManager = () => {
                 <div className="flex space-x-1">
                   <Button variant="ghost" size="sm">
                     <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => setEditingCourse(course)}
+                    title="Modifica contenuti"
+                  >
+                    <FileText className="h-4 w-4" />
                   </Button>
                   <Button variant="ghost" size="sm">
                     <Edit className="h-4 w-4" />

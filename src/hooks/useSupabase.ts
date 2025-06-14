@@ -28,7 +28,6 @@ export const useCourses = () => {
           *,
           competence_areas (name, color)
         `)
-        .eq('is_published', true)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
@@ -68,6 +67,27 @@ export const useCreateCourse = () => {
       const { data, error } = await supabase
         .from('courses')
         .insert([courseData])
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['courses'] });
+    },
+  });
+};
+
+export const useUpdateCourse = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
+      const { data, error } = await supabase
+        .from('courses')
+        .update(updates)
+        .eq('id', id)
         .select()
         .single();
       
