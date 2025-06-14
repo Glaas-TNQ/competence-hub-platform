@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Clock, Users, BookOpen, Play, Lock, Euro } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -46,6 +47,7 @@ export const CourseCard = ({
 }: CourseCardProps) => {
   const IconComponent = typeIcons[type];
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   
   // Check if user has access to this course
   const hasAccess = !requiresPayment || 
@@ -54,8 +56,7 @@ export const CourseCard = ({
 
   const handleCourseClick = () => {
     if (hasAccess) {
-      // Navigate to course content
-      console.log('Opening course:', courseId);
+      navigate(`/course/${courseId}`);
     }
     // If no access, the dialog will handle the payment request
   };
