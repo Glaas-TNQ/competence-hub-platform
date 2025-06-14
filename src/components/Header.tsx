@@ -1,5 +1,5 @@
 
-import { Bell, Search, User, LogOut, Settings as SettingsIcon } from 'lucide-react';
+import { Bell, Search, User, LogOut, Settings as SettingsIcon, Shield } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,19 +21,42 @@ export const Header = () => {
     navigate('/auth');
   };
 
+  console.log('Header - Current profile:', profile);
+  console.log('Header - User email:', user?.email);
+
   return (
     <header className="bg-white border-b border-slate-200 px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <h2 className="text-2xl font-bold text-slate-800">Academy Corporate</h2>
           {profile?.role === 'admin' && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate('/admin')}
-            >
-              Admin Panel
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/admin')}
+                className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Admin Panel
+              </Button>
+              <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
+                Amministratore
+              </span>
+            </div>
+          )}
+          {user?.email === 'admin@academy.com' && !profile && (
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/admin')}
+                className="bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100"
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Admin Panel (Caricamento...)
+              </Button>
+            </div>
           )}
         </div>
         
@@ -70,9 +93,9 @@ export const Header = () => {
                 <SettingsIcon className="mr-2 h-4 w-4" />
                 Impostazioni
               </DropdownMenuItem>
-              {profile?.role === 'admin' && (
+              {(profile?.role === 'admin' || user?.email === 'admin@academy.com') && (
                 <DropdownMenuItem onClick={() => navigate('/admin')}>
-                  <SettingsIcon className="mr-2 h-4 w-4" />
+                  <Shield className="mr-2 h-4 w-4" />
                   Admin Dashboard
                 </DropdownMenuItem>
               )}

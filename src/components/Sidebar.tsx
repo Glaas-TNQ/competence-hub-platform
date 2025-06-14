@@ -10,8 +10,10 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Home
+  Home,
+  Shield
 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/' },
@@ -25,6 +27,9 @@ const menuItems = [
 export const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
+  const { user, profile } = useAuth();
+
+  const isAdmin = profile?.role === 'admin' || user?.email === 'admin@academy.com';
 
   return (
     <div className={`bg-slate-900 text-white transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'} min-h-screen relative`}>
@@ -62,6 +67,21 @@ export const Sidebar = () => {
             </NavLink>
           );
         })}
+
+        {/* Admin Panel Link */}
+        {isAdmin && (
+          <NavLink
+            to="/admin"
+            className={`flex items-center space-x-3 px-3 py-3 rounded-lg mb-1 transition-all duration-200 mt-4 border-t border-slate-700 pt-4 ${
+              location.pathname === '/admin'
+                ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg' 
+                : 'hover:bg-red-900 text-red-300 hover:text-white bg-red-950'
+            }`}
+          >
+            <Shield size={20} />
+            {!isCollapsed && <span className="font-medium">Admin Panel</span>}
+          </NavLink>
+        )}
       </nav>
     </div>
   );
