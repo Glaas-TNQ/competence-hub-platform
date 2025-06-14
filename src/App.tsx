@@ -11,6 +11,7 @@ import { Header } from "./components/Header";
 import { Dashboard } from "./pages/Dashboard";
 import { CompetenceAreas } from "./pages/CompetenceAreas";
 import { MyLearning } from "./pages/MyLearning";
+import { AdminDashboard } from "./pages/AdminDashboard";
 import { Auth } from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
