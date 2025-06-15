@@ -21,13 +21,20 @@ interface UserTotalPoints {
   updated_at: string;
 }
 
+interface BadgeCriteria {
+  type: string;
+  count?: number;
+  points?: number;
+  max_hours?: number;
+}
+
 interface Badge {
   id: string;
   name: string;
   description: string;
   icon: string;
   category: string;
-  criteria: any;
+  criteria: BadgeCriteria;
   points_reward: number;
   rarity: string;
   is_active: boolean;
@@ -202,22 +209,22 @@ export const useCheckAndAwardBadges = () => {
       for (const badge of allBadges) {
         if (earnedBadgeIds.has(badge.id)) continue;
         
-        const criteria = badge.criteria;
+        const criteria = badge.criteria as BadgeCriteria;
         let shouldEarn = false;
         
         switch (criteria.type) {
           case 'chapter_completion':
-            shouldEarn = (chapterProgress?.length || 0) >= criteria.count;
+            shouldEarn = (chapterProgress?.length || 0) >= (criteria.count || 0);
             break;
           case 'course_completion':
             const completedCourses = userProgress?.filter(p => p.progress_percentage === 100).length || 0;
-            shouldEarn = completedCourses >= criteria.count;
+            shouldEarn = completedCourses >= (criteria.count || 0);
             break;
           case 'points_milestone':
-            shouldEarn = (totalPoints?.total_points || 0) >= criteria.points;
+            shouldEarn = (totalPoints?.total_points || 0) >= (criteria.points || 0);
             break;
           case 'badge_collection':
-            shouldEarn = userBadges.length >= criteria.count;
+            shouldEarn = userBadges.length >= (criteria.count || 0);
             break;
         }
         
@@ -231,7 +238,7 @@ export const useCheckAndAwardBadges = () => {
             });
           
           if (!error) {
-            newBadges.push(badge);
+            newBadges.push(badge as Badge);
             
             // Award points for the badge
             if (badge.points_reward > 0) {

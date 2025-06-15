@@ -119,9 +119,17 @@ export const Dashboard = () => {
               return (
                 <CourseCard
                   key={course.id}
-                  course={course}
+                  title={course.title}
+                  description={course.description}
+                  duration={course.duration}
+                  participants={0}
                   progress={progress?.progress_percentage || 0}
-                  showProgress={true}
+                  type={course.course_type as 'text' | 'video' | 'arcade'}
+                  image={course.image_url || 'photo-1516321318423-f06f85e504b3?w=500&h=300&fit=crop'}
+                  level={course.level as 'Principiante' | 'Intermedio' | 'Avanzato'}
+                  requiresPayment={course.requires_payment || false}
+                  price={Number(course.price) || 0}
+                  courseId={course.id}
                 />
               );
             })}
@@ -143,9 +151,17 @@ export const Dashboard = () => {
               return (
                 <CourseCard
                   key={course.id}
-                  course={course}
+                  title={course.title}
+                  description={course.description}
+                  duration={course.duration}
+                  participants={0}
                   progress={progress?.progress_percentage || 0}
-                  showProgress={!!progress}
+                  type={course.course_type as 'text' | 'video' | 'arcade'}
+                  image={course.image_url || 'photo-1516321318423-f06f85e504b3?w=500&h=300&fit=crop'}
+                  level={course.level as 'Principiante' | 'Intermedio' | 'Avanzato'}
+                  requiresPayment={course.requires_payment || false}
+                  price={Number(course.price) || 0}
+                  courseId={course.id}
                 />
               );
             })}
