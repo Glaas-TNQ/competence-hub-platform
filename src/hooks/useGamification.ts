@@ -109,7 +109,15 @@ export const useUserBadges = () => {
         .order('earned_at', { ascending: false });
       
       if (error) throw error;
-      return data as UserBadge[];
+      
+      // Transform the data to match our interface
+      return data.map(item => ({
+        ...item,
+        badges: {
+          ...item.badges,
+          criteria: item.badges.criteria as BadgeCriteria
+        }
+      })) as UserBadge[];
     },
     enabled: !!user,
   });
@@ -126,7 +134,12 @@ export const useAllBadges = () => {
         .order('created_at');
       
       if (error) throw error;
-      return data as Badge[];
+      
+      // Transform the data to match our interface
+      return data.map(badge => ({
+        ...badge,
+        criteria: badge.criteria as BadgeCriteria
+      })) as Badge[];
     },
   });
 };
@@ -206,10 +219,16 @@ export const useCheckAndAwardBadges = () => {
       const newBadges: Badge[] = [];
       
       // Check each badge criteria
-      for (const badge of allBadges) {
-        if (earnedBadgeIds.has(badge.id)) continue;
+      for (const badgeData of allBadges) {
+        if (earnedBadgeIds.has(badgeData.id)) continue;
         
-        const criteria = badge.criteria as BadgeCriteria;
+        // Transform to our Badge interface
+        const badge: Badge = {
+          ...badgeData,
+          criteria: badgeData.criteria as BadgeCriteria
+        };
+        
+        const criteria = badge.criteria;
         let shouldEarn = false;
         
         switch (criteria.type) {
@@ -238,7 +257,7 @@ export const useCheckAndAwardBadges = () => {
             });
           
           if (!error) {
-            newBadges.push(badge as Badge);
+            newBadges.push(badge);
             
             // Award points for the badge
             if (badge.points_reward > 0) {
