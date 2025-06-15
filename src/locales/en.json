@@ -44,6 +44,7 @@
     "learningPaths": "Learning Paths"
   },
   "dashboard": {
+    "title": "Dashboard",
     "welcome": "Welcome",
     "welcomeBack": "Welcome back",
     "continueWhere": "Continue where you left off",
@@ -63,7 +64,34 @@
     "viewAll": "View All",
     "startLearning": "Start Learning",
     "resume": "Resume",
-    "customize": "Customize Dashboard"
+    "customize": "Customize Dashboard",
+    "finishCustomization": "Finish Customization",
+    "settings": "Settings",
+    "overview": "Overview",
+    "loadingError": "Loading Error",
+    "loadingErrorDesc": "There was an error loading the dashboard data",
+    "loadingErrorContact": "Please try refreshing the page or contact support if the problem persists",
+    "refreshPage": "Refresh Page"
+  },
+  "competenceAreas": {
+    "title": "Competence Areas",
+    "subtitle": "Explore different areas of competence and track your progress",
+    "courses": "courses",
+    "completion": "Completion",
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "toStart": "To Start",
+    "backToAreas": "Back to Areas",
+    "allCourses": "All Courses",
+    "completedFilter": "Completed",
+    "noCoursesFound": "No courses found",
+    "noCoursesDesc": "Try changing the filter to see more courses",
+    "noAreasAvailable": "No competence areas available",
+    "noAreasDesc": "Please check back later or contact support"
+  },
+  "goals": {
+    "myGoals": "My Goals",
+    "newGoal": "New Goal"
   },
   "courses": {
     "duration": "Duration",
@@ -132,7 +160,8 @@
     "show": "Show",
     "hide": "Hide",
     "more": "More",
-    "less": "Less"
+    "less": "Less",
+    "refreshPage": "Refresh Page"
   },
   "settings": {
     "title": "Settings",

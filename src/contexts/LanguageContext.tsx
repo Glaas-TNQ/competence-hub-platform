@@ -51,31 +51,42 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
 
   const handleSetLanguage = (lang: Language) => {
     setLanguage(lang);
-    // TODO: Save to user preferences when settings component is updated
   };
 
   const t = (key: string, variables?: Record<string, string>): string => {
+    if (!translations[language] && !translations['en']) {
+      return key;
+    }
+
     const keys = key.split('.');
     let value = translations[language];
     
+    // Navigate through the nested object
     for (const k of keys) {
       if (value && typeof value === 'object') {
         value = value[k];
       } else {
-        // Fallback to English if Italian translation is missing
-        value = translations['en'];
-        for (const k of keys) {
-          if (value && typeof value === 'object') {
-            value = value[k];
-          } else {
-            return key; // Return key if translation not found
-          }
-        }
+        value = undefined;
         break;
       }
     }
 
+    // If translation not found in current language, try English
+    if (typeof value !== 'string' && translations['en']) {
+      value = translations['en'];
+      for (const k of keys) {
+        if (value && typeof value === 'object') {
+          value = value[k];
+        } else {
+          value = undefined;
+          break;
+        }
+      }
+    }
+
+    // If still not found, return the key
     if (typeof value !== 'string') {
+      console.warn(`Translation key not found: ${key}`);
       return key;
     }
 

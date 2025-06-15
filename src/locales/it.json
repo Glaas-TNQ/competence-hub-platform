@@ -44,6 +44,7 @@
     "learningPaths": "Percorsi di Apprendimento"
   },
   "dashboard": {
+    "title": "Dashboard",
     "welcome": "Benvenuto",
     "welcomeBack": "Bentornato",
     "continueWhere": "Continua da dove avevi lasciato",
@@ -63,7 +64,34 @@
     "viewAll": "Visualizza Tutto",
     "startLearning": "Inizia ad Imparare",
     "resume": "Riprendi",
-    "customize": "Personalizza Dashboard"
+    "customize": "Personalizza Dashboard",
+    "finishCustomization": "Termina Personalizzazione",
+    "settings": "Impostazioni",
+    "overview": "Panoramica",
+    "loadingError": "Errore di Caricamento",
+    "loadingErrorDesc": "Si è verificato un errore durante il caricamento dei dati della dashboard",
+    "loadingErrorContact": "Prova a ricaricare la pagina o contatta il supporto se il problema persiste",
+    "refreshPage": "Ricarica Pagina"
+  },
+  "competenceAreas": {
+    "title": "Aree di Competenza",
+    "subtitle": "Esplora diverse aree di competenza e monitora i tuoi progressi",
+    "courses": "corsi",
+    "completion": "Completamento",
+    "completed": "Completato",
+    "inProgress": "In Corso",
+    "toStart": "Da Iniziare",
+    "backToAreas": "Torna alle Aree",
+    "allCourses": "Tutti i Corsi",
+    "completedFilter": "Completati",
+    "noCoursesFound": "Nessun corso trovato",
+    "noCoursesDesc": "Prova a cambiare il filtro per vedere più corsi",
+    "noAreasAvailable": "Nessuna area di competenza disponibile",
+    "noAreasDesc": "Riprova più tardi o contatta il supporto"
+  },
+  "goals": {
+    "myGoals": "I Miei Obiettivi",
+    "newGoal": "Nuovo Obiettivo"
   },
   "courses": {
     "duration": "Durata",
@@ -132,7 +160,8 @@
     "show": "Mostra",
     "hide": "Nascondi",
     "more": "Altro",
-    "less": "Meno"
+    "less": "Meno",
+    "refreshPage": "Ricarica Pagina"
   },
   "settings": {
     "title": "Impostazioni",
