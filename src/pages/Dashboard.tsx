@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { StatsCard } from "@/components/StatsCard";
 import { CourseCard } from "@/components/CourseCard";
@@ -6,6 +5,7 @@ import { UserLevel } from "@/components/gamification/UserLevel";
 import { UserBadges } from "@/components/gamification/UserBadges";
 import { UserStreak } from "@/components/gamification/UserStreak";
 import { CertificateWidget } from "@/components/certificates/CertificateWidget";
+import { NotesWidget } from "@/components/notes/NotesWidget";
 import { DashboardWidget } from "@/components/dashboard/DashboardWidget";
 import { DashboardCustomizer } from "@/components/dashboard/DashboardCustomizer";
 import { Button } from "@/components/ui/button";
@@ -83,6 +83,9 @@ export const Dashboard = () => {
 
       case 'certificates':
         return <CertificateWidget />;
+
+      case 'notes':
+        return <NotesWidget />;
 
       case 'badges':
         return <UserBadges />;

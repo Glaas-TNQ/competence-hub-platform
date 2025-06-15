@@ -1,7 +1,7 @@
 
 export interface DashboardWidget {
   id: string;
-  type: 'stats' | 'certificates' | 'streak' | 'level' | 'badges' | 'recent-courses' | 'goals';
+  type: 'stats' | 'certificates' | 'streak' | 'level' | 'badges' | 'recent-courses' | 'goals' | 'notes';
   title: string;
   size: 'small' | 'medium' | 'large';
   position: {
@@ -52,11 +52,19 @@ export const DEFAULT_WIDGETS: DashboardWidget[] = [
     visible: true,
   },
   {
+    id: 'notes-widget',
+    type: 'notes',
+    title: 'Note Recenti',
+    size: 'medium',
+    position: { x: 0, y: 2 },
+    visible: true,
+  },
+  {
     id: 'badges-widget',
     type: 'badges',
     title: 'Badge Ottenuti',
     size: 'large',
-    position: { x: 0, y: 2 },
+    position: { x: 1, y: 2 },
     visible: true,
   },
   {

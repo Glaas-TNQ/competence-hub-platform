@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, BookOpen, Play, CheckCircle } from 'lucide-react';
@@ -7,6 +6,8 @@ import { useChapterProgress, useMarkChapterComplete, useCalculateProgress } from
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/button';
 import { BlockRenderer } from '../components/chapter/BlockRenderer';
+import { InlineNoteCreator } from '../components/notes/InlineNoteCreator';
+import { NotesManager } from '../components/notes/NotesManager';
 
 export const ChapterView = () => {
   const { courseId, chapterIndex } = useParams<{ courseId: string; chapterIndex: string }>();
@@ -297,67 +298,93 @@ export const ChapterView = () => {
         </div>
       </div>
 
-      {/* Chapter Content */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-6">
-        <div className="prose max-w-none">
-          {renderChapterContent()}
-        </div>
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Main Content */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* Chapter Content */}
+          <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <div className="prose max-w-none">
+              {renderChapterContent()}
+            </div>
+            
+            {/* Inline Note Creator */}
+            <div className="mt-8 pt-6 border-t border-slate-200">
+              <InlineNoteCreator
+                courseId={courseId!}
+                chapterIndex={chapterIdx}
+                className="w-full max-w-sm"
+              />
+            </div>
+          </div>
 
-      {/* Navigation Controls */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-        <div className="flex items-center justify-between">
-          <Button
-            onClick={handlePreviousChapter}
-            variant="outline"
-            disabled={chapterIdx === 0}
-          >
-            <ArrowLeft size={16} className="mr-2" />
-            Capitolo Precedente
-          </Button>
+          {/* Navigation Controls */}
+          <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <div className="flex items-center justify-between">
+              <Button
+                onClick={handlePreviousChapter}
+                variant="outline"
+                disabled={chapterIdx === 0}
+              >
+                <ArrowLeft size={16} className="mr-2" />
+                Capitolo Precedente
+              </Button>
 
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={handleMarkAsCompleted}
-              variant={isChapterCompleted ? "secondary" : "outline"}
-              className="gap-2"
-              disabled={isChapterCompleted || markChapterComplete.isPending}
-            >
-              <CheckCircle size={16} />
-              {isChapterCompleted ? 'Completato' : 'Segna come Completato'}
-            </Button>
-
-            <Button
-              onClick={handleNextChapter}
-              className="gap-2"
-            >
-              {chapterIdx < chapters.length - 1 ? (
-                <>
-                  Prossimo Capitolo
-                  <ArrowLeft size={16} className="rotate-180" />
-                </>
-              ) : (
-                <>
-                  Completa Corso
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={handleMarkAsCompleted}
+                  variant={isChapterCompleted ? "secondary" : "outline"}
+                  className="gap-2"
+                  disabled={isChapterCompleted || markChapterComplete.isPending}
+                >
                   <CheckCircle size={16} />
-                </>
-              )}
-            </Button>
+                  {isChapterCompleted ? 'Completato' : 'Segna come Completato'}
+                </Button>
+
+                <Button
+                  onClick={handleNextChapter}
+                  className="gap-2"
+                >
+                  {chapterIdx < chapters.length - 1 ? (
+                    <>
+                      Prossimo Capitolo
+                      <ArrowLeft size={16} className="rotate-180" />
+                    </>
+                  ) : (
+                    <>
+                      Completa Corso
+                      <CheckCircle size={16} />
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+            
+            {/* Progress indicator */}
+            <div className="mt-4">
+              <div className="flex justify-between text-sm mb-2">
+                <span className="text-slate-600">Progresso del corso</span>
+                <span className="text-slate-800 font-medium">
+                  {currentProgress}% ({completedChaptersCount}/{chapters.length} capitoli)
+                </span>
+              </div>
+              <div className="w-full bg-slate-200 rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${currentProgress}%` }}
+                />
+              </div>
+            </div>
           </div>
         </div>
-        
-        {/* Progress indicator */}
-        <div className="mt-4">
-          <div className="flex justify-between text-sm mb-2">
-            <span className="text-slate-600">Progresso del corso</span>
-            <span className="text-slate-800 font-medium">
-              {currentProgress}% ({completedChaptersCount}/{chapters.length} capitoli)
-            </span>
-          </div>
-          <div className="w-full bg-slate-200 rounded-full h-2">
-            <div 
-              className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${currentProgress}%` }}
+
+        {/* Sidebar with Chapter Notes */}
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+            <h3 className="text-lg font-semibold mb-4">Note del Capitolo</h3>
+            <NotesManager 
+              courseId={courseId}
+              chapterIndex={chapterIdx}
+              className="space-y-3"
             />
           </div>
         </div>
