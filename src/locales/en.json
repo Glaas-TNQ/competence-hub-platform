@@ -244,6 +244,8 @@
     "completionRate": "Completion",
     "noBadgesFound": "No badges found",
     "noBadgesDesc": "No badges found with the selected filters.",
+    "noBadgesEarned": "No badges earned yet.",
+    "noBadgesEarnedDesc": "Complete chapters and courses to earn your first badges!",
     "rarity": {
       "common": "Common",
       "rare": "Rare",

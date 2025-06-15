@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useUserBadges } from '@/hooks/useGamification';
+import { useTranslation } from '@/contexts/LanguageContext';
 import * as Icons from 'lucide-react';
 
 const rarityColors = {
@@ -10,14 +11,8 @@ const rarityColors = {
   legendary: 'bg-yellow-100 border-yellow-300 text-yellow-700',
 };
 
-const rarityLabels = {
-  common: 'Comune',
-  rare: 'Raro',
-  epic: 'Epico',
-  legendary: 'Leggendario',
-};
-
 export const UserBadges = ({ limit = 6 }: { limit?: number }) => {
+  const { t } = useTranslation();
   const { data: userBadges, isLoading } = useUserBadges();
 
   if (isLoading) {
@@ -40,8 +35,8 @@ export const UserBadges = ({ limit = 6 }: { limit?: number }) => {
     return (
       <div className="text-center py-6 text-slate-500">
         <div className="text-4xl mb-2">🏆</div>
-        <p className="text-sm">Nessun badge guadagnato ancora.</p>
-        <p className="text-xs">Completa capitoli e corsi per guadagnare i tuoi primi badge!</p>
+        <p className="text-sm">{t('badges.noBadgesEarned')}</p>
+        <p className="text-xs">{t('badges.noBadgesEarnedDesc')}</p>
       </div>
     );
   }
@@ -57,7 +52,7 @@ export const UserBadges = ({ limit = 6 }: { limit?: number }) => {
           <div
             key={userBadge.id}
             className={`rounded-lg p-3 border-2 ${rarityClass} transition-transform hover:scale-105`}
-            title={`${badge.description} - ${rarityLabels[badge.rarity as keyof typeof rarityLabels]}`}
+            title={`${badge.description} - ${t(`badges.rarity.${badge.rarity}`)}`}
           >
             <div className="flex items-center justify-center mb-2">
               <IconComponent className="h-8 w-8" />
@@ -66,7 +61,7 @@ export const UserBadges = ({ limit = 6 }: { limit?: number }) => {
             <p className="text-xs text-center opacity-75">{badge.description}</p>
             <div className="mt-2 text-center">
               <span className="text-xs px-2 py-1 rounded-full bg-white/50">
-                {rarityLabels[badge.rarity as keyof typeof rarityLabels]}
+                {t(`badges.rarity.${badge.rarity}`)}
               </span>
             </div>
           </div>

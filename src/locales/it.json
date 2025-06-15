@@ -244,6 +244,8 @@
     "completionRate": "Completamento",
     "noBadgesFound": "Nessun badge trovato",
     "noBadgesDesc": "Nessun badge trovato con i filtri selezionati.",
+    "noBadgesEarned": "Nessun badge guadagnato ancora.",
+    "noBadgesEarnedDesc": "Completa capitoli e corsi per guadagnare i tuoi primi badge!",
     "rarity": {
       "common": "Comune",
       "rare": "Raro",
