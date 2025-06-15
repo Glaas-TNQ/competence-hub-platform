@@ -11,6 +11,14 @@ export interface DashboardWidget {
   settings?: Record<string, any>;
 }
 
+export interface DashboardWidgetProps {
+  widget: DashboardWidget;
+  isCustomizing?: boolean;
+  onToggleVisibility?: () => void;
+  className?: string;
+  children?: React.ReactNode;
+}
+
 export interface DashboardLayout {
   widgets: DashboardWidget[];
   theme: 'light' | 'dark' | 'system';
