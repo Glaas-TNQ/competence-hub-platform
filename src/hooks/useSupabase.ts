@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -60,22 +59,33 @@ export const useUsers = () => {
     queryKey: ['users'],
     queryFn: async () => {
       try {
+        console.log('useUsers: Starting query...');
+        
+        // Get current user info for debugging
+        const { data: { user } } = await supabase.auth.getUser();
+        console.log('useUsers: Current user:', user?.email);
+        
         const { data, error } = await supabase
           .from('profiles')
           .select('*')
           .order('created_at', { ascending: false });
         
+        console.log('useUsers: Query result:', { data, error });
+        
         if (error) {
-          console.error('Error fetching users:', error);
-          return [];
+          console.error('useUsers: Error fetching users:', error);
+          throw error;
         }
-        return data;
+        
+        console.log('useUsers: Successfully fetched', data?.length, 'users');
+        return data || [];
       } catch (error) {
-        console.error('Error in useUsers:', error);
-        return [];
+        console.error('useUsers: Exception in query:', error);
+        throw error;
       }
     },
-    retry: false,
+    retry: 1,
+    retryDelay: 1000,
   });
 };
 

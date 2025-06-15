@@ -3,16 +3,31 @@ import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Users, Mail, Calendar, Settings } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Users, Mail, Calendar, Settings, AlertCircle, RefreshCw } from 'lucide-react';
 import { useUsers } from '@/hooks/useSupabase';
 import { UserFilter } from './UserFilter';
 import { UserAccessModal } from './UserAccessModal';
+import { useAdminSecurity } from '@/hooks/useAdminSecurity';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const UserManager = () => {
-  const { data: users, isLoading } = useUsers();
+  const { user: currentUser } = useAuth();
+  const { isAdmin } = useAdminSecurity();
+  const { data: users, isLoading, error, refetch } = useUsers();
   const [emailFilter, setEmailFilter] = useState('');
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [isAccessModalOpen, setIsAccessModalOpen] = useState(false);
+
+  // Debug logging
+  console.log('UserManager Debug:', {
+    currentUser: currentUser?.email,
+    isAdmin,
+    usersData: users,
+    usersLength: users?.length,
+    isLoading,
+    error
+  });
 
   const filteredUsers = useMemo(() => {
     if (!users) return [];
@@ -34,13 +49,94 @@ export const UserManager = () => {
     setSelectedUser(null);
   };
 
+  const handleRefresh = () => {
+    refetch();
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-muted rounded w-1/3 mb-2"></div>
-          <div className="h-4 bg-muted rounded w-1/2"></div>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Gestione Utenti</h2>
+            <p className="text-slate-600 dark:text-slate-400">Caricamento utenti...</p>
+          </div>
         </div>
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Caricamento utenti in corso...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Gestione Utenti</h2>
+            <p className="text-slate-600 dark:text-slate-400">Errore nel caricamento</p>
+          </div>
+          <Button onClick={handleRefresh} variant="outline">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Riprova
+          </Button>
+        </div>
+        
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Errore nel caricamento degli utenti. Questo potrebbe essere dovuto a problemi con le politiche RLS del database.
+            <br />
+            <strong>Debug Info:</strong>
+            <br />
+            Utente corrente: {currentUser?.email}
+            <br />
+            Admin: {isAdmin ? 'Sì' : 'No'}
+            <br />
+            Errore: {error?.message || 'Errore sconosciuto'}
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (!users || users.length === 0) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Gestione Utenti</h2>
+            <p className="text-slate-600 dark:text-slate-400">Nessun utente trovato</p>
+          </div>
+          <Button onClick={handleRefresh} variant="outline">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Aggiorna
+          </Button>
+        </div>
+
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Nessun utente trovato. Questo potrebbe essere dovuto a:
+            <ul className="list-disc list-inside mt-2">
+              <li>Problemi con le politiche RLS del database</li>
+              <li>Nessun utente registrato nel sistema</li>
+              <li>Permessi insufficienti per visualizzare gli utenti</li>
+            </ul>
+            <br />
+            <strong>Debug Info:</strong>
+            <br />
+            Utente corrente: {currentUser?.email}
+            <br />
+            Admin: {isAdmin ? 'Sì' : 'No'}
+            <br />
+            Dati utenti: {JSON.stringify(users)}
+          </AlertDescription>
+        </Alert>
       </div>
     );
   }
@@ -52,6 +148,10 @@ export const UserManager = () => {
           <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Gestione Utenti</h2>
           <p className="text-slate-600 dark:text-slate-400">Visualizza e gestisci gli utenti della piattaforma</p>
         </div>
+        <Button onClick={handleRefresh} variant="outline">
+          <RefreshCw className="h-4 w-4 mr-2" />
+          Aggiorna
+        </Button>
       </div>
 
       <UserFilter
@@ -75,7 +175,7 @@ export const UserManager = () => {
                     <Users className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">{user.full_name}</h3>
+                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">{user.full_name || user.email}</h3>
                     <div className="flex items-center space-x-4 text-sm text-slate-600 dark:text-slate-400">
                       <div className="flex items-center space-x-1">
                         <Mail className="h-4 w-4" />
