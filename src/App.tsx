@@ -9,7 +9,7 @@ import { Header } from './components/Header';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Import pages
-import { Index } from './pages/Index';
+import Index from './pages/Index';
 import { Auth } from './pages/Auth';
 import { Dashboard } from './pages/Dashboard';
 import { CompetenceAreas } from './pages/CompetenceAreas';
@@ -20,7 +20,7 @@ import { Certificates } from './pages/Certificates';
 import { Badges } from './pages/Badges';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Notes } from './pages/Notes';
-import { NotFound } from './pages/NotFound';
+import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient();
 
