@@ -7,6 +7,7 @@ import { UserBadges } from "@/components/gamification/UserBadges";
 import { UserStreak } from "@/components/gamification/UserStreak";
 import { CertificateWidget } from "@/components/certificates/CertificateWidget";
 import { NotesWidget } from "@/components/notes/NotesWidget";
+import { GoalsWidget } from "@/components/goals/GoalsWidget";
 import { DashboardWidget } from "@/components/dashboard/DashboardWidget";
 import { DashboardCustomizer } from "@/components/dashboard/DashboardCustomizer";
 import { Button } from "@/components/ui/button";
@@ -36,12 +37,12 @@ export const Dashboard = () => {
   console.log('Dashboard errors:', { coursesError, progressError });
 
   // Safe array access with fallbacks
-  const safeUserProgress = userProgress || [];
-  const safeCourses = courses || [];
-  const safeDashboardWidgets = dashboardLayout?.widgets || [];
+  const safeUserProgress = Array.isArray(userProgress) ? userProgress : [];
+  const safeCourses = Array.isArray(courses) ? courses : [];
+  const safeDashboardWidgets = Array.isArray(dashboardLayout?.widgets) ? dashboardLayout.widgets : [];
 
-  const completedCourses = safeUserProgress.filter(p => p.progress_percentage === 100)?.length || 0;
-  const inProgressCourses = safeUserProgress.filter(p => p.progress_percentage > 0 && p.progress_percentage < 100)?.length || 0;
+  const completedCourses = safeUserProgress.filter(p => p?.progress_percentage === 100)?.length || 0;
+  const inProgressCourses = safeUserProgress.filter(p => p?.progress_percentage > 0 && p?.progress_percentage < 100)?.length || 0;
 
   console.log('Dashboard calculated values:', { completedCourses, inProgressCourses });
 
@@ -74,6 +75,11 @@ export const Dashboard = () => {
 
   const renderWidget = (widget: any) => {
     console.log('Rendering widget:', widget);
+    
+    if (!widget || !widget.type) {
+      console.error('Invalid widget:', widget);
+      return <div>Widget non valido</div>;
+    }
     
     switch (widget.type) {
       case 'stats':
@@ -120,6 +126,9 @@ export const Dashboard = () => {
 
       case 'badges':
         return <UserBadges />;
+
+      case 'goals':
+        return <GoalsWidget />;
 
       case 'recent-courses':
         return (
@@ -190,7 +199,7 @@ export const Dashboard = () => {
       {/* Dashboard Widgets */}
       <div className="space-y-educational-lg">
         {safeDashboardWidgets
-          .filter(widget => widget.visible || isCustomizing)
+          .filter(widget => widget && (widget.visible || isCustomizing))
           .map((widget) => (
             <DashboardWidget
               key={widget.id}

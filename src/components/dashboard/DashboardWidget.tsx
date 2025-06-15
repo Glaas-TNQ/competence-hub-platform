@@ -25,6 +25,10 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
       return children;
     }
 
+    if (!widget || !widget.type) {
+      return <div className="p-4 text-gray-500">Widget non valido</div>;
+    }
+
     switch (widget.type) {
       case 'stats':
         return <StatsOverview />;
@@ -45,9 +49,13 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
       case 'analytics':
         return <AnalyticsOverview />;
       default:
-        return <div className="p-4 text-gray-500">Widget non riconosciuto</div>;
+        return <div className="p-4 text-gray-500">Widget non riconosciuto: {widget.type}</div>;
     }
   };
+
+  if (!widget) {
+    return <div className="p-4 text-red-500">Widget mancante</div>;
+  }
 
   return (
     <div className={`relative ${className || ''}`}>
@@ -66,7 +74,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
       
       <Card className={`h-full ${!widget.visible && isCustomizing ? 'opacity-50' : ''}`}>
         <CardHeader>
-          <CardTitle className="text-lg">{widget.title}</CardTitle>
+          <CardTitle className="text-lg">{widget.title || 'Widget'}</CardTitle>
         </CardHeader>
         <CardContent className="p-4 h-full">
           {renderWidgetContent()}
