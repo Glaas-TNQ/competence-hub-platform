@@ -16,6 +16,9 @@ export const ChapterView = () => {
   const course = courses?.find(c => c.id === courseId);
   const chapterIdx = parseInt(chapterIndex || '0');
   
+  console.log('Course data:', course);
+  console.log('Course content:', course?.content);
+  
   if (!course) {
     return (
       <div className="p-6 bg-slate-50 min-h-screen">
@@ -48,9 +51,29 @@ export const ChapterView = () => {
     );
   }
 
-  // Parse course content to get chapters
-  const chapters = (course.content as any)?.chapters || [];
+  // Parse course content to get chapters - handle different possible structures
+  let chapters = [];
+  if (course.content) {
+    if (Array.isArray(course.content)) {
+      chapters = course.content;
+    } else if (typeof course.content === 'object' && course.content.chapters) {
+      chapters = course.content.chapters;
+    } else if (typeof course.content === 'string') {
+      try {
+        const parsed = JSON.parse(course.content);
+        chapters = Array.isArray(parsed) ? parsed : (parsed.chapters || []);
+      } catch (e) {
+        console.error('Error parsing course content:', e);
+        chapters = [];
+      }
+    }
+  }
+  
+  console.log('Parsed chapters:', chapters);
+  console.log('Current chapter index:', chapterIdx);
+  
   const currentChapter = chapters[chapterIdx];
+  console.log('Current chapter:', currentChapter);
 
   if (!currentChapter) {
     return (
@@ -102,6 +125,59 @@ export const ChapterView = () => {
     }
   };
 
+  const renderChapterContent = () => {
+    // Handle different content structures
+    let contentToRender = '';
+    
+    if (typeof currentChapter.content === 'string') {
+      contentToRender = currentChapter.content;
+    } else if (Array.isArray(currentChapter.content)) {
+      // If content is an array, join the elements
+      contentToRender = currentChapter.content.map(item => {
+        if (typeof item === 'string') return item;
+        if (typeof item === 'object') return JSON.stringify(item);
+        return String(item);
+      }).join('\n\n');
+    } else if (typeof currentChapter.content === 'object') {
+      // If content is an object, try to extract meaningful text
+      if (currentChapter.content.text) {
+        contentToRender = currentChapter.content.text;
+      } else if (currentChapter.content.html) {
+        contentToRender = currentChapter.content.html;
+      } else {
+        contentToRender = JSON.stringify(currentChapter.content, null, 2);
+      }
+    } else {
+      contentToRender = String(currentChapter.content || '');
+    }
+
+    console.log('Content to render:', contentToRender);
+
+    if (!contentToRender || contentToRender.trim() === '') {
+      return (
+        <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-lg">
+          <BookOpen className="mx-auto h-12 w-12 text-slate-400 mb-4" />
+          <h3 className="text-lg font-medium text-slate-800 mb-2">Contenuto in Preparazione</h3>
+          <p className="text-slate-600">
+            Il contenuto di questo capitolo sarà disponibile a breve.
+          </p>
+        </div>
+      );
+    }
+
+    // Check if content looks like HTML
+    if (contentToRender.includes('<') && contentToRender.includes('>')) {
+      return <div dangerouslySetInnerHTML={{ __html: contentToRender }} />;
+    } else {
+      // Render as plain text with line breaks preserved
+      return (
+        <div className="whitespace-pre-wrap">
+          {contentToRender}
+        </div>
+      );
+    }
+  };
+
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
       {/* Header */}
@@ -142,14 +218,14 @@ export const ChapterView = () => {
       {/* Chapter Content */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-6">
         <div className="prose max-w-none">
-          {currentChapter.type === 'video' ? (
+          {currentChapter.type === 'video' && currentChapter.video_url ? (
             <div className="mb-6">
               <div className="aspect-video bg-slate-100 rounded-lg flex items-center justify-center">
                 <div className="text-center">
                   <Play size={48} className="mx-auto text-slate-400 mb-2" />
                   <p className="text-slate-600">Video placeholder</p>
                   <p className="text-sm text-slate-500">
-                    {currentChapter.video_url || 'URL del video non disponibile'}
+                    {currentChapter.video_url}
                   </p>
                 </div>
               </div>
@@ -157,17 +233,7 @@ export const ChapterView = () => {
           ) : null}
           
           <div className="text-slate-800 leading-relaxed">
-            {currentChapter.content ? (
-              <div dangerouslySetInnerHTML={{ __html: currentChapter.content }} />
-            ) : (
-              <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-lg">
-                <BookOpen className="mx-auto h-12 w-12 text-slate-400 mb-4" />
-                <h3 className="text-lg font-medium text-slate-800 mb-2">Contenuto in Preparazione</h3>
-                <p className="text-slate-600">
-                  Il contenuto di questo capitolo sarà disponibile a breve.
-                </p>
-              </div>
-            )}
+            {renderChapterContent()}
           </div>
         </div>
       </div>
