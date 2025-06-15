@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,7 +13,7 @@ import {
   CheckCircle,
   AlertCircle
 } from 'lucide-react';
-import { useCertificates } from '@/hooks/useCertificates';
+import { useUserCertificates } from '@/hooks/useCertificates';
 import { CertificateViewer } from './CertificateViewer';
 import { format } from 'date-fns';
 import { it, enUS } from 'date-fns/locale';
@@ -27,7 +26,7 @@ export const CertificateManager = () => {
   const [selectedCertificate, setSelectedCertificate] = useState<any>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
   
-  const { data: userCertificates = [], isLoading: userLoading } = useCertificates();
+  const { data: userCertificates = [], isLoading: userLoading } = useUserCertificates();
   const dateLocale = language === 'it' ? it : enUS;
 
   const filteredCertificates = userCertificates.filter(cert => {
