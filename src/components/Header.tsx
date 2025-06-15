@@ -1,6 +1,7 @@
 
 import { Bell, Search, User, LogOut, Settings as SettingsIcon, Shield } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import {
@@ -15,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const Header = () => {
   const { user, profile, signOut } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -41,7 +43,7 @@ export const Header = () => {
             <Search className="absolute left-educational-sm top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
             <input
               type="text"
-              placeholder="Search content..."
+              placeholder={t('header.searchPlaceholder')}
               className="pl-10 pr-educational-md py-educational-sm border border-input rounded-educational-lg focus:ring-2 focus:ring-focus focus:border-transparent w-80 bg-background text-educational-body transition-all duration-200"
             />
           </div>
@@ -67,16 +69,16 @@ export const Header = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel className="text-educational-body">My Account</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-educational-body">{t('navigation.myAccount')}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-educational-body">
                 <SettingsIcon className="mr-2 h-4 w-4" />
-                Settings
+                {t('navigation.settings')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut} className="text-educational-body">
                 <LogOut className="mr-2 h-4 w-4" />
-                Logout
+                {t('navigation.logout')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -1,0 +1,95 @@
+
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "competenceAreas": "Competence Areas",
+    "myCourses": "My Courses",
+    "badges": "Badges",
+    "certificates": "Certificates",
+    "goals": "Goals",
+    "settings": "Settings",
+    "adminPanel": "Admin Panel",
+    "myAccount": "My Account",
+    "logout": "Logout"
+  },
+  "header": {
+    "searchPlaceholder": "Search content...",
+    "notifications": "Notifications"
+  },
+  "auth": {
+    "title": "FairMind Academy",
+    "subtitle": "Access your training platform",
+    "description": "The most advanced corporate training platform. Learn, grow and achieve your professional goals.",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full Name",
+    "emailPlaceholder": "name@company.com",
+    "fullNamePlaceholder": "John Doe",
+    "signInButton": "Sign In",
+    "signUpButton": "Sign Up",
+    "signingIn": "Signing in...",
+    "signingUp": "Signing up...",
+    "signInError": "Sign in error",
+    "signUpError": "Sign up error",
+    "signInSuccess": "Successfully signed in",
+    "signUpSuccess": "Registration completed",
+    "welcomeMessage": "Welcome to your Academy!",
+    "checkEmailMessage": "Check your email to confirm your account.",
+    "features": {
+      "interactiveCourses": "Interactive Courses",
+      "interactiveCoursesDesc": "Video content, interactive quizzes and practical projects for effective learning",
+      "certifications": "Certifications",
+      "certificationsDesc": "Get recognized certificates to validate your acquired skills",
+      "trackedProgress": "Tracked Progress",
+      "trackedProgressDesc": "Monitor your improvements with detailed analytics and personalized goals",
+      "courses": "Courses",
+      "certificates": "Certificates",
+      "analytics": "Analytics"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to your learning hub",
+    "overview": "Overview",
+    "recentActivity": "Recent Activity",
+    "quickStats": "Quick Stats",
+    "recommendations": "Recommendations",
+    "progress": "Progress",
+    "achievements": "Achievements"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "notifications": "Notifications",
+    "privacy": "Privacy",
+    "language": "Language",
+    "theme": "Theme",
+    "account": "Account"
+  },
+  "forms": {
+    "required": "Required field",
+    "invalidEmail": "Invalid email",
+    "passwordMinLength": "Password must be at least {{min}} characters",
+    "passwordsDontMatch": "Passwords don't match",
+    "confirmPassword": "Confirm Password"
+  }
+}

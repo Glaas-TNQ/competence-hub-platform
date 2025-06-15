@@ -15,25 +15,27 @@ import {
   Trophy
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
-
-const menuItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/dashboard' },
-  { id: 'areas', label: 'Competence Areas', icon: Target, path: '/areas' },
-  { id: 'my-learning', label: 'My Courses', icon: BookOpen, path: '/my-learning' },
-  { id: 'badges', label: 'Badges', icon: Trophy, path: '/badges' },
-  { id: 'certificates', label: 'Certificates', icon: Award, path: '/certificates' },
-  { id: 'goals', label: 'Goals', icon: Target, path: '/goals' },
-  { id: 'settings', label: 'Settings', icon: Settings, path: '/settings' }
-];
 
 export const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
   const { user, profile } = useAuth();
+  const { t } = useTranslation();
   const isMobile = useIsMobile();
+
+  const menuItems = [
+    { id: 'dashboard', label: t('navigation.dashboard'), icon: Home, path: '/dashboard' },
+    { id: 'areas', label: t('navigation.competenceAreas'), icon: Target, path: '/areas' },
+    { id: 'my-learning', label: t('navigation.myCourses'), icon: BookOpen, path: '/my-learning' },
+    { id: 'badges', label: t('navigation.badges'), icon: Trophy, path: '/badges' },
+    { id: 'certificates', label: t('navigation.certificates'), icon: Award, path: '/certificates' },
+    { id: 'goals', label: t('navigation.goals'), icon: Target, path: '/goals' },
+    { id: 'settings', label: t('navigation.settings'), icon: Settings, path: '/settings' }
+  ];
 
   const isAdmin = profile?.role === 'admin' || user?.email === 'admin@academy.com';
 
@@ -112,7 +114,7 @@ export const Sidebar = () => {
                 }`}
               >
                 <Shield size={20} />
-                <span className="font-medium">Admin Panel</span>
+                <span className="font-medium">{t('navigation.adminPanel')}</span>
               </NavLink>
             )}
           </nav>
@@ -187,10 +189,10 @@ export const Sidebar = () => {
                   : 'bg-destructive/10 text-destructive border-l-4 border-destructive'
                 : 'hover:bg-destructive/5 text-muted-foreground hover:text-destructive'
             }`}
-            title={isCollapsed ? "Admin Panel" : undefined}
+            title={isCollapsed ? t('navigation.adminPanel') : undefined}
           >
             <Shield size={20} className="flex-shrink-0" />
-            {!isCollapsed && <span className="font-medium">Admin Panel</span>}
+            {!isCollapsed && <span className="font-medium">{t('navigation.adminPanel')}</span>}
           </NavLink>
         )}
       </nav>

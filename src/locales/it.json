@@ -1,0 +1,95 @@
+
+{
+  "common": {
+    "save": "Salva",
+    "cancel": "Annulla",
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "create": "Crea",
+    "search": "Cerca",
+    "close": "Chiudi",
+    "back": "Indietro",
+    "next": "Avanti",
+    "previous": "Precedente",
+    "yes": "Sì",
+    "no": "No"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "competenceAreas": "Aree di Competenza",
+    "myCourses": "I Miei Corsi",
+    "badges": "Badge",
+    "certificates": "Certificati",
+    "goals": "Obiettivi",
+    "settings": "Impostazioni",
+    "adminPanel": "Pannello Admin",
+    "myAccount": "Il Mio Account",
+    "logout": "Logout"
+  },
+  "header": {
+    "searchPlaceholder": "Cerca contenuti...",
+    "notifications": "Notifiche"
+  },
+  "auth": {
+    "title": "FairMind Academy",
+    "subtitle": "Accedi alla tua piattaforma di formazione",
+    "description": "La piattaforma di formazione aziendale più avanzata. Impara, cresci e raggiungi i tuoi obiettivi professionali.",
+    "signIn": "Accedi",
+    "signUp": "Registrati",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Nome completo",
+    "emailPlaceholder": "nome@azienda.com",
+    "fullNamePlaceholder": "Mario Rossi",
+    "signInButton": "Accedi",
+    "signUpButton": "Registrati",
+    "signingIn": "Accesso in corso...",
+    "signingUp": "Registrazione in corso...",
+    "signInError": "Errore di accesso",
+    "signUpError": "Errore di registrazione",
+    "signInSuccess": "Accesso effettuato",
+    "signUpSuccess": "Registrazione completata",
+    "welcomeMessage": "Benvenuto nella tua Academy!",
+    "checkEmailMessage": "Controlla la tua email per confermare l'account.",
+    "features": {
+      "interactiveCourses": "Corsi Interattivi",
+      "interactiveCoursesDesc": "Contenuti video, quiz interattivi e progetti pratici per un apprendimento efficace",
+      "certifications": "Certificazioni",
+      "certificationsDesc": "Ottieni certificati riconosciuti per validare le tue competenze acquisite",
+      "trackedProgress": "Progressi Tracciati",
+      "trackedProgressDesc": "Monitora i tuoi miglioramenti con analytics dettagliati e obiettivi personalizzati",
+      "courses": "Corsi",
+      "certificates": "Certificati",
+      "analytics": "Analytics"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Benvenuto nel tuo hub di apprendimento",
+    "overview": "Panoramica",
+    "recentActivity": "Attività Recente",
+    "quickStats": "Statistiche Rapide",
+    "recommendations": "Raccomandazioni",
+    "progress": "Progresso",
+    "achievements": "Traguardi"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "general": "Generale",
+    "notifications": "Notifiche",
+    "privacy": "Privacy",
+    "language": "Lingua",
+    "theme": "Tema",
+    "account": "Account"
+  },
+  "forms": {
+    "required": "Campo obbligatorio",
+    "invalidEmail": "Email non valida",
+    "passwordMinLength": "La password deve essere di almeno {{min}} caratteri",
+    "passwordsDontMatch": "Le password non corrispondono",
+    "confirmPassword": "Conferma Password"
+  }
+}
