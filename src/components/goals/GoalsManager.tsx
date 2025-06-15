@@ -9,20 +9,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useUserGoals } from '@/hooks/useUserGoals';
-import { Plus, Target, Calendar, TrendingUp, CheckCircle } from 'lucide-react';
+import { Plus, Target, TrendingUp, CheckCircle } from 'lucide-react';
 import { format, addDays } from 'date-fns';
-import { it } from 'date-fns/locale';
 
 const GOAL_TYPES = [
   { value: 'courses_completed', label: 'Corsi Completati', icon: <Target className="h-4 w-4" /> },
-  { value: 'study_days', label: 'Giorni di Studio', icon: <Calendar className="h-4 w-4" /> },
+  { value: 'study_days', label: 'Giorni di Studio', icon: <Target className="h-4 w-4" /> },
   { value: 'points_earned', label: 'Punti Guadagnati', icon: <TrendingUp className="h-4 w-4" /> },
-];
-
-const GOAL_PERIODS = [
-  { value: 'weekly', label: 'Settimanale', days: 7 },
-  { value: 'monthly', label: 'Mensile', days: 30 },
-  { value: 'quarterly', label: 'Trimestrale', days: 90 },
 ];
 
 export const GoalsManager: React.FC = () => {
@@ -132,15 +125,10 @@ interface GoalCardProps {
 const GoalCard: React.FC<GoalCardProps> = ({ goal }) => {
   const goalType = GOAL_TYPES.find(type => type.value === goal.goal_type);
   const progress = Math.min((goal.current_value / goal.target_value) * 100, 100);
-  const isExpired = new Date(goal.period_end) < new Date() && !goal.is_completed;
 
   return (
     <Card className={`hover-educational relative ${
-      goal.is_completed 
-        ? 'bg-success/5 border-success/20' 
-        : isExpired 
-        ? 'bg-destructive/5 border-destructive/20' 
-        : ''
+      goal.is_completed ? 'bg-success/5 border-success/20' : ''
     }`}>
       <CardHeader className="pb-educational-sm">
         <div className="flex items-center justify-between">
@@ -174,15 +162,7 @@ const GoalCard: React.FC<GoalCardProps> = ({ goal }) => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-educational-caption">
-          <span className="text-muted-foreground">
-            Scade: {format(new Date(goal.period_end), 'dd MMM yyyy', { locale: it })}
-          </span>
-          {isExpired && !goal.is_completed && (
-            <Badge variant="destructive" className="text-educational-caption">
-              Scaduto
-            </Badge>
-          )}
+        <div className="flex items-center justify-center">
           {goal.is_completed && (
             <Badge className="text-educational-caption bg-success hover:bg-success/90">
               Completato
@@ -201,19 +181,15 @@ interface CreateGoalFormProps {
 const CreateGoalForm: React.FC<CreateGoalFormProps> = ({ onSuccess }) => {
   const [goalType, setGoalType] = useState('');
   const [targetValue, setTargetValue] = useState('');
-  const [period, setPeriod] = useState('');
   const { createGoal } = useUserGoals();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!goalType || !targetValue || !period) return;
-
-    const selectedPeriod = GOAL_PERIODS.find(p => p.value === period);
-    if (!selectedPeriod) return;
+    if (!goalType || !targetValue) return;
 
     const startDate = new Date();
-    const endDate = addDays(startDate, selectedPeriod.days);
+    const endDate = addDays(startDate, 30); // Default 30 days period
 
     try {
       await createGoal.mutateAsync({
@@ -271,26 +247,10 @@ const CreateGoalForm: React.FC<CreateGoalFormProps> = ({ onSuccess }) => {
         />
       </div>
 
-      <div className="space-y-educational-xs">
-        <Label htmlFor="period">Periodo</Label>
-        <Select value={period} onValueChange={setPeriod}>
-          <SelectTrigger>
-            <SelectValue placeholder="Seleziona il periodo" />
-          </SelectTrigger>
-          <SelectContent>
-            {GOAL_PERIODS.map((p) => (
-              <SelectItem key={p.value} value={p.value}>
-                {p.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
       <div className="flex gap-educational-sm pt-educational-md">
         <Button 
           type="submit" 
-          disabled={!goalType || !targetValue || !period || createGoal.isPending}
+          disabled={!goalType || !targetValue || createGoal.isPending}
           className="flex-1"
         >
           {createGoal.isPending ? 'Creazione...' : 'Crea Obiettivo'}

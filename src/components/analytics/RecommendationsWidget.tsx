@@ -28,11 +28,11 @@ export const RecommendationsWidget: React.FC<RecommendationsWidgetProps> = ({ de
 
   const getRecommendationColor = (type: string) => {
     switch (type) {
-      case 'course': return 'text-blue-600 bg-blue-50';
-      case 'skill': return 'text-yellow-600 bg-yellow-50';
-      case 'improvement': return 'text-green-600 bg-green-50';
-      case 'goal': return 'text-purple-600 bg-purple-50';
-      default: return 'text-gray-600 bg-gray-50';
+      case 'course': return 'text-blue-600 bg-blue-50 dark:bg-blue-950/30';
+      case 'skill': return 'text-yellow-600 bg-yellow-50 dark:bg-yellow-950/30';
+      case 'improvement': return 'text-green-600 bg-green-50 dark:bg-green-950/30';
+      case 'goal': return 'text-purple-600 bg-purple-50 dark:bg-purple-950/30';
+      default: return 'text-muted-foreground bg-muted';
     }
   };
 
@@ -51,7 +51,7 @@ export const RecommendationsWidget: React.FC<RecommendationsWidgetProps> = ({ de
   return (
     <div className="space-y-4">
       {displayedRecommendations.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-muted-foreground">
           <BookOpen className="h-12 w-12 mx-auto mb-4 opacity-30" />
           <p>Continua a studiare per ricevere raccomandazioni personalizzate!</p>
         </div>
@@ -60,7 +60,7 @@ export const RecommendationsWidget: React.FC<RecommendationsWidgetProps> = ({ de
           {displayedRecommendations.map((rec, index) => (
             <div
               key={index}
-              className="p-4 border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+              className="p-4 border rounded-lg hover:bg-accent/50 transition-colors cursor-pointer"
               onClick={() => handleRecommendationClick(rec)}
             >
               <div className="flex items-start space-x-3">
@@ -68,16 +68,16 @@ export const RecommendationsWidget: React.FC<RecommendationsWidgetProps> = ({ de
                   {getRecommendationIcon(rec.type)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-gray-900">{rec.title}</h4>
-                  <p className="text-sm text-gray-600 mt-1">{rec.description}</p>
+                  <h4 className="font-medium text-foreground">{rec.title}</h4>
+                  <p className="text-sm text-muted-foreground mt-1">{rec.description}</p>
                   {rec.reason && (
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="text-xs text-muted-foreground/80 mt-2">
                       Motivo: {rec.reason}
                     </p>
                   )}
                   {rec.priority && (
                     <div className="flex items-center mt-2">
-                      <span className="text-xs font-medium text-orange-600">
+                      <span className="text-xs font-medium text-orange-600 dark:text-orange-400">
                         Priorità: {rec.priority}
                       </span>
                     </div>

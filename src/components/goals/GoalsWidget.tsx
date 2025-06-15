@@ -5,19 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useUserGoals } from '@/hooks/useUserGoals';
-import { Target, ArrowRight, Trophy, Calendar } from 'lucide-react';
+import { Target, ArrowRight, Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
 
 export const GoalsWidget: React.FC = () => {
   const { data: goals, isLoading } = useUserGoals();
   const navigate = useNavigate();
   
-  const activeGoals = goals?.filter(goal => 
-    !goal.is_completed && 
-    new Date(goal.period_end) >= new Date()
-  ) || [];
+  const activeGoals = goals?.filter(goal => !goal.is_completed) || [];
   
   const recentlyCompleted = goals?.filter(goal => 
     goal.is_completed && 
@@ -103,7 +98,6 @@ export const GoalsWidget: React.FC = () => {
             <div className="space-y-educational-sm">
               {activeGoals.slice(0, 3).map((goal) => {
                 const progress = Math.min((goal.current_value / goal.target_value) * 100, 100);
-                const daysLeft = Math.ceil((new Date(goal.period_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
                 
                 return (
                   <div
@@ -114,10 +108,6 @@ export const GoalsWidget: React.FC = () => {
                       <span className="text-educational-small font-medium text-accent-foreground">
                         {getGoalTypeLabel(goal.goal_type)}
                       </span>
-                      <div className="flex items-center gap-1 text-educational-caption text-muted-foreground">
-                        <Calendar className="h-3 w-3" />
-                        {daysLeft > 0 ? `${daysLeft}g` : 'Scaduto'}
-                      </div>
                     </div>
                     
                     <div className="space-y-educational-xs">

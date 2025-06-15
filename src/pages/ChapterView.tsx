@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, BookOpen, Play, CheckCircle } from 'lucide-react';
@@ -26,9 +27,9 @@ export const ChapterView = () => {
   
   if (!course) {
     return (
-      <div className="p-6 bg-slate-50 min-h-screen">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-6">
         <div className="text-center py-12">
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">Corso non trovato</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Corso non trovato</h1>
           <Button onClick={() => navigate('/areas')} variant="outline">
             Torna ai corsi
           </Button>
@@ -44,10 +45,10 @@ export const ChapterView = () => {
 
   if (!hasAccess) {
     return (
-      <div className="p-6 bg-slate-50 min-h-screen">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-6">
         <div className="text-center py-12">
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">Accesso Negato</h1>
-          <p className="text-slate-600 mb-4">Non hai accesso a questo contenuto.</p>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Accesso Negato</h1>
+          <p className="text-muted-foreground mb-4">Non hai accesso a questo contenuto.</p>
           <Button onClick={() => navigate(`/course/${courseId}`)} variant="outline">
             Torna al corso
           </Button>
@@ -95,9 +96,9 @@ export const ChapterView = () => {
 
   if (!currentChapter) {
     return (
-      <div className="p-6 bg-slate-50 min-h-screen">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-6">
         <div className="text-center py-12">
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">Capitolo non trovato</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Capitolo non trovato</h1>
           <Button onClick={() => navigate(`/course/${courseId}`)} variant="outline">
             Torna al corso
           </Button>
@@ -156,7 +157,7 @@ export const ChapterView = () => {
       case 'text':
         return <BookOpen size={20} className="text-green-600" />;
       default:
-        return <BookOpen size={20} className="text-slate-600" />;
+        return <BookOpen size={20} className="text-muted-foreground" />;
     }
   };
 
@@ -241,10 +242,10 @@ export const ChapterView = () => {
 
     if (blocks.length === 0) {
       return (
-        <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-lg">
-          <BookOpen className="mx-auto h-12 w-12 text-slate-400 mb-4" />
-          <h3 className="text-lg font-medium text-slate-800 mb-2">Contenuto in Preparazione</h3>
-          <p className="text-slate-600">
+        <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+          <BookOpen className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+          <h3 className="text-lg font-medium text-foreground mb-2">Contenuto in Preparazione</h3>
+          <p className="text-muted-foreground">
             Il contenuto di questo capitolo sarà disponibile a breve.
           </p>
         </div>
@@ -259,32 +260,32 @@ export const ChapterView = () => {
   const currentProgress = Math.round((completedChaptersCount / chapters.length) * 100);
 
   return (
-    <div className="p-6 bg-slate-50 min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-6">
       {/* Header */}
       <div className="mb-6">
         <button
           onClick={() => navigate(`/course/${courseId}`)}
-          className="flex items-center gap-2 text-slate-600 hover:text-slate-800 mb-4 transition-colors"
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4 transition-colors"
         >
           <ArrowLeft size={20} />
           Torna al corso
         </button>
         
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+        <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-educational-sm border p-6">
           <div className="flex items-center gap-3 mb-4">
             {getChapterIcon(currentChapter.type)}
             <div>
-              <h1 className="text-2xl font-bold text-slate-800">
+              <h1 className="text-2xl font-bold text-foreground">
                 {currentChapter.title || `Capitolo ${chapterIdx + 1}`}
               </h1>
-              <p className="text-slate-600">{course.title}</p>
+              <p className="text-muted-foreground">{course.title}</p>
             </div>
             {isChapterCompleted && (
               <CheckCircle className="text-green-600 ml-auto" size={24} />
             )}
           </div>
           
-          <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
             <div className="flex items-center gap-1">
               <Clock size={16} />
               {currentChapter.duration || '5 min'}
@@ -293,7 +294,7 @@ export const ChapterView = () => {
           </div>
           
           {currentChapter.description && (
-            <p className="text-slate-600">{currentChapter.description}</p>
+            <p className="text-muted-foreground">{currentChapter.description}</p>
           )}
         </div>
       </div>
@@ -302,13 +303,13 @@ export const ChapterView = () => {
         {/* Main Content */}
         <div className="lg:col-span-3 space-y-6">
           {/* Chapter Content */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-            <div className="prose max-w-none">
+          <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-educational-sm border p-6">
+            <div className="prose max-w-none dark:prose-invert">
               {renderChapterContent()}
             </div>
             
             {/* Inline Note Creator */}
-            <div className="mt-8 pt-6 border-t border-slate-200">
+            <div className="mt-8 pt-6 border-t border-border">
               <InlineNoteCreator
                 courseId={courseId!}
                 chapterIndex={chapterIdx}
@@ -318,7 +319,7 @@ export const ChapterView = () => {
           </div>
 
           {/* Navigation Controls */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+          <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-educational-sm border p-6">
             <div className="flex items-center justify-between">
               <Button
                 onClick={handlePreviousChapter}
@@ -362,12 +363,12 @@ export const ChapterView = () => {
             {/* Progress indicator */}
             <div className="mt-4">
               <div className="flex justify-between text-sm mb-2">
-                <span className="text-slate-600">Progresso del corso</span>
-                <span className="text-slate-800 font-medium">
+                <span className="text-muted-foreground">Progresso del corso</span>
+                <span className="text-foreground font-medium">
                   {currentProgress}% ({completedChaptersCount}/{chapters.length} capitoli)
                 </span>
               </div>
-              <div className="w-full bg-slate-200 rounded-full h-2">
+              <div className="w-full bg-muted rounded-full h-2">
                 <div 
                   className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${currentProgress}%` }}
@@ -379,8 +380,8 @@ export const ChapterView = () => {
 
         {/* Sidebar with Chapter Notes */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
-            <h3 className="text-lg font-semibold mb-4">Note del Capitolo</h3>
+          <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-educational-sm border p-4">
+            <h3 className="text-lg font-semibold mb-4 text-foreground">Note del Capitolo</h3>
             <NotesManager 
               courseId={courseId}
               chapterIndex={chapterIdx}
