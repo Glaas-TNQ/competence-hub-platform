@@ -10,7 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useUserGoals } from '@/hooks/useUserGoals';
 import { Plus, Target, Calendar, TrendingUp, CheckCircle } from 'lucide-react';
-import { format, addDays, addWeeks, addMonths } from 'date-fns';
+import { format, addDays } from 'date-fns';
 import { it } from 'date-fns/locale';
 
 const GOAL_TYPES = [
@@ -31,10 +31,14 @@ export const GoalsManager: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-32 bg-gray-200 rounded-lg animate-pulse"></div>
-        ))}
+      <div className="container-educational layout-educational">
+        <div className="space-y-educational-lg">
+          {[...Array(3)].map((_, i) => (
+            <Card key={i} className="h-40 animate-educational-pulse">
+              <CardContent className="h-full" />
+            </Card>
+          ))}
+        </div>
       </div>
     );
   }
@@ -43,22 +47,27 @@ export const GoalsManager: React.FC = () => {
   const completedGoals = goals?.filter(goal => goal.is_completed) || [];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">I Miei Obiettivi</h1>
-          <p className="text-gray-600">Crea e monitora i tuoi obiettivi di apprendimento</p>
+    <div className="container-educational layout-educational space-educational">
+      {/* Header Section */}
+      <div className="flex items-center justify-between mb-educational-2xl">
+        <div className="space-y-educational-xs">
+          <h1 className="heading-educational-display text-accent-foreground">
+            I Miei Obiettivi
+          </h1>
+          <p className="text-educational-body text-muted-foreground">
+            Crea e monitora i tuoi obiettivi di apprendimento
+          </p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
-              <Plus className="h-4 w-4" />
+            <Button size="lg" className="flex items-center gap-2 hover-educational">
+              <Plus className="h-5 w-5" />
               Nuovo Obiettivo
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Crea Nuovo Obiettivo</DialogTitle>
+              <DialogTitle className="text-educational-h2">Crea Nuovo Obiettivo</DialogTitle>
             </DialogHeader>
             <CreateGoalForm onSuccess={() => setIsCreateDialogOpen(false)} />
           </DialogContent>
@@ -66,40 +75,51 @@ export const GoalsManager: React.FC = () => {
       </div>
 
       {/* Obiettivi Attivi */}
-      <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Obiettivi Attivi</h2>
+      <section className="section-educational">
+        <h2 className="heading-educational-section text-accent-foreground mb-educational-lg">
+          Obiettivi Attivi
+        </h2>
         {activeGoals.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-educational-md md:grid-cols-2 lg:grid-cols-3">
             {activeGoals.map((goal) => (
               <GoalCard key={goal.id} goal={goal} />
             ))}
           </div>
         ) : (
-          <Card>
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <Target className="h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Nessun obiettivo attivo</h3>
-              <p className="text-gray-600 text-center mb-4">
+          <Card className="hover-educational">
+            <CardContent className="flex flex-col items-center justify-center py-educational-5xl">
+              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-educational-lg">
+                <Target className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="text-educational-h3 font-semibold text-accent-foreground mb-educational-sm">
+                Nessun obiettivo attivo
+              </h3>
+              <p className="text-educational-body text-muted-foreground text-center mb-educational-lg max-w-sm">
                 Crea il tuo primo obiettivo per iniziare a monitorare i progressi!
               </p>
-              <Button onClick={() => setIsCreateDialogOpen(true)}>
+              <Button 
+                onClick={() => setIsCreateDialogOpen(true)}
+                className="hover-educational"
+              >
                 Crea Primo Obiettivo
               </Button>
             </CardContent>
           </Card>
         )}
-      </div>
+      </section>
 
       {/* Obiettivi Completati */}
       {completedGoals.length > 0 && (
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Obiettivi Completati</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <section className="section-educational">
+          <h2 className="heading-educational-section text-accent-foreground mb-educational-lg">
+            Obiettivi Completati
+          </h2>
+          <div className="grid gap-educational-md md:grid-cols-2 lg:grid-cols-3">
             {completedGoals.map((goal) => (
               <GoalCard key={goal.id} goal={goal} />
             ))}
           </div>
-        </div>
+        </section>
       )}
     </div>
   );
@@ -115,46 +135,56 @@ const GoalCard: React.FC<GoalCardProps> = ({ goal }) => {
   const isExpired = new Date(goal.period_end) < new Date() && !goal.is_completed;
 
   return (
-    <Card className={`relative ${goal.is_completed ? 'bg-green-50 border-green-200' : isExpired ? 'bg-red-50 border-red-200' : ''}`}>
-      <CardHeader className="pb-3">
+    <Card className={`hover-educational relative ${
+      goal.is_completed 
+        ? 'bg-success/5 border-success/20' 
+        : isExpired 
+        ? 'bg-destructive/5 border-destructive/20' 
+        : ''
+    }`}>
+      <CardHeader className="pb-educational-sm">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {goalType?.icon}
-            <CardTitle className="text-sm font-medium">
+          <div className="flex items-center gap-educational-sm">
+            <div className="w-8 h-8 bg-primary/10 rounded-educational flex items-center justify-center">
+              {goalType?.icon}
+            </div>
+            <CardTitle className="text-educational-h4 font-medium">
               {goalType?.label}
             </CardTitle>
           </div>
           {goal.is_completed && (
-            <CheckCircle className="h-5 w-5 text-green-600" />
+            <div className="w-6 h-6 bg-success rounded-full flex items-center justify-center">
+              <CheckCircle className="h-4 w-4 text-white" />
+            </div>
           )}
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">Progresso</span>
-            <span className="font-medium">
+      <CardContent className="space-y-educational-md">
+        <div className="space-y-educational-sm">
+          <div className="flex items-center justify-between text-educational-small">
+            <span className="text-muted-foreground">Progresso</span>
+            <span className="font-medium text-accent-foreground">
               {goal.current_value} / {goal.target_value}
             </span>
           </div>
-          <Progress value={progress} className="h-2" />
-          <div className="text-xs text-gray-500 text-center">
+          <Progress value={progress} className="h-3" />
+          <div className="text-educational-caption text-muted-foreground text-center">
             {progress.toFixed(0)}% completato
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-xs text-gray-500">
-          <span>
+        <div className="flex items-center justify-between text-educational-caption">
+          <span className="text-muted-foreground">
             Scade: {format(new Date(goal.period_end), 'dd MMM yyyy', { locale: it })}
           </span>
           {isExpired && !goal.is_completed && (
-            <Badge variant="destructive" className="text-xs">
+            <Badge variant="destructive" className="text-educational-caption">
               Scaduto
             </Badge>
           )}
           {goal.is_completed && (
-            <Badge variant="default" className="text-xs bg-green-600">
+            <Badge className="text-educational-caption bg-success hover:bg-success/90">
               Completato
             </Badge>
           )}
@@ -202,8 +232,8 @@ const CreateGoalForm: React.FC<CreateGoalFormProps> = ({ onSuccess }) => {
   const selectedGoalType = GOAL_TYPES.find(type => type.value === goalType);
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
+    <form onSubmit={handleSubmit} className="space-y-educational-md">
+      <div className="space-y-educational-xs">
         <Label htmlFor="goalType">Tipo di Obiettivo</Label>
         <Select value={goalType} onValueChange={setGoalType}>
           <SelectTrigger>
@@ -222,11 +252,11 @@ const CreateGoalForm: React.FC<CreateGoalFormProps> = ({ onSuccess }) => {
         </Select>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-educational-xs">
         <Label htmlFor="targetValue">
           Valore Target
           {selectedGoalType && (
-            <span className="text-sm text-gray-500 ml-1">
+            <span className="text-educational-small text-muted-foreground ml-1">
               ({selectedGoalType.label.toLowerCase()})
             </span>
           )}
@@ -241,7 +271,7 @@ const CreateGoalForm: React.FC<CreateGoalFormProps> = ({ onSuccess }) => {
         />
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-educational-xs">
         <Label htmlFor="period">Periodo</Label>
         <Select value={period} onValueChange={setPeriod}>
           <SelectTrigger>
@@ -257,8 +287,12 @@ const CreateGoalForm: React.FC<CreateGoalFormProps> = ({ onSuccess }) => {
         </Select>
       </div>
 
-      <div className="flex gap-2 pt-4">
-        <Button type="submit" disabled={!goalType || !targetValue || !period || createGoal.isPending}>
+      <div className="flex gap-educational-sm pt-educational-md">
+        <Button 
+          type="submit" 
+          disabled={!goalType || !targetValue || !period || createGoal.isPending}
+          className="flex-1"
+        >
           {createGoal.isPending ? 'Creazione...' : 'Crea Obiettivo'}
         </Button>
         <Button type="button" variant="outline" onClick={onSuccess}>

@@ -25,33 +25,35 @@ export const Header = () => {
   console.log('Header - User email:', user?.email);
 
   return (
-    <header className="bg-white border-b border-slate-200 px-6 py-4">
+    <header className="bg-background border-b border-border px-educational-lg py-educational-md">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <h2 className="text-2xl font-bold text-slate-800">Academy Corporate</h2>
+        <div className="flex items-center space-x-educational-md">
+          <h2 className="text-educational-h2 font-bold text-accent-foreground">
+            Academy Corporate
+          </h2>
           {profile?.role === 'admin' && (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-educational-sm">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => navigate('/admin')}
-                className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+                className="bg-destructive/5 border-destructive/20 text-destructive hover:bg-destructive/10 hover-educational"
               >
                 <Shield className="h-4 w-4 mr-2" />
                 Admin Panel
               </Button>
-              <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
+              <span className="text-educational-caption bg-destructive/10 text-destructive px-educational-sm py-1 rounded-pill">
                 Amministratore
               </span>
             </div>
           )}
           {user?.email === 'admin@academy.com' && !profile && (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-educational-sm">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => navigate('/admin')}
-                className="bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100"
+                className="bg-secondary/10 border-secondary/20 text-secondary-foreground hover:bg-secondary/20 hover-educational"
               >
                 <Shield className="h-4 w-4 mr-2" />
                 Admin Panel (Caricamento...)
@@ -60,47 +62,49 @@ export const Header = () => {
           )}
         </div>
         
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-educational-md">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
+            <Search className="absolute left-educational-sm top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
             <input
               type="text"
               placeholder="Cerca contenuti..."
-              className="pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-80"
+              className="pl-10 pr-educational-md py-educational-sm border border-input rounded-educational-lg focus:ring-2 focus:ring-focus focus:border-transparent w-80 bg-background text-educational-body transition-all duration-200"
             />
           </div>
           
-          <button className="relative p-2 text-slate-600 hover:text-slate-800 transition-colors">
+          <button className="relative p-educational-sm text-muted-foreground hover:text-accent-foreground transition-colors hover-educational rounded-educational">
             <Bell size={20} />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+            <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-educational-caption rounded-full w-5 h-5 flex items-center justify-center">
+              3
+            </span>
           </button>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-green-500 rounded-full flex items-center justify-center">
-                  <User size={16} className="text-white" />
+              <Button variant="ghost" className="flex items-center space-x-educational-sm hover-educational">
+                <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
+                  <User size={16} className="text-primary-foreground" />
                 </div>
-                <span className="font-medium text-slate-700">
+                <span className="font-medium text-accent-foreground text-educational-body">
                   {profile?.full_name || user?.email}
                 </span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>Il mio account</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-educational-body">Il mio account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem className="text-educational-body">
                 <SettingsIcon className="mr-2 h-4 w-4" />
                 Impostazioni
               </DropdownMenuItem>
               {(profile?.role === 'admin' || user?.email === 'admin@academy.com') && (
-                <DropdownMenuItem onClick={() => navigate('/admin')}>
+                <DropdownMenuItem onClick={() => navigate('/admin')} className="text-educational-body">
                   <Shield className="mr-2 h-4 w-4" />
                   Admin Dashboard
                 </DropdownMenuItem>
               )}
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSignOut}>
+              <DropdownMenuItem onClick={handleSignOut} className="text-educational-body">
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>
