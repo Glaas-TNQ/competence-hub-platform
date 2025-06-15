@@ -333,6 +333,86 @@ export type Database = {
         }
         Relationships: []
       }
+      learning_path_progress: {
+        Row: {
+          completed_at: string | null
+          completed_course_ids: string[]
+          created_at: string
+          id: string
+          learning_path_id: string
+          progress_percentage: number
+          started_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_course_ids?: string[]
+          created_at?: string
+          id?: string
+          learning_path_id: string
+          progress_percentage?: number
+          started_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          completed_course_ids?: string[]
+          created_at?: string
+          id?: string
+          learning_path_id?: string
+          progress_percentage?: number
+          started_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_path_progress_learning_path_id_fkey"
+            columns: ["learning_path_id"]
+            isOneToOne: false
+            referencedRelation: "learning_paths"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learning_paths: {
+        Row: {
+          course_ids: string[]
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          is_published: boolean
+          order_index: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          course_ids?: string[]
+          created_at?: string
+          created_by: string
+          description?: string | null
+          id?: string
+          is_published?: boolean
+          order_index?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          course_ids?: string[]
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean
+          order_index?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pasti_consumati: {
         Row: {
           created_at: string

@@ -1,78 +1,181 @@
-
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider } from './contexts/AuthContext';
-import { Toaster } from './components/ui/toaster';
-import { Sidebar } from './components/Sidebar';
-import { Header } from './components/Header';
 import { ProtectedRoute } from './components/ProtectedRoute';
-
-// Import pages
-import Index from './pages/Index';
-import { Auth } from './pages/Auth';
 import { Dashboard } from './pages/Dashboard';
-import { CompetenceAreas } from './pages/CompetenceAreas';
+import { Courses } from './pages/Courses';
 import { CourseView } from './pages/CourseView';
-import { ChapterView } from './pages/ChapterView';
+import { CompetenceAreas } from './pages/CompetenceAreas';
 import { MyLearning } from './pages/MyLearning';
-import { Certificates } from './pages/Certificates';
-import { Badges } from './pages/Badges';
-import { AdminDashboard } from './pages/AdminDashboard';
-import { Notes } from './pages/Notes';
-import { Goals } from './pages/Goals';
-import { Analytics } from './pages/Analytics';
-import { Collaboration } from './pages/Collaboration';
 import { Settings } from './pages/Settings';
-import NotFound from './pages/NotFound';
+import { Header } from './components/Header';
+import { Sidebar } from './components/Sidebar';
+import { Goals } from './pages/Goals';
+import { AdminDashboard } from './pages/AdminDashboard';
+import { LearningPaths } from '@/pages/LearningPaths';
+import { LearningPathView } from '@/pages/LearningPathView';
+import { LearningPathManager } from '@/components/admin/LearningPathManager';
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Router>
-          <div className="min-h-screen bg-gray-50">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route
-                path="/*"
-                element={
+      <ThemeProvider defaultTheme="system" storageKey="ui-theme">
+        <AuthProvider>
+          <Router>
+            <div className="min-h-screen bg-background">
+              <Routes>
+                <Route path="/" element={<>
                   <ProtectedRoute>
-                    <div className="flex h-screen bg-gray-50">
-                      <Sidebar />
-                      <div className="flex-1 flex flex-col overflow-hidden">
-                        <Header />
-                        <main className="flex-1 overflow-x-hidden overflow-y-auto">
-                          <Routes>
-                            <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/areas" element={<CompetenceAreas />} />
-                            <Route path="/course/:courseId" element={<CourseView />} />
-                            <Route path="/course/:courseId/chapter/:chapterIndex" element={<ChapterView />} />
-                            <Route path="/my-learning" element={<MyLearning />} />
-                            <Route path="/certificates" element={<Certificates />} />
-                            <Route path="/badges" element={<Badges />} />
-                            <Route path="/notes" element={<Notes />} />
-                            <Route path="/goals" element={<Goals />} />
-                            <Route path="/analytics" element={<Analytics />} />
-                            <Route path="/collaboration" element={<Collaboration />} />
-                            <Route path="/settings" element={<Settings />} />
-                            <Route path="/admin" element={<AdminDashboard />} />
-                            <Route path="*" element={<NotFound />} />
-                          </Routes>
+                    <>
+                      <Header />
+                      <div className="flex">
+                        <Sidebar />
+                        <main className="flex-1">
+                          <Dashboard />
                         </main>
                       </div>
-                    </div>
+                    </>
                   </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </div>
-          <Toaster />
-        </Router>
-      </AuthProvider>
+                </>} />
+                <Route path="/dashboard" element={<>
+                  <ProtectedRoute>
+                    <>
+                      <Header />
+                      <div className="flex">
+                        <Sidebar />
+                        <main className="flex-1">
+                          <Dashboard />
+                        </main>
+                      </div>
+                    </>
+                  </ProtectedRoute>
+                </>} />
+                <Route path="/courses" element={<>
+                  <ProtectedRoute>
+                    <>
+                      <Header />
+                      <div className="flex">
+                        <Sidebar />
+                        <main className="flex-1">
+                          <Courses />
+                        </main>
+                      </div>
+                    </>
+                  </ProtectedRoute>
+                </>} />
+                <Route path="/course/:courseId" element={<>
+                  <ProtectedRoute>
+                    <>
+                      <Header />
+                      <div className="flex">
+                        <Sidebar />
+                        <main className="flex-1">
+                          <CourseView />
+                        </main>
+                      </div>
+                    </>
+                  </ProtectedRoute>
+                </>} />
+                <Route path="/competence-areas" element={<>
+                  <ProtectedRoute>
+                    <>
+                      <Header />
+                      <div className="flex">
+                        <Sidebar />
+                        <main className="flex-1">
+                          <CompetenceAreas />
+                        </main>
+                      </div>
+                    </>
+                  </ProtectedRoute>
+                </>} />
+                <Route path="/my-learning" element={<>
+                  <ProtectedRoute>
+                    <>
+                      <Header />
+                      <div className="flex">
+                        <Sidebar />
+                        <main className="flex-1">
+                          <MyLearning />
+                        </main>
+                      </div>
+                    </>
+                  </ProtectedRoute>
+                </>} />
+                <Route path="/goals" element={<>
+                  <ProtectedRoute>
+                    <>
+                      <Header />
+                      <div className="flex">
+                        <Sidebar />
+                        <main className="flex-1">
+                          <Goals />
+                        </main>
+                      </div>
+                    </>
+                  </ProtectedRoute>
+                </>} />
+                <Route path="/settings" element={<>
+                  <ProtectedRoute>
+                    <>
+                      <Header />
+                      <div className="flex">
+                        <Sidebar />
+                        <main className="flex-1">
+                          <Settings />
+                        </main>
+                      </div>
+                    </>
+                  </ProtectedRoute>
+                </>} />
+                <Route path="/learning-paths" element={
+                  <ProtectedRoute>
+                    <>
+                      <Header />
+                      <div className="flex">
+                        <Sidebar />
+                        <main className="flex-1">
+                          <LearningPaths />
+                        </main>
+                      </div>
+                    </>
+                  </ProtectedRoute>
+                } />
+                <Route path="/learning-path/:id" element={
+                  <ProtectedRoute>
+                    <>
+                      <Header />
+                      <div className="flex">
+                        <Sidebar />
+                        <main className="flex-1">
+                          <LearningPathView />
+                        </main>
+                      </div>
+                    </>
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin" element={
+                  <ProtectedRoute>
+                    <>
+                      <Header />
+                      <div className="flex">
+                        <Sidebar />
+                        <main className="flex-1 p-8">
+                          <AdminDashboard />
+                        </main>
+                      </div>
+                    </>
+                  </ProtectedRoute>
+                } />
+              </Routes>
+            </div>
+          </Router>
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
