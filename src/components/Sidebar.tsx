@@ -12,8 +12,7 @@ import {
   Shield,
   Menu,
   X,
-  Trophy,
-  StickyNote
+  Trophy
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -25,7 +24,6 @@ const menuItems = [
   { id: 'my-learning', label: 'I Miei Corsi', icon: BookOpen, path: '/my-learning' },
   { id: 'badges', label: 'Badge', icon: Trophy, path: '/badges' },
   { id: 'certificates', label: 'Certificati', icon: Award, path: '/certificates' },
-  { id: 'notes', label: 'Note', icon: StickyNote, path: '/notes' },
   { id: 'goals', label: 'Obiettivi', icon: Target, path: '/goals' },
   { id: 'settings', label: 'Impostazioni', icon: Settings, path: '/settings' }
 ];
