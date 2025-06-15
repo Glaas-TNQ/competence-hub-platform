@@ -22,7 +22,6 @@ export const useCourses = () => {
     queryKey: ['courses'],
     queryFn: async () => {
       try {
-        // First try to get courses with competence areas
         const { data, error } = await supabase
           .from('courses')
           .select(`
@@ -32,25 +31,17 @@ export const useCourses = () => {
           .order('created_at', { ascending: false });
         
         if (error) {
-          console.error('Error fetching courses with areas:', error);
-          // Fallback: get courses without competence areas
-          const { data: coursesOnly, error: coursesError } = await supabase
-            .from('courses')
-            .select('*')
-            .order('created_at', { ascending: false });
-          
-          if (coursesError) throw coursesError;
-          return coursesOnly;
+          console.error('Error fetching courses:', error);
+          return [];
         }
         
-        return data;
+        return data || [];
       } catch (error) {
         console.error('Error in useCourses:', error);
-        // Return empty array as fallback
         return [];
       }
     },
-    retry: false,
+    retry: 1,
   });
 };
 
@@ -60,10 +51,6 @@ export const useUsers = () => {
     queryFn: async () => {
       try {
         console.log('useUsers: Starting query...');
-        
-        // Get current user info for debugging
-        const { data: { user } } = await supabase.auth.getUser();
-        console.log('useUsers: Current user:', user?.email);
         
         const { data, error } = await supabase
           .from('profiles')
@@ -98,7 +85,6 @@ export const useUserProgress = () => {
       if (!user) return [];
       
       try {
-        // Try to get progress with courses
         const { data, error } = await supabase
           .from('user_progress')
           .select(`
@@ -108,28 +94,18 @@ export const useUserProgress = () => {
           .eq('user_id', user.id);
         
         if (error) {
-          console.error('Error fetching progress with courses:', error);
-          // Fallback: get progress without courses
-          const { data: progressOnly, error: progressError } = await supabase
-            .from('user_progress')
-            .select('*')
-            .eq('user_id', user.id);
-          
-          if (progressError) {
-            console.error('Error fetching progress:', progressError);
-            return [];
-          }
-          return progressOnly;
+          console.error('Error fetching progress:', error);
+          return [];
         }
         
-        return data;
+        return data || [];
       } catch (error) {
         console.error('Error in useUserProgress:', error);
         return [];
       }
     },
     enabled: !!user,
-    retry: false,
+    retry: 1,
   });
 };
 

@@ -19,7 +19,6 @@ export const UserManager = () => {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [isAccessModalOpen, setIsAccessModalOpen] = useState(false);
 
-  // Debug logging
   console.log('UserManager Debug:', {
     currentUser: currentUser?.email,
     isAdmin,
@@ -89,15 +88,11 @@ export const UserManager = () => {
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            Errore nel caricamento degli utenti. Questo potrebbe essere dovuto a problemi con le politiche RLS del database.
+            Errore nel caricamento degli utenti: {error?.message || 'Errore sconosciuto'}
             <br />
-            <strong>Debug Info:</strong>
-            <br />
-            Utente corrente: {currentUser?.email}
-            <br />
-            Admin: {isAdmin ? 'Sì' : 'No'}
-            <br />
-            Errore: {error?.message || 'Errore sconosciuto'}
+            <Button onClick={handleRefresh} className="mt-2" size="sm">
+              Riprova
+            </Button>
           </AlertDescription>
         </Alert>
       </div>
@@ -121,20 +116,11 @@ export const UserManager = () => {
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            Nessun utente trovato. Questo potrebbe essere dovuto a:
+            Nessun utente trovato nel database. Questo potrebbe indicare che:
             <ul className="list-disc list-inside mt-2">
-              <li>Problemi con le politiche RLS del database</li>
-              <li>Nessun utente registrato nel sistema</li>
-              <li>Permessi insufficienti per visualizzare gli utenti</li>
+              <li>Non ci sono utenti registrati nel sistema</li>
+              <li>Il trigger per creare i profili utente non funziona correttamente</li>
             </ul>
-            <br />
-            <strong>Debug Info:</strong>
-            <br />
-            Utente corrente: {currentUser?.email}
-            <br />
-            Admin: {isAdmin ? 'Sì' : 'No'}
-            <br />
-            Dati utenti: {JSON.stringify(users)}
           </AlertDescription>
         </Alert>
       </div>
