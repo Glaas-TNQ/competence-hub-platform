@@ -89,9 +89,48 @@
     "noAreasAvailable": "No competence areas available",
     "noAreasDesc": "Please check back later or contact support"
   },
+  "myLearning": {
+    "title": "My Learning",
+    "subtitle": "Manage your courses and track your progress",
+    "stats": {
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "total": "Total",
+      "averageProgress": "Average Progress"
+    },
+    "overallProgress": "Overall Progress",
+    "completed": "completed",
+    "coursesCompleted": "courses completed",
+    "inProgressCourses": "Courses in Progress",
+    "completedCourses": "Completed Courses",
+    "noCourses": "No courses started",
+    "noCoursesDesc": "Start your learning journey by exploring available courses",
+    "exploreCourses": "Explore Courses"
+  },
   "goals": {
     "myGoals": "My Goals",
-    "newGoal": "New Goal"
+    "newGoal": "New Goal",
+    "createAndTrack": "Create and track your learning goals",
+    "activeGoals": "Active Goals",
+    "completedGoals": "Completed Goals",
+    "noActiveGoals": "No active goals",
+    "noActiveGoalsDesc": "Create your first goal to start tracking progress",
+    "createFirstGoal": "Create First Goal",
+    "createNewGoal": "Create New Goal",
+    "goalType": "Goal Type",
+    "selectGoalType": "Select goal type",
+    "targetValue": "Target Value",
+    "targetValuePlaceholder": "Enter target value",
+    "creating": "Creating...",
+    "createGoal": "Create Goal",
+    "progress": "Progress",
+    "completed": "completed",
+    "ends": "Ends",
+    "types": {
+      "courses_completed": "Courses Completed",
+      "study_days": "Study Days",
+      "points_earned": "Points Earned"
+    }
   },
   "courses": {
     "duration": "Duration",
@@ -122,6 +161,69 @@
     "whatYouWillLearn": "What You Will Learn",
     "requirements": "Requirements",
     "targetAudience": "Target Audience"
+  },
+  "badges": {
+    "exploreBadges": "Explore Badges",
+    "subtitle2": "Earn badges by completing courses and achieving goals",
+    "category": "Category",
+    "status": "Status",
+    "all": "All",
+    "badgesEarned": "Badges Earned",
+    "totalBadges": "Total Badges",
+    "completionRate": "Completion Rate",
+    "criteria": {
+      "levelMilestone": "Reach level milestone",
+      "totalChapters": "Complete total chapters"
+    },
+    "points": "points",
+    "rarity": {
+      "epic": "epic",
+      "rare": "rare"
+    },
+    "completion": "completion",
+    "special": "special",
+    "firstSteps": "First Steps",
+    "quickLearner": "Quick Learner",
+    "dedicated": "Dedicated",
+    "explorer": "Explorer",
+    "achiever": "Achiever",
+    "expert": "Expert",
+    "mentor": "Mentor",
+    "innovator": "Innovator",
+    "leader": "Leader",
+    "master": "Master"
+  },
+  "certificates": {
+    "searchCertificates": "Search certificates",
+    "all": "All",
+    "earned": "Earned",
+    "available": "Available",
+    "noCertificatesFound": "No certificates found",
+    "noCertificatesSearchDesc": "Try changing search filters",
+    "noCertificatesDesc": "You don't have any certificates available yet",
+    "pointsRequired": "points required",
+    "issuedOn": "Issued on",
+    "requirements": "Requirements",
+    "verificationCode": "Verification Code",
+    "view": "View",
+    "types": {
+      "completion": "Completion",
+      "achievement": "Achievement",
+      "mastery": "Mastery"
+    },
+    "viewCertificate": "View Certificate",
+    "certificateOfRecognition": "Certificate of Recognition",
+    "certifiedThat": "This is to certify that",
+    "hasSuccessfullyCompleted": "has successfully completed",
+    "officialCertificate": "Official Certificate",
+    "issueDate": "Issue Date",
+    "downloadPdf": "Download PDF",
+    "share": "Share",
+    "certificateDetails": "Certificate Details",
+    "type": "Type",
+    "certificateId": "Certificate ID",
+    "status": "Status",
+    "valid": "Valid"
   },
   "common": {
     "loading": "Loading...",
@@ -161,7 +263,8 @@
     "hide": "Hide",
     "more": "More",
     "less": "Less",
-    "refreshPage": "Refresh Page"
+    "refreshPage": "Refresh Page",
+    "of": "of"
   },
   "settings": {
     "title": "Settings",
@@ -178,17 +281,5 @@
     "saving": "Saving...",
     "settingsUpdated": "Your settings have been updated successfully.",
     "errorSaving": "An error occurred while saving."
-  },
-  "badges": {
-    "firstSteps": "First Steps",
-    "quickLearner": "Quick Learner",
-    "dedicated": "Dedicated",
-    "explorer": "Explorer",
-    "achiever": "Achiever",
-    "expert": "Expert",
-    "mentor": "Mentor",
-    "innovator": "Innovator",
-    "leader": "Leader",
-    "master": "Master"
   }
 }

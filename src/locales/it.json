@@ -89,9 +89,48 @@
     "noAreasAvailable": "Nessuna area di competenza disponibile",
     "noAreasDesc": "Riprova più tardi o contatta il supporto"
   },
+  "myLearning": {
+    "title": "Il Mio Apprendimento",
+    "subtitle": "Gestisci i tuoi corsi e monitora i progressi",
+    "stats": {
+      "inProgress": "In Corso",
+      "completed": "Completati",
+      "total": "Totali",
+      "averageProgress": "Progresso Medio"
+    },
+    "overallProgress": "Progresso Complessivo",
+    "completed": "completato",
+    "coursesCompleted": "corsi completati",
+    "inProgressCourses": "Corsi in Corso",
+    "completedCourses": "Corsi Completati",
+    "noCourses": "Nessun corso iniziato",
+    "noCoursesDesc": "Inizia il tuo percorso di apprendimento esplorando i corsi disponibili",
+    "exploreCourses": "Esplora Corsi"
+  },
   "goals": {
     "myGoals": "I Miei Obiettivi",
-    "newGoal": "Nuovo Obiettivo"
+    "newGoal": "Nuovo Obiettivo",
+    "createAndTrack": "Crea e monitora i tuoi obiettivi di apprendimento",
+    "activeGoals": "Obiettivi Attivi",
+    "completedGoals": "Obiettivi Completati",
+    "noActiveGoals": "Nessun obiettivo attivo",
+    "noActiveGoalsDesc": "Crea il tuo primo obiettivo per iniziare a monitorare i progressi",
+    "createFirstGoal": "Crea il Primo Obiettivo",
+    "createNewGoal": "Crea Nuovo Obiettivo",
+    "goalType": "Tipo di Obiettivo",
+    "selectGoalType": "Seleziona tipo di obiettivo",
+    "targetValue": "Valore Target",
+    "targetValuePlaceholder": "Inserisci il valore target",
+    "creating": "Creazione...",
+    "createGoal": "Crea Obiettivo",
+    "progress": "Progresso",
+    "completed": "completato",
+    "ends": "Scadenza",
+    "types": {
+      "courses_completed": "Corsi Completati",
+      "study_days": "Giorni di Studio",
+      "points_earned": "Punti Guadagnati"
+    }
   },
   "courses": {
     "duration": "Durata",
@@ -122,6 +161,69 @@
     "whatYouWillLearn": "Cosa Imparerai",
     "requirements": "Requisiti",
     "targetAudience": "Pubblico Target"
+  },
+  "badges": {
+    "exploreBadges": "Esplora Badge",
+    "subtitle2": "Guadagna badge completando corsi e raggiungendo obiettivi",
+    "category": "Categoria",
+    "status": "Stato",
+    "all": "Tutti",
+    "badgesEarned": "Badge Guadagnati",
+    "totalBadges": "Badge Totali",
+    "completionRate": "Tasso di Completamento",
+    "criteria": {
+      "levelMilestone": "Raggiungi il livello milestone",
+      "totalChapters": "Completa capitoli totali"
+    },
+    "points": "punti",
+    "rarity": {
+      "epic": "epico",
+      "rare": "raro"
+    },
+    "completion": "completamento",
+    "special": "speciale",
+    "firstSteps": "Primi Passi",
+    "quickLearner": "Apprendimento Rapido",
+    "dedicated": "Dedicato",
+    "explorer": "Esploratore",
+    "achiever": "Realizzatore",
+    "expert": "Esperto",
+    "mentor": "Mentore",
+    "innovator": "Innovatore",
+    "leader": "Leader",
+    "master": "Maestro"
+  },
+  "certificates": {
+    "searchCertificates": "Cerca certificati",
+    "all": "Tutti",
+    "earned": "Guadagnati",
+    "available": "Disponibili",
+    "noCertificatesFound": "Nessun certificato trovato",
+    "noCertificatesSearchDesc": "Prova a cambiare i filtri di ricerca",
+    "noCertificatesDesc": "Non hai ancora certificati disponibili",
+    "pointsRequired": "punti richiesti",
+    "issuedOn": "Rilasciato il",
+    "requirements": "Requisiti",
+    "verificationCode": "Codice di Verifica",
+    "view": "Visualizza",
+    "types": {
+      "completion": "Completamento",
+      "achievement": "Risultato",
+      "mastery": "Maestria"
+    },
+    "viewCertificate": "Visualizza Certificato",
+    "certificateOfRecognition": "Certificato di Riconoscimento",
+    "certifiedThat": "Si certifica che",
+    "hasSuccessfullyCompleted": "ha completato con successo",
+    "officialCertificate": "Certificato Ufficiale",
+    "issueDate": "Data di Rilascio",
+    "downloadPdf": "Scarica PDF",
+    "share": "Condividi",
+    "certificateDetails": "Dettagli Certificato",
+    "type": "Tipo",
+    "certificateId": "ID Certificato",
+    "status": "Stato",
+    "valid": "Valido"
   },
   "common": {
     "loading": "Caricamento...",
@@ -161,7 +263,8 @@
     "hide": "Nascondi",
     "more": "Altro",
     "less": "Meno",
-    "refreshPage": "Ricarica Pagina"
+    "refreshPage": "Ricarica Pagina",
+    "of": "di"
   },
   "settings": {
     "title": "Impostazioni",
@@ -178,17 +281,5 @@
     "saving": "Salvataggio...",
     "settingsUpdated": "Le tue impostazioni sono state aggiornate con successo.",
     "errorSaving": "Si è verificato un errore durante il salvataggio."
-  },
-  "badges": {
-    "firstSteps": "Primi Passi",
-    "quickLearner": "Apprendimento Rapido",
-    "dedicated": "Dedicato",
-    "explorer": "Esploratore",
-    "achiever": "Realizzatore",
-    "expert": "Esperto",
-    "mentor": "Mentore",
-    "innovator": "Innovatore",
-    "leader": "Leader",
-    "master": "Maestro"
   }
 }
