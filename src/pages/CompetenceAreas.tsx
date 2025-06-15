@@ -1,5 +1,5 @@
+
 import React, { useState } from 'react';
-import { CourseCard } from "@/components/CourseCard";
 import { useCourses, useCompetenceAreas, useUserProgress } from "@/hooks/useSupabase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -29,7 +29,6 @@ export const CompetenceAreas = () => {
   
   const [selectedArea, setSelectedArea] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
-  
   const [completionFilter, setCompletionFilter] = useState<string>('all');
 
   const handleResetFilters = () => {
@@ -60,11 +59,11 @@ export const CompetenceAreas = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-8">
+      <div className="min-h-screen bg-gradient-to-br from-fairmind-light via-white to-fairmind-light/30 p-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-64 bg-card/50 rounded-3xl animate-pulse"></div>
+              <div key={i} className="h-64 bg-white/70 rounded-xl animate-pulse shadow-fairmind"></div>
             ))}
           </div>
         </div>
@@ -74,12 +73,12 @@ export const CompetenceAreas = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-8">
+      <div className="min-h-screen bg-gradient-to-br from-fairmind-light via-white to-fairmind-light/30 p-8">
         <div className="max-w-4xl mx-auto text-center py-20">
-          <h2 className="text-3xl font-bold text-destructive mb-6">
+          <h2 className="text-3xl font-bold text-fairmind-primary mb-6">
             Errore nel caricamento
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-fairmind-secondary">
             Si è verificato un errore durante il caricamento dei dati.
           </p>
         </div>
@@ -88,19 +87,19 @@ export const CompetenceAreas = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="min-h-screen bg-gradient-to-br from-fairmind-light via-white to-fairmind-light/30">
       <div className="max-w-7xl mx-auto p-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-primary/10 rounded-2xl">
-              <Filter className="h-8 w-8 text-primary" />
+            <div className="p-3 bg-fairmind-primary/10 rounded-xl">
+              <Filter className="h-8 w-8 text-fairmind-primary" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-foreground">
+              <h1 className="text-4xl font-bold text-fairmind-primary">
                 Aree di Competenza
               </h1>
-              <p className="text-lg text-muted-foreground">
+              <p className="text-lg text-fairmind-secondary">
                 Esplora i corsi disponibili per ogni area
               </p>
             </div>
@@ -108,33 +107,33 @@ export const CompetenceAreas = () => {
         </div>
 
         {/* Filters */}
-        <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm mb-8">
+        <Card className="border-0 shadow-fairmind bg-white/70 backdrop-blur-sm mb-8">
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {/* Search */}
               <div className="space-y-2">
-                <Label htmlFor="search" className="text-sm font-medium">
+                <Label htmlFor="search" className="text-sm font-medium text-fairmind-primary">
                   Cerca corsi
                 </Label>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-fairmind-secondary" />
                   <Input
                     id="search"
                     placeholder="Titolo o descrizione..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 rounded-full"
+                    className="pl-10 rounded-lg border-fairmind-light focus:border-fairmind-primary"
                   />
                 </div>
               </div>
 
               {/* Area Filter */}
               <div className="space-y-2">
-                <Label htmlFor="area-filter" className="text-sm font-medium">
+                <Label htmlFor="area-filter" className="text-sm font-medium text-fairmind-primary">
                   Area di competenza
                 </Label>
                 <Select value={selectedArea} onValueChange={setSelectedArea}>
-                  <SelectTrigger id="area-filter">
+                  <SelectTrigger id="area-filter" className="rounded-lg border-fairmind-light">
                     <SelectValue placeholder="Seleziona area" />
                   </SelectTrigger>
                   <SelectContent>
@@ -150,11 +149,11 @@ export const CompetenceAreas = () => {
 
               {/* Completion Filter */}
               <div className="space-y-2">
-                <Label htmlFor="completion-filter" className="text-sm font-medium">
+                <Label htmlFor="completion-filter" className="text-sm font-medium text-fairmind-primary">
                   Completamento
                 </Label>
                 <Select value={completionFilter} onValueChange={setCompletionFilter}>
-                  <SelectTrigger id="completion-filter">
+                  <SelectTrigger id="completion-filter" className="rounded-lg border-fairmind-light">
                     <SelectValue placeholder="Seleziona stato" />
                   </SelectTrigger>
                   <SelectContent>
@@ -170,7 +169,7 @@ export const CompetenceAreas = () => {
                 <Button 
                   variant="outline" 
                   onClick={handleResetFilters}
-                  className="rounded-full w-full"
+                  className="rounded-lg w-full border-fairmind-light hover:bg-fairmind-light"
                   disabled={!selectedArea && !searchTerm}
                 >
                   <X className="h-4 w-4 mr-2" />
@@ -182,21 +181,20 @@ export const CompetenceAreas = () => {
         </Card>
 
         {/* Learning Paths Section */}
-        <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm mb-8">
+        <Card className="border-0 shadow-fairmind bg-white/70 backdrop-blur-sm mb-8">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <GraduationCap className="h-6 w-6 text-primary" />
+            <CardTitle className="flex items-center gap-3 text-fairmind-primary">
+              <GraduationCap className="h-6 w-6" />
               Percorsi di Apprendimento
             </CardTitle>
-            <p className="text-muted-foreground">
+            <p className="text-fairmind-secondary">
               Segui percorsi strutturati per un apprendimento guidato
             </p>
           </CardHeader>
           <CardContent>
             <Button 
               onClick={() => navigate('/learning-paths')}
-              variant="outline"
-              className="w-full rounded-full border-dashed"
+              className="w-full rounded-lg bg-fairmind-accent hover:bg-fairmind-accent/90 text-white font-semibold"
             >
               <BookOpen className="h-4 w-4 mr-2" />
               Esplora Percorsi di Apprendimento
@@ -207,25 +205,25 @@ export const CompetenceAreas = () => {
         {/* Results */}
         <div className="space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-semibold">
+            <h2 className="text-2xl font-semibold text-fairmind-primary">
               {filteredCourses.length} {filteredCourses.length === 1 ? 'corso trovato' : 'corsi trovati'}
             </h2>
           </div>
 
           {filteredCourses.length === 0 ? (
-            <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
+            <Card className="border-0 shadow-fairmind bg-white/70 backdrop-blur-sm">
               <CardContent className="p-12 text-center">
-                <BookOpen className="h-16 w-16 mx-auto mb-4 text-muted-foreground/40" />
-                <h3 className="text-xl font-medium mb-2">
+                <BookOpen className="h-16 w-16 mx-auto mb-4 text-fairmind-secondary/40" />
+                <h3 className="text-xl font-medium mb-2 text-fairmind-primary">
                   Nessun corso trovato
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-fairmind-secondary">
                   Prova a modificare i filtri di ricerca
                 </p>
                 <Button 
                   variant="outline" 
                   onClick={handleResetFilters}
-                  className="mt-4 rounded-full"
+                  className="mt-4 rounded-lg border-fairmind-light hover:bg-fairmind-light"
                 >
                   Reset Filtri
                 </Button>
@@ -234,7 +232,32 @@ export const CompetenceAreas = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredCourses.map((course) => (
-                <CourseCard key={course.id} course={course} />
+                <Card key={course.id} className="group hover:shadow-fairmind-lg transition-all duration-300 border-0 shadow-fairmind bg-white/70 backdrop-blur-sm hover:scale-[1.02]">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg font-semibold line-clamp-2 group-hover:text-fairmind-primary transition-colors">
+                      {course.title}
+                    </CardTitle>
+                    <p className="text-sm text-fairmind-secondary line-clamp-3">
+                      {course.description}
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-xs bg-fairmind-light text-fairmind-primary px-2 py-1 rounded-full">
+                        {course.course_type}
+                      </span>
+                      <span className="text-xs text-fairmind-secondary">
+                        {course.duration}
+                      </span>
+                    </div>
+                    <Button 
+                      onClick={() => navigate(`/course/${course.id}`)}
+                      className="w-full rounded-lg bg-fairmind-accent hover:bg-fairmind-accent/90 text-white font-medium"
+                    >
+                      Inizia Corso
+                    </Button>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           )}

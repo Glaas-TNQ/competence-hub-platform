@@ -3,61 +3,62 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Educational Design System - Apple-Inspired Foundation */
+/* FairMind Design System - AI-Inspired Color Palette */
 
 @layer base {
   :root {
-    /* Educational Color Palette */
+    /* FairMind Color Palette */
     --background: 0 0% 100%;
-    --foreground: 224 71% 4%;
+    --foreground: 223 50% 15%; /* Deep blue-gray for text */
 
     --card: 0 0% 100%;
-    --card-foreground: 224 71% 4%;
+    --card-foreground: 223 50% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71% 4%;
+    --popover-foreground: 223 50% 15%;
 
-    /* Primary Educational Colors */
-    --primary: 253 67% 69%; /* #8c6bf4 - Viola-blu per interazioni */
+    /* Primary FairMind Colors */
+    --primary: 223 50% 30%; /* #1E2A78 - Deep professional blue */
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 43 89% 58%; /* #f2c13a - Giallo zafferano per CTA */
-    --secondary-foreground: 224 71% 4%;
+    --secondary: 215 20% 65%; /* #9CA3AF - Medium gray for secondary elements */
+    --secondary-foreground: 223 50% 15%;
+
+    /* FairMind Accent Colors */
+    --accent: 15 85% 60%; /* #FF6F3C - Bright orange for CTAs */
+    --accent-foreground: 0 0% 98%;
 
     /* Support Colors */
-    --muted: 253 23% 75%; /* #b1afc8 - Neutro chiaro */
-    --muted-foreground: 253 23% 30%; /* #443c4c - Neutro scuro */
+    --muted: 220 14% 96%; /* #F8F9FA - Very light gray backgrounds */
+    --muted-foreground: 215 25% 27%; /* #6C757D - Medium gray text */
 
-    --accent: 253 23% 95%;
-    --accent-foreground: 253 51% 29%; /* #4c3c95 - Blu scuro */
-
-    /* Educational Specific Colors */
-    --success: 158 64% 52%; /* #10b981 - Verde educativo */
-    --success-foreground: 0 0% 98%;
-
-    --focus: 217 91% 60%; /* #3b82f6 - Blu concentrazione */
-    --focus-foreground: 0 0% 98%;
+    /* FairMind Specific Colors */
+    --fairmind-primary: 223 50% 30%; /* #1E2A78 - Main brand blue */
+    --fairmind-secondary: 215 25% 27%; /* #6C757D - Secondary text */
+    --fairmind-accent: 15 85% 60%; /* #FF6F3C - Orange accent */
+    --fairmind-yellow: 42 96% 65%; /* #FFC94D - Yellow highlight */
+    --fairmind-light: 220 14% 96%; /* #F8F9FA - Light background */
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 253 23% 91%;
-    --input: 253 23% 91%;
-    --ring: 253 67% 69%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 223 50% 30%;
 
-    --radius: 1rem; /* 16px - educational friendly radius */
+    --radius: 0.75rem; /* 12px - modern, clean radius */
 
     /* Educational Sidebar */
-    --sidebar-background: 253 8% 97%;
-    --sidebar-foreground: 253 23% 30%;
-    --sidebar-primary: 253 67% 69%;
+    --sidebar-background: 220 14% 98%;
+    --sidebar-foreground: 223 50% 15%;
+    --sidebar-primary: 223 50% 30%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 253 23% 95%;
-    --sidebar-accent-foreground: 253 51% 29%;
-    --sidebar-border: 253 23% 87%;
-    --sidebar-ring: 253 67% 69%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 223 50% 15%;
+    --sidebar-border: 220 13% 87%;
+    --sidebar-ring: 223 50% 30%;
 
-    /* Educational Spacing System (8px base) */
+    /* FairMind Spacing System (8px base) */
     --spacing-xs: 0.5rem; /* 8px */
     --spacing-sm: 0.75rem; /* 12px */
     --spacing-md: 1rem; /* 16px */
@@ -70,43 +71,49 @@
   }
 
   .dark {
-    /* Educational Dark Mode - Warm Dark Greys */
-    --background: 253 23% 8%;
-    --foreground: 253 23% 95%;
+    /* FairMind Dark Mode - Professional Dark Theme */
+    --background: 223 50% 8%;
+    --foreground: 220 14% 95%;
 
-    --card: 253 23% 10%;
-    --card-foreground: 253 23% 95%;
+    --card: 223 50% 10%;
+    --card-foreground: 220 14% 95%;
 
-    --popover: 253 23% 8%;
-    --popover-foreground: 253 23% 95%;
+    --popover: 223 50% 8%;
+    --popover-foreground: 220 14% 95%;
 
-    --primary: 253 67% 69%;
-    --primary-foreground: 253 23% 8%;
+    --primary: 223 50% 50%; /* Lighter blue for dark mode */
+    --primary-foreground: 223 50% 8%;
 
-    --secondary: 43 89% 58%;
-    --secondary-foreground: 253 23% 8%;
+    --secondary: 215 20% 35%;
+    --secondary-foreground: 220 14% 95%;
 
-    --muted: 253 23% 15%;
-    --muted-foreground: 253 23% 65%;
+    --accent: 15 85% 55%; /* Slightly muted orange for dark */
+    --accent-foreground: 223 50% 8%;
 
-    --accent: 253 23% 15%;
-    --accent-foreground: 253 23% 95%;
+    --muted: 223 50% 12%;
+    --muted-foreground: 215 20% 65%;
+
+    --fairmind-primary: 223 50% 50%;
+    --fairmind-secondary: 215 20% 65%;
+    --fairmind-accent: 15 85% 55%;
+    --fairmind-yellow: 42 96% 60%;
+    --fairmind-light: 223 50% 12%;
 
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 85% 97%;
 
-    --border: 253 23% 15%;
-    --input: 253 23% 15%;
-    --ring: 253 67% 69%;
+    --border: 223 50% 15%;
+    --input: 223 50% 15%;
+    --ring: 223 50% 50%;
 
-    --sidebar-background: 253 23% 6%;
-    --sidebar-foreground: 253 23% 85%;
-    --sidebar-primary: 253 67% 69%;
-    --sidebar-primary-foreground: 253 23% 8%;
-    --sidebar-accent: 253 23% 12%;
-    --sidebar-accent-foreground: 253 23% 85%;
-    --sidebar-border: 253 23% 12%;
-    --sidebar-ring: 253 67% 69%;
+    --sidebar-background: 223 50% 6%;
+    --sidebar-foreground: 220 14% 85%;
+    --sidebar-primary: 223 50% 50%;
+    --sidebar-primary-foreground: 223 50% 8%;
+    --sidebar-accent: 223 50% 12%;
+    --sidebar-accent-foreground: 220 14% 85%;
+    --sidebar-border: 223 50% 12%;
+    --sidebar-ring: 223 50% 50%;
   }
 }
 
@@ -119,32 +126,36 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    line-height: 1.5;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Educational Typography Scale */
+  /* FairMind Typography Scale */
   h1 {
     @apply text-4xl font-bold leading-tight tracking-tight;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', sans-serif;
+    color: hsl(var(--fairmind-primary));
   }
 
   h2 {
     @apply text-2xl font-semibold leading-tight tracking-tight;
+    color: hsl(var(--fairmind-primary));
   }
 
   h3 {
     @apply text-xl font-medium leading-tight;
+    color: hsl(var(--fairmind-primary));
   }
 
   h4 {
     @apply text-lg font-medium leading-tight;
+    color: hsl(var(--fairmind-primary));
   }
 
   /* Focus Management for Accessibility */
   *:focus-visible {
-    @apply outline-none ring-2 ring-focus ring-offset-2 ring-offset-background;
+    @apply outline-none ring-2 ring-fairmind-primary ring-offset-2 ring-offset-background;
   }
 
   /* Smooth Transitions */
@@ -156,71 +167,106 @@
 }
 
 @layer utilities {
-  /* Educational Spacing System */
-  .space-educational {
+  /* FairMind Color Utilities */
+  .text-fairmind-primary {
+    color: hsl(var(--fairmind-primary));
+  }
+
+  .text-fairmind-secondary {
+    color: hsl(var(--fairmind-secondary));
+  }
+
+  .text-fairmind-accent {
+    color: hsl(var(--fairmind-accent));
+  }
+
+  .bg-fairmind-primary {
+    background-color: hsl(var(--fairmind-primary));
+  }
+
+  .bg-fairmind-accent {
+    background-color: hsl(var(--fairmind-accent));
+  }
+
+  .bg-fairmind-yellow {
+    background-color: hsl(var(--fairmind-yellow));
+  }
+
+  .bg-fairmind-light {
+    background-color: hsl(var(--fairmind-light));
+  }
+
+  .border-fairmind-light {
+    border-color: hsl(var(--fairmind-light));
+  }
+
+  .border-fairmind-primary {
+    border-color: hsl(var(--fairmind-primary));
+  }
+
+  /* FairMind Spacing System */
+  .space-fairmind {
     @apply space-y-6;
   }
 
-  .container-educational {
+  .container-fairmind {
     @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
   }
 
-  /* Educational Card Shadows */
-  .shadow-educational-sm {
-    box-shadow: 0 1px 3px 0 rgba(140, 107, 244, 0.1), 0 1px 2px -1px rgba(140, 107, 244, 0.1);
+  /* FairMind Card Shadows */
+  .shadow-fairmind {
+    box-shadow: 0 4px 6px -1px rgba(30, 42, 120, 0.1), 0 2px 4px -2px rgba(30, 42, 120, 0.1);
   }
 
-  .shadow-educational {
-    box-shadow: 0 4px 6px -1px rgba(140, 107, 244, 0.1), 0 2px 4px -2px rgba(140, 107, 244, 0.1);
+  .shadow-fairmind-lg {
+    box-shadow: 0 10px 15px -3px rgba(30, 42, 120, 0.1), 0 4px 6px -4px rgba(30, 42, 120, 0.1);
   }
 
-  .shadow-educational-lg {
-    box-shadow: 0 10px 15px -3px rgba(140, 107, 244, 0.1), 0 4px 6px -4px rgba(140, 107, 244, 0.1);
+  .shadow-fairmind-xl {
+    box-shadow: 0 20px 25px -5px rgba(30, 42, 120, 0.1), 0 8px 10px -6px rgba(30, 42, 120, 0.1);
   }
 
-  .shadow-educational-xl {
-    box-shadow: 0 20px 25px -5px rgba(140, 107, 244, 0.1), 0 8px 10px -6px rgba(140, 107, 244, 0.1);
+  /* FairMind Animations */
+  .animate-fairmind-fade-in {
+    animation: fairmind-fade-in 300ms ease-out;
   }
 
-  /* Educational Animations */
-  .animate-educational-fade-in {
-    animation: educational-fade-in 300ms ease-out;
+  .animate-fairmind-scale-in {
+    animation: fairmind-scale-in 200ms ease-out;
   }
 
-  .animate-educational-scale-in {
-    animation: educational-scale-in 200ms ease-out;
-  }
-
-  .hover-educational {
-    @apply transform transition-all duration-200 hover:scale-[1.02] hover:shadow-educational-lg;
+  .hover-fairmind {
+    @apply transform transition-all duration-200 hover:scale-[1.02] hover:shadow-fairmind-lg;
   }
 
   /* Text Sizing for Readability */
-  .text-educational-body {
+  .text-fairmind-body {
     @apply text-base leading-relaxed;
   }
 
-  .text-educational-small {
+  .text-fairmind-small {
     @apply text-sm leading-relaxed;
   }
 
-  /* White Space Rule (50/50) */
-  .layout-educational {
+  /* White Space Rule (generous spacing) */
+  .layout-fairmind {
     @apply py-12 px-6;
   }
 
-  .section-educational {
+  .section-fairmind {
     @apply py-16 space-y-8;
   }
 
   /* Responsive Typography */
-  .heading-educational-display {
+  .heading-fairmind-display {
     @apply text-3xl sm:text-4xl lg:text-5xl font-bold;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', sans-serif;
+    color: hsl(var(--fairmind-primary));
   }
 
-  .heading-educational-section {
+  .heading-fairmind-section {
     @apply text-2xl sm:text-3xl font-semibold;
+    color: hsl(var(--fairmind-primary));
   }
 
   /* Touch Targets (44px minimum) */
@@ -239,38 +285,38 @@
 }
 
 @layer components {
-  /* Educational Button Variants */
-  .btn-educational-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6 py-3 font-medium touch-target;
-    @apply transition-all duration-200 hover:shadow-educational-lg hover:scale-105;
+  /* FairMind Button Variants */
+  .btn-fairmind-primary {
+    @apply bg-fairmind-accent text-white hover:bg-fairmind-accent/90 rounded-lg px-6 py-3 font-semibold touch-target;
+    @apply transition-all duration-200 hover:shadow-fairmind-lg hover:scale-105;
   }
 
-  .btn-educational-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-xl px-6 py-3 font-medium touch-target;
-    @apply transition-all duration-200 hover:shadow-educational hover:scale-105;
+  .btn-fairmind-secondary {
+    @apply bg-fairmind-yellow text-fairmind-primary hover:bg-fairmind-yellow/90 rounded-lg px-6 py-3 font-semibold touch-target;
+    @apply transition-all duration-200 hover:shadow-fairmind hover:scale-105;
   }
 
-  .btn-educational-ghost {
-    @apply text-accent-foreground hover:bg-accent rounded-xl px-4 py-2 font-medium touch-target;
+  .btn-fairmind-ghost {
+    @apply text-fairmind-primary hover:bg-fairmind-light rounded-lg px-4 py-2 font-medium touch-target;
     @apply transition-all duration-200;
   }
 
-  /* Educational Card Component */
-  .card-educational {
-    @apply bg-card border border-border rounded-2xl shadow-educational-sm hover:shadow-educational;
+  /* FairMind Card Component */
+  .card-fairmind {
+    @apply bg-white/70 backdrop-blur-sm border-0 rounded-xl shadow-fairmind hover:shadow-fairmind-lg;
     @apply transition-all duration-200 hover:scale-[1.02];
   }
 
-  /* Educational Input Component */
-  .input-educational {
-    @apply w-full rounded-xl border border-input bg-background px-4 py-3 text-base;
-    @apply focus:border-focus focus:ring-2 focus:ring-focus/20 focus:outline-none;
+  /* FairMind Input Component */
+  .input-fairmind {
+    @apply w-full rounded-lg border border-fairmind-light bg-white/70 px-4 py-3 text-base;
+    @apply focus:border-fairmind-primary focus:ring-2 focus:ring-fairmind-primary/20 focus:outline-none;
     @apply transition-all duration-200;
   }
 }
 
-/* Educational Keyframes */
-@keyframes educational-fade-in {
+/* FairMind Keyframes */
+@keyframes fairmind-fade-in {
   0% {
     opacity: 0;
     transform: translateY(10px);
@@ -281,7 +327,7 @@
   }
 }
 
-@keyframes educational-scale-in {
+@keyframes fairmind-scale-in {
   0% {
     opacity: 0;
     transform: scale(0.95);
@@ -292,8 +338,8 @@
   }
 }
 
-/* Success Animation for Educational Achievement */
-@keyframes educational-success {
+/* Success Animation for Achievement */
+@keyframes fairmind-success {
   0% {
     transform: scale(1);
   }
@@ -305,6 +351,6 @@
   }
 }
 
-.animate-educational-success {
-  animation: educational-success 600ms ease-in-out;
+.animate-fairmind-success {
+  animation: fairmind-success 600ms ease-in-out;
 }
