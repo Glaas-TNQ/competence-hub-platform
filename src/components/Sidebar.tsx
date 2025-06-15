@@ -53,7 +53,7 @@ export const Sidebar = () => {
         <Button
           variant="ghost"
           size="icon"
-          className="fixed top-4 left-4 z-50 md:hidden bg-white shadow-lg"
+          className="fixed top-6 left-6 z-50 md:hidden bg-white/90 backdrop-blur-md shadow-educational border border-muted"
           onClick={() => setIsMobileOpen(true)}
         >
           <Menu size={20} />
@@ -62,33 +62,36 @@ export const Sidebar = () => {
         {/* Mobile Overlay */}
         {isMobileOpen && (
           <div 
-            className="fixed inset-0 bg-black/50 z-40"
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
             onClick={() => setIsMobileOpen(false)}
           />
         )}
 
         {/* Mobile Sidebar */}
-        <div className={`fixed left-0 top-0 h-full w-80 bg-slate-900 text-white z-50 transform transition-transform duration-300 ${
+        <div className={`fixed left-0 top-0 h-full w-80 bg-background/95 backdrop-blur-lg border-r border-border z-50 transform transition-transform duration-300 ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
-          <div className="flex items-center justify-between p-6">
+          <div className="flex items-center justify-between p-8">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
-                <BookOpen size={20} className="text-white" />
+              <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center border border-primary/20">
+                <BookOpen size={22} className="text-primary" />
               </div>
-              <h1 className="text-xl font-bold">Academy Pro</h1>
+              <div>
+                <h1 className="text-xl font-semibold text-foreground">Academy Pro</h1>
+                <p className="text-sm text-muted-foreground">Piattaforma educativa</p>
+              </div>
             </div>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileOpen(false)}
-              className="text-white hover:bg-slate-800"
+              className="text-muted-foreground hover:text-foreground"
             >
               <X size={20} />
             </Button>
           </div>
 
-          <nav className="px-3">
+          <nav className="px-6 space-y-2">
             {menuItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -96,13 +99,13 @@ export const Sidebar = () => {
                   key={item.id}
                   to={item.path}
                   onClick={() => setIsMobileOpen(false)}
-                  className={`flex items-center space-x-3 px-3 py-3 rounded-lg mb-1 transition-all duration-200 ${
+                  className={`flex items-center space-x-4 px-4 py-3 rounded-2xl transition-all duration-200 group ${
                     isActive 
-                      ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg' 
-                      : 'hover:bg-slate-800 text-slate-300 hover:text-white'
+                      ? 'bg-primary/10 text-primary border-l-4 border-primary' 
+                      : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
                   }`}
                 >
-                  <item.icon size={20} />
+                  <item.icon size={20} className={`${isActive ? 'text-primary' : ''}`} />
                   <span className="font-medium">{item.label}</span>
                 </NavLink>
               );
@@ -112,10 +115,10 @@ export const Sidebar = () => {
               <NavLink
                 to="/admin"
                 onClick={() => setIsMobileOpen(false)}
-                className={`flex items-center space-x-3 px-3 py-3 rounded-lg mb-1 transition-all duration-200 mt-4 border-t border-slate-700 pt-4 ${
+                className={`flex items-center space-x-4 px-4 py-3 rounded-2xl transition-all duration-200 mt-6 pt-6 border-t border-border ${
                   location.pathname === '/admin'
-                    ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg' 
-                    : 'hover:bg-red-900 text-red-300 hover:text-white bg-red-950'
+                    ? 'bg-destructive/10 text-destructive border-l-4 border-destructive' 
+                    : 'hover:bg-destructive/5 text-muted-foreground hover:text-destructive'
                 }`}
               >
                 <Shield size={20} />
@@ -130,37 +133,42 @@ export const Sidebar = () => {
 
   // Desktop sidebar
   return (
-    <div className={`bg-slate-900 text-white transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'} min-h-screen relative hidden md:block`}>
+    <div className={`bg-background/95 backdrop-blur-lg border-r border-border transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-72'} min-h-screen relative hidden md:block`}>
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-6 bg-white text-slate-900 rounded-full p-1 shadow-lg hover:shadow-xl transition-shadow"
+        className="absolute -right-4 top-8 bg-background border border-border rounded-full p-2 shadow-educational hover:shadow-educational-lg transition-all duration-200 hover:scale-105"
       >
         {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
       </button>
 
-      <div className="p-6">
+      <div className="p-8">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
-            <BookOpen size={20} className="text-white" />
+          <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center border border-primary/20">
+            <BookOpen size={22} className="text-primary" />
           </div>
-          {!isCollapsed && <h1 className="text-xl font-bold">Academy Pro</h1>}
+          {!isCollapsed && (
+            <div>
+              <h1 className="text-xl font-semibold text-foreground">Academy Pro</h1>
+              <p className="text-sm text-muted-foreground">Piattaforma educativa</p>
+            </div>
+          )}
         </div>
       </div>
 
-      <nav className="px-3">
+      <nav className="px-6 space-y-2">
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <NavLink
               key={item.id}
               to={item.path}
-              className={`flex items-center space-x-3 px-3 py-3 rounded-lg mb-1 transition-all duration-200 ${
+              className={`flex items-center space-x-4 px-4 py-3 rounded-2xl transition-all duration-200 group ${
                 isActive 
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg' 
-                  : 'hover:bg-slate-800 text-slate-300 hover:text-white'
+                  ? 'bg-primary/10 text-primary border-l-4 border-primary' 
+                  : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
               }`}
             >
-              <item.icon size={20} />
+              <item.icon size={20} className={`${isActive ? 'text-primary' : ''}`} />
               {!isCollapsed && <span className="font-medium">{item.label}</span>}
             </NavLink>
           );
@@ -169,10 +177,10 @@ export const Sidebar = () => {
         {isAdmin && (
           <NavLink
             to="/admin"
-            className={`flex items-center space-x-3 px-3 py-3 rounded-lg mb-1 transition-all duration-200 mt-4 border-t border-slate-700 pt-4 ${
+            className={`flex items-center space-x-4 px-4 py-3 rounded-2xl transition-all duration-200 mt-6 pt-6 border-t border-border ${
               location.pathname === '/admin'
-                ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg' 
-                : 'hover:bg-red-900 text-red-300 hover:text-white bg-red-950'
+                ? 'bg-destructive/10 text-destructive border-l-4 border-destructive' 
+                : 'hover:bg-destructive/5 text-muted-foreground hover:text-destructive'
             }`}
           >
             <Shield size={20} />
