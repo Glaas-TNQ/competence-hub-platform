@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +13,7 @@ import { MyLearning } from "./pages/MyLearning";
 import { CourseView } from "./pages/CourseView";
 import { ChapterView } from "./pages/ChapterView";
 import { Badges } from "./pages/Badges";
+import { Certificates } from "./pages/Certificates";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { Auth } from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -46,7 +46,7 @@ const App = () => (
                           <Route path="/course/:courseId" element={<CourseView />} />
                           <Route path="/course/:courseId/chapter/:chapterIndex" element={<ChapterView />} />
                           <Route path="/progress" element={<Dashboard />} />
-                          <Route path="/certificates" element={<Dashboard />} />
+                          <Route path="/certificates" element={<Certificates />} />
                           <Route path="/settings" element={<Dashboard />} />
                           <Route path="/admin" element={<AdminDashboard />} />
                           <Route path="*" element={<NotFound />} />

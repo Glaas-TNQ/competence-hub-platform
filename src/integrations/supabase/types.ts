@@ -105,6 +105,59 @@ export type Database = {
         }
         Relationships: []
       }
+      certificates: {
+        Row: {
+          certificate_type: string
+          competence_area_id: string | null
+          courses_required: string[] | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          points_required: number | null
+          requirements: Json
+          template_data: Json
+          updated_at: string | null
+        }
+        Insert: {
+          certificate_type?: string
+          competence_area_id?: string | null
+          courses_required?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          points_required?: number | null
+          requirements: Json
+          template_data: Json
+          updated_at?: string | null
+        }
+        Update: {
+          certificate_type?: string
+          competence_area_id?: string | null
+          courses_required?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          points_required?: number | null
+          requirements?: Json
+          template_data?: Json
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certificates_competence_area_id_fkey"
+            columns: ["competence_area_id"]
+            isOneToOne: false
+            referencedRelation: "competence_areas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chapter_progress: {
         Row: {
           chapter_index: number
@@ -491,6 +544,142 @@ export type Database = {
           },
         ]
       }
+      user_certificates: {
+        Row: {
+          certificate_data: Json
+          certificate_id: string
+          created_at: string | null
+          id: string
+          is_revoked: boolean | null
+          issued_at: string | null
+          revoked_at: string | null
+          revoked_reason: string | null
+          user_id: string
+          verification_code: string
+        }
+        Insert: {
+          certificate_data: Json
+          certificate_id: string
+          created_at?: string | null
+          id?: string
+          is_revoked?: boolean | null
+          issued_at?: string | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          user_id: string
+          verification_code: string
+        }
+        Update: {
+          certificate_data?: Json
+          certificate_id?: string
+          created_at?: string | null
+          id?: string
+          is_revoked?: boolean | null
+          issued_at?: string | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          user_id?: string
+          verification_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_certificates_certificate_id_fkey"
+            columns: ["certificate_id"]
+            isOneToOne: false
+            referencedRelation: "certificates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_goals: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          current_value: number | null
+          goal_type: string
+          id: string
+          is_completed: boolean | null
+          period_end: string
+          period_start: string
+          target_value: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          current_value?: number | null
+          goal_type: string
+          id?: string
+          is_completed?: boolean | null
+          period_end: string
+          period_start: string
+          target_value: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          current_value?: number | null
+          goal_type?: string
+          id?: string
+          is_completed?: boolean | null
+          period_end?: string
+          period_start?: string
+          target_value?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_notes: {
+        Row: {
+          chapter_index: number | null
+          content: string
+          course_id: string | null
+          created_at: string | null
+          id: string
+          is_shared: boolean | null
+          note_type: string | null
+          position_data: Json | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          chapter_index?: number | null
+          content: string
+          course_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_shared?: boolean | null
+          note_type?: string | null
+          position_data?: Json | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          chapter_index?: number | null
+          content?: string
+          course_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_shared?: boolean | null
+          note_type?: string | null
+          position_data?: Json | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_notes_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_points: {
         Row: {
           activity_id: string | null
@@ -517,6 +706,42 @@ export type Database = {
           earned_at?: string
           id?: string
           points?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_preferences: {
+        Row: {
+          created_at: string | null
+          dashboard_layout: Json | null
+          id: string
+          learning_preferences: Json | null
+          notification_settings: Json | null
+          personal_goals: Json | null
+          theme_settings: Json | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          dashboard_layout?: Json | null
+          id?: string
+          learning_preferences?: Json | null
+          notification_settings?: Json | null
+          personal_goals?: Json | null
+          theme_settings?: Json | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          dashboard_layout?: Json | null
+          id?: string
+          learning_preferences?: Json | null
+          notification_settings?: Json | null
+          personal_goals?: Json | null
+          theme_settings?: Json | null
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: []
@@ -637,6 +862,14 @@ export type Database = {
       calculate_level_from_points: {
         Args: { points: number }
         Returns: number
+      }
+      check_and_award_certificates: {
+        Args: { p_user_id: string }
+        Returns: undefined
+      }
+      generate_certificate_verification_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_user_current_streak: {
         Args: { p_user_id: string; p_activity_type?: string }
