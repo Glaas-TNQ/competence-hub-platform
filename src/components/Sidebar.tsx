@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { 
@@ -13,7 +12,8 @@ import {
   Home,
   Shield,
   Menu,
-  X
+  X,
+  Trophy
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -23,6 +23,7 @@ const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/' },
   { id: 'areas', label: 'Aree di Competenza', icon: Target, path: '/areas' },
   { id: 'my-learning', label: 'I Miei Corsi', icon: BookOpen, path: '/my-learning' },
+  { id: 'badges', label: 'Badge', icon: Trophy, path: '/badges' },
   { id: 'progress', label: 'Progressi', icon: BarChart3, path: '/progress' },
   { id: 'certificates', label: 'Certificati', icon: Award, path: '/certificates' },
   { id: 'settings', label: 'Impostazioni', icon: Settings, path: '/settings' }
