@@ -77,7 +77,7 @@ export const Sidebar = () => {
                 <BookOpen size={22} className="text-primary" />
               </div>
               <div>
-                <h1 className="text-xl font-semibold text-foreground">Academy Pro</h1>
+                <h1 className="text-xl font-semibold text-foreground">FairMind Academy</h1>
                 <p className="text-sm text-muted-foreground">Piattaforma educativa</p>
               </div>
             </div>
@@ -136,24 +136,34 @@ export const Sidebar = () => {
     <div className={`bg-background/95 backdrop-blur-lg border-r border-border transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-72'} min-h-screen relative hidden md:block`}>
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-4 top-8 bg-background border border-border rounded-full p-2 shadow-educational hover:shadow-educational-lg transition-all duration-200 hover:scale-105"
+        className="absolute -right-4 top-8 bg-background border border-border rounded-full p-2 shadow-educational hover:shadow-educational-lg transition-all duration-200 hover:scale-105 z-10"
       >
         {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
       </button>
 
-      <div className="p-8">
-        <div className="flex items-center space-x-3">
+      {/* Header - solo quando non è collassato */}
+      {!isCollapsed && (
+        <div className="p-8">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center border border-primary/20">
+              <BookOpen size={22} className="text-primary" />
+            </div>
+            <div>
+              <h1 className="text-xl font-semibold text-foreground">FairMind Academy</h1>
+              <p className="text-sm text-muted-foreground">Piattaforma educativa</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Icona centrale quando collassato */}
+      {isCollapsed && (
+        <div className="p-4 flex justify-center">
           <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center border border-primary/20">
             <BookOpen size={22} className="text-primary" />
           </div>
-          {!isCollapsed && (
-            <div>
-              <h1 className="text-xl font-semibold text-foreground">Academy Pro</h1>
-              <p className="text-sm text-muted-foreground">Piattaforma educativa</p>
-            </div>
-          )}
         </div>
-      </div>
+      )}
 
       <nav className="px-6 space-y-2">
         {menuItems.map((item) => {
@@ -167,8 +177,9 @@ export const Sidebar = () => {
                   ? 'bg-primary/10 text-primary border-l-4 border-primary' 
                   : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
               }`}
+              title={isCollapsed ? item.label : undefined}
             >
-              <item.icon size={20} className={`${isActive ? 'text-primary' : ''}`} />
+              <item.icon size={20} className={`${isActive ? 'text-primary' : ''} flex-shrink-0`} />
               {!isCollapsed && <span className="font-medium">{item.label}</span>}
             </NavLink>
           );
@@ -182,8 +193,9 @@ export const Sidebar = () => {
                 ? 'bg-destructive/10 text-destructive border-l-4 border-destructive' 
                 : 'hover:bg-destructive/5 text-muted-foreground hover:text-destructive'
             }`}
+            title={isCollapsed ? "Admin Panel" : undefined}
           >
-            <Shield size={20} />
+            <Shield size={20} className="flex-shrink-0" />
             {!isCollapsed && <span className="font-medium">Admin Panel</span>}
           </NavLink>
         )}

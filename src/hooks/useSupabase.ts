@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -139,6 +138,27 @@ export const useUpdateProgress = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-progress'] });
+    },
+  });
+};
+
+export const useUpdateUserAccess = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ userId, accessibleCourses }: { userId: string; accessibleCourses: string[] }) => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({ accessible_courses: accessibleCourses })
+        .eq('id', userId)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
     },
   });
 };
