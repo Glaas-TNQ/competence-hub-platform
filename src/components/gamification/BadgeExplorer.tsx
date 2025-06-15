@@ -5,10 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import * as Icons from 'lucide-react';
 
 const rarityColors = {
-  common: 'bg-gray-100 border-gray-300 text-gray-700',
-  rare: 'bg-blue-100 border-blue-300 text-blue-700',
-  epic: 'bg-purple-100 border-purple-300 text-purple-700',
-  legendary: 'bg-yellow-100 border-yellow-300 text-yellow-700',
+  common: 'bg-muted/50 border-muted text-foreground',
+  rare: 'bg-blue-100 border-blue-300 text-blue-700 dark:bg-blue-900/30 dark:border-blue-600 dark:text-blue-300',
+  epic: 'bg-purple-100 border-purple-300 text-purple-700 dark:bg-purple-900/30 dark:border-purple-600 dark:text-purple-300',
+  legendary: 'bg-yellow-100 border-yellow-300 text-yellow-700 dark:bg-yellow-900/30 dark:border-yellow-600 dark:text-yellow-300',
 };
 
 const rarityLabels = {
@@ -65,21 +65,25 @@ export const BadgeExplorer = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-slate-800 mb-2">Esplora Badge</h2>
-        <p className="text-slate-600">Scopri tutti i badge disponibili e i tuoi progressi</p>
+      <div className="space-y-4">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          Esplora Badge
+        </h1>
+        <p className="text-lg text-muted-foreground">
+          Scopri tutti i badge disponibili e i tuoi progressi
+        </p>
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-4">
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Categoria</label>
+          <label className="block text-sm font-medium text-foreground mb-2">Categoria</label>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2 border border-slate-300 rounded-md text-sm"
+            className="px-4 py-2 border-0 bg-background/50 rounded-xl text-sm text-foreground"
           >
             <option value="all">Tutte</option>
             {categories.slice(1).map(category => (
@@ -91,11 +95,11 @@ export const BadgeExplorer = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Stato</label>
+          <label className="block text-sm font-medium text-foreground mb-2">Stato</label>
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-2 border border-slate-300 rounded-md text-sm"
+            className="px-4 py-2 border-0 bg-background/50 rounded-xl text-sm text-foreground"
           >
             <option value="all">Tutti</option>
             <option value="earned">Guadagnati</option>
@@ -105,25 +109,25 @@ export const BadgeExplorer = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-green-700">{userBadges?.length || 0}</div>
-          <div className="text-sm text-green-600">Badge Guadagnati</div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-gradient-to-r from-success/10 to-success/20 border border-success/20 rounded-2xl p-6 text-center shadow-educational">
+          <div className="text-3xl font-bold text-success">{userBadges?.length || 0}</div>
+          <div className="text-sm text-success/80 font-medium">Badge Guadagnati</div>
         </div>
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-blue-700">{allBadges?.length || 0}</div>
-          <div className="text-sm text-blue-600">Badge Totali</div>
+        <div className="bg-gradient-to-r from-primary/10 to-primary/20 border border-primary/20 rounded-2xl p-6 text-center shadow-educational">
+          <div className="text-3xl font-bold text-primary">{allBadges?.length || 0}</div>
+          <div className="text-sm text-primary/80 font-medium">Badge Totali</div>
         </div>
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-orange-700">
+        <div className="bg-gradient-to-r from-secondary/10 to-secondary/20 border border-secondary/20 rounded-2xl p-6 text-center shadow-educational">
+          <div className="text-3xl font-bold text-secondary">
             {allBadges ? Math.round(((userBadges?.length || 0) / allBadges.length) * 100) : 0}%
           </div>
-          <div className="text-sm text-orange-600">Completamento</div>
+          <div className="text-sm text-secondary/80 font-medium">Completamento</div>
         </div>
       </div>
 
       {/* Badge Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredBadges.map((badge) => {
           const isEarned = earnedBadgeIds.has(badge.id);
           const IconComponent = (Icons as any)[badge.icon] || Icons.Award;
@@ -132,33 +136,33 @@ export const BadgeExplorer = () => {
           return (
             <div
               key={badge.id}
-              className={`relative rounded-lg p-4 border-2 transition-all hover:scale-105 ${
+              className={`relative rounded-2xl p-6 border-2 transition-all duration-300 hover:scale-105 shadow-educational ${
                 isEarned 
                   ? rarityClass 
-                  : 'bg-gray-50 border-gray-200 text-gray-500'
+                  : 'bg-card/50 backdrop-blur-sm border-border text-muted-foreground'
               }`}
             >
               {/* Earned indicator */}
               {isEarned && (
-                <div className="absolute top-2 right-2">
-                  <Icons.Check className="h-5 w-5 text-green-600" />
+                <div className="absolute top-3 right-3">
+                  <Icons.Check className="h-5 w-5 text-success" />
                 </div>
               )}
               
               {/* Badge icon */}
-              <div className="flex items-center justify-center mb-3">
-                <IconComponent className={`h-12 w-12 ${isEarned ? '' : 'opacity-50'}`} />
+              <div className="flex items-center justify-center mb-4">
+                <IconComponent className={`h-16 w-16 ${isEarned ? '' : 'opacity-50'}`} />
               </div>
               
               {/* Badge info */}
-              <h4 className="font-semibold text-center mb-2">{badge.name}</h4>
-              <p className="text-sm text-center mb-3 opacity-75">
+              <h4 className="font-semibold text-center mb-3 text-lg">{badge.name}</h4>
+              <p className="text-sm text-center mb-4 opacity-80">
                 {getBadgeDescription(badge)}
               </p>
               
               {/* Rarity and points */}
-              <div className="flex items-center justify-between text-xs">
-                <Badge variant="outline" className="text-xs">
+              <div className="flex items-center justify-between text-sm">
+                <Badge variant="outline" className="text-xs border-current">
                   {rarityLabels[badge.rarity as keyof typeof rarityLabels]}
                 </Badge>
                 <span className="font-medium">
@@ -167,8 +171,8 @@ export const BadgeExplorer = () => {
               </div>
               
               {/* Category */}
-              <div className="mt-2 text-center">
-                <span className="text-xs px-2 py-1 rounded-full bg-white/50">
+              <div className="mt-3 text-center">
+                <span className="text-xs px-3 py-1 rounded-full bg-background/50 backdrop-blur-sm border border-border">
                   {categoryLabels[badge.category as keyof typeof categoryLabels] || badge.category}
                 </span>
               </div>
@@ -178,9 +182,16 @@ export const BadgeExplorer = () => {
       </div>
 
       {filteredBadges.length === 0 && (
-        <div className="text-center py-8 text-slate-500">
-          <Icons.Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p>Nessun badge trovato con i filtri selezionati.</p>
+        <div className="text-center py-16">
+          <div className="w-24 h-24 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Icons.Search className="h-12 w-12 text-muted-foreground" />
+          </div>
+          <h3 className="text-xl font-semibold text-foreground mb-4">
+            Nessun badge trovato
+          </h3>
+          <p className="text-muted-foreground">
+            Nessun badge trovato con i filtri selezionati.
+          </p>
         </div>
       )}
     </div>

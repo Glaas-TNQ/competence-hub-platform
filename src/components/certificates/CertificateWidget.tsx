@@ -17,7 +17,7 @@ export const CertificateWidget = () => {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Award className="h-5 w-5" />
@@ -27,7 +27,7 @@ export const CertificateWidget = () => {
         <CardContent>
           <div className="animate-pulse space-y-3">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-12 bg-gray-200 rounded"></div>
+              <div key={i} className="h-12 bg-muted/30 rounded"></div>
             ))}
           </div>
         </CardContent>
@@ -36,27 +36,29 @@ export const CertificateWidget = () => {
   }
 
   return (
-    <Card>
+    <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm hover:shadow-educational-lg transition-all duration-300">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Award className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-foreground">
+          <Award className="h-5 w-5 text-primary" />
           Certificati
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-muted-foreground">
           I tuoi ultimi certificati ottenuti
         </CardDescription>
       </CardHeader>
       <CardContent>
         {certificates?.length === 0 ? (
-          <div className="text-center py-6">
-            <Award className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-gray-600 text-sm">
+          <div className="text-center py-8">
+            <div className="w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Award className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <p className="text-muted-foreground text-sm mb-4">
               Nessun certificato ancora ottenuto
             </p>
             <Button 
               variant="outline" 
               size="sm" 
-              className="mt-2"
+              className="border-0 bg-background/50 hover:bg-background/80 rounded-xl"
               onClick={() => navigate('/certificates')}
             >
               Scopri i certificati disponibili
@@ -67,20 +69,21 @@ export const CertificateWidget = () => {
             {recentCertificates.map((cert) => (
               <div
                 key={cert.id}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-center justify-between p-4 bg-background/30 rounded-xl hover:bg-background/50 transition-colors cursor-pointer"
+                onClick={() => navigate('/certificates')}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-                    <Award className="h-5 w-5 text-white" />
+                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                    <Award className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-sm">{cert.certificates.name}</h4>
-                    <p className="text-xs text-gray-600">
+                    <h4 className="font-medium text-sm text-foreground">{cert.certificates.name}</h4>
+                    <p className="text-xs text-muted-foreground">
                       {format(new Date(cert.issued_at), 'dd MMM yyyy', { locale: it })}
                     </p>
                   </div>
                 </div>
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">
                   <Eye className="h-3 w-3 mr-1" />
                   Visualizza
                 </Badge>
@@ -92,7 +95,7 @@ export const CertificateWidget = () => {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="w-full"
+                  className="w-full border-0 bg-background/50 hover:bg-background/80 rounded-xl"
                   onClick={() => navigate('/certificates')}
                 >
                   Vedi tutti i certificati ({certificates.length})
@@ -105,7 +108,7 @@ export const CertificateWidget = () => {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="w-full"
+                  className="w-full border-0 bg-background/50 hover:bg-background/80 rounded-xl"
                   onClick={() => navigate('/certificates')}
                 >
                   <TrendingUp className="h-4 w-4 mr-2" />

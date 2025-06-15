@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -9,10 +9,54 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
-import { Bell, User, Shield, Palette, Download, Trash2, Settings as SettingsIcon } from 'lucide-react';
+import { useUpdateUserPreferences, useUserPreferences } from '@/hooks/useUserPreferences';
+import { useToast } from '@/hooks/use-toast';
+import { User, Shield, Palette, Download, Trash2 } from 'lucide-react';
 
 export const Settings: React.FC = () => {
   const { user, profile } = useAuth();
+  const { data: preferences } = useUserPreferences();
+  const updatePreferences = useUpdateUserPreferences();
+  const { toast } = useToast();
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    bio: '',
+    theme: 'light',
+    language: 'it',
+    animations: true,
+    publicProfile: false,
+    shareProgress: true,
+    badgeVisibility: 'public'
+  });
+
+  const handleSaveChanges = async () => {
+    try {
+      await updatePreferences.mutateAsync({
+        theme_settings: {
+          theme: formData.theme,
+          animations: formData.animations
+        },
+        personal_goals: {
+          publicProfile: formData.publicProfile,
+          shareProgress: formData.shareProgress,
+          badgeVisibility: formData.badgeVisibility
+        }
+      });
+      
+      toast({
+        title: "Modifiche salvate",
+        description: "Le tue impostazioni sono state aggiornate con successo.",
+      });
+    } catch (error) {
+      toast({
+        title: "Errore",
+        description: "Si è verificato un errore durante il salvataggio.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
@@ -28,20 +72,13 @@ export const Settings: React.FC = () => {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-5 bg-card/50 backdrop-blur-sm border-0 shadow-educational rounded-2xl p-2">
+          <TabsList className="grid w-full grid-cols-4 bg-card/50 backdrop-blur-sm border-0 shadow-educational rounded-2xl p-2">
             <TabsTrigger 
               value="profile" 
               className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               <User className="w-4 h-4 mr-2" />
               Profilo
-            </TabsTrigger>
-            <TabsTrigger 
-              value="notifications"
-              className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              <Bell className="w-4 h-4 mr-2" />
-              Notifiche
             </TabsTrigger>
             <TabsTrigger 
               value="privacy"
@@ -82,6 +119,8 @@ export const Settings: React.FC = () => {
                       id="firstName" 
                       placeholder="Inserisci il tuo nome" 
                       className="mt-2 border-0 bg-background/50 rounded-xl"
+                      value={formData.firstName}
+                      onChange={(e) => setFormData({...formData, firstName: e.target.value})}
                     />
                   </div>
                   <div>
@@ -90,6 +129,8 @@ export const Settings: React.FC = () => {
                       id="lastName" 
                       placeholder="Inserisci il tuo cognome" 
                       className="mt-2 border-0 bg-background/50 rounded-xl"
+                      value={formData.lastName}
+                      onChange={(e) => setFormData({...formData, lastName: e.target.value})}
                     />
                   </div>
                 </div>
@@ -111,62 +152,18 @@ export const Settings: React.FC = () => {
                     id="bio" 
                     placeholder="Racconta qualcosa di te..." 
                     className="mt-2 border-0 bg-background/50 rounded-xl"
+                    value={formData.bio}
+                    onChange={(e) => setFormData({...formData, bio: e.target.value})}
                   />
                 </div>
                 
-                <Button className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white rounded-xl">
-                  Salva Modifiche
+                <Button 
+                  onClick={handleSaveChanges}
+                  disabled={updatePreferences.isPending}
+                  className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white rounded-xl"
+                >
+                  {updatePreferences.isPending ? 'Salvando...' : 'Salva Modifiche'}
                 </Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="notifications" className="space-y-6">
-            <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Bell className="w-5 h-5 text-secondary" />
-                  Preferenze Notifiche
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-between py-4">
-                  <div>
-                    <h4 className="font-medium text-foreground">Notifiche Email</h4>
-                    <p className="text-sm text-muted-foreground">Ricevi aggiornamenti via email</p>
-                  </div>
-                  <Switch />
-                </div>
-                
-                <Separator className="bg-border/50" />
-                
-                <div className="flex items-center justify-between py-4">
-                  <div>
-                    <h4 className="font-medium text-foreground">Promemoria Corsi</h4>
-                    <p className="text-sm text-muted-foreground">Ricorda i corsi da completare</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <Separator className="bg-border/50" />
-                
-                <div className="flex items-center justify-between py-4">
-                  <div>
-                    <h4 className="font-medium text-foreground">Aggiornamenti Badge</h4>
-                    <p className="text-sm text-muted-foreground">Notifica quando ottieni nuovi badge</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                
-                <Separator className="bg-border/50" />
-                
-                <div className="flex items-center justify-between py-4">
-                  <div>
-                    <h4 className="font-medium text-foreground">Newsletter</h4>
-                    <p className="text-sm text-muted-foreground">Ricevi la newsletter mensile</p>
-                  </div>
-                  <Switch />
-                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -185,7 +182,10 @@ export const Settings: React.FC = () => {
                     <h4 className="font-medium text-foreground">Profilo Pubblico</h4>
                     <p className="text-sm text-muted-foreground">Rendi il tuo profilo visibile ad altri utenti</p>
                   </div>
-                  <Switch />
+                  <Switch 
+                    checked={formData.publicProfile}
+                    onCheckedChange={(checked) => setFormData({...formData, publicProfile: checked})}
+                  />
                 </div>
                 
                 <Separator className="bg-border/50" />
@@ -195,14 +195,17 @@ export const Settings: React.FC = () => {
                     <h4 className="font-medium text-foreground">Condividi Progressi</h4>
                     <p className="text-sm text-muted-foreground">Permetti ad altri di vedere i tuoi progressi</p>
                   </div>
-                  <Switch defaultChecked />
+                  <Switch 
+                    checked={formData.shareProgress}
+                    onCheckedChange={(checked) => setFormData({...formData, shareProgress: checked})}
+                  />
                 </div>
                 
                 <Separator className="bg-border/50" />
                 
                 <div className="py-4">
                   <Label className="text-sm font-medium text-foreground">Visibilità Badge</Label>
-                  <Select defaultValue="public">
+                  <Select value={formData.badgeVisibility} onValueChange={(value) => setFormData({...formData, badgeVisibility: value})}>
                     <SelectTrigger className="mt-2 border-0 bg-background/50 rounded-xl">
                       <SelectValue />
                     </SelectTrigger>
@@ -235,7 +238,7 @@ export const Settings: React.FC = () => {
               <CardContent className="space-y-6">
                 <div>
                   <Label className="text-sm font-medium text-foreground">Tema</Label>
-                  <Select defaultValue="light">
+                  <Select value={formData.theme} onValueChange={(value) => setFormData({...formData, theme: value})}>
                     <SelectTrigger className="mt-2 border-0 bg-background/50 rounded-xl">
                       <SelectValue />
                     </SelectTrigger>
@@ -249,7 +252,7 @@ export const Settings: React.FC = () => {
                 
                 <div>
                   <Label className="text-sm font-medium text-foreground">Lingua</Label>
-                  <Select defaultValue="it">
+                  <Select value={formData.language} onValueChange={(value) => setFormData({...formData, language: value})}>
                     <SelectTrigger className="mt-2 border-0 bg-background/50 rounded-xl">
                       <SelectValue />
                     </SelectTrigger>
@@ -266,7 +269,10 @@ export const Settings: React.FC = () => {
                     <h4 className="font-medium text-foreground">Animazioni</h4>
                     <p className="text-sm text-muted-foreground">Abilita animazioni nell'interfaccia</p>
                   </div>
-                  <Switch defaultChecked />
+                  <Switch 
+                    checked={formData.animations}
+                    onCheckedChange={(checked) => setFormData({...formData, animations: checked})}
+                  />
                 </div>
               </CardContent>
             </Card>

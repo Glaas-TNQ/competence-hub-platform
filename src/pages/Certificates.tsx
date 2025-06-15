@@ -4,8 +4,10 @@ import { CertificateManager } from '../components/certificates/CertificateManage
 
 export const Certificates = () => {
   return (
-    <div className="p-6 bg-slate-50 min-h-screen">
-      <CertificateManager />
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="max-w-7xl mx-auto p-8">
+        <CertificateManager />
+      </div>
     </div>
   );
 };
