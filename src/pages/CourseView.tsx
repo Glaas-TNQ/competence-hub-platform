@@ -11,6 +11,8 @@ type Chapter = {
   description: string;
   type: 'video' | 'text';
   duration?: string;
+  content?: string;
+  video_url?: string;
 };
 
 export const CourseView = () => {
@@ -47,17 +49,7 @@ export const CourseView = () => {
 
   const handleStartChapter = (chapterIndex: number) => {
     if (!hasAccess) return;
-    
-    // Calculate progress based on chapter completion
-    const newProgress = Math.round(((chapterIndex + 1) / chapters.length) * 100);
-    
-    updateProgressMutation.mutate({
-      courseId: course.id,
-      progressPercentage: newProgress
-    });
-
-    // Here you would navigate to the specific chapter content
-    console.log(`Starting chapter ${chapterIndex + 1} of course ${courseId}`);
+    navigate(`/course/${courseId}/chapter/${chapterIndex}`);
   };
 
   const getChapterIcon = (chapterType: string) => {

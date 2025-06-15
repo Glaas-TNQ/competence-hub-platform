@@ -12,6 +12,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { CompetenceAreas } from "./pages/CompetenceAreas";
 import { MyLearning } from "./pages/MyLearning";
 import { CourseView } from "./pages/CourseView";
+import { ChapterView } from "./pages/ChapterView";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { Auth } from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -41,6 +42,7 @@ const App = () => (
                           <Route path="/areas" element={<CompetenceAreas />} />
                           <Route path="/my-learning" element={<MyLearning />} />
                           <Route path="/course/:courseId" element={<CourseView />} />
+                          <Route path="/course/:courseId/chapter/:chapterIndex" element={<ChapterView />} />
                           <Route path="/progress" element={<Dashboard />} />
                           <Route path="/certificates" element={<Dashboard />} />
                           <Route path="/settings" element={<Dashboard />} />
