@@ -9,13 +9,13 @@ import { useCourses, useUserProgress } from "@/hooks/useSupabase";
 import { useUserTotalPoints, useUserStreak, useUserBadges } from "@/hooks/useGamification";
 import { useUserGoals } from "@/hooks/useUserGoals";
 import { useDashboardCustomization } from "@/hooks/useDashboardCustomization";
-import { Settings, Sparkles } from "lucide-react";
+import { Settings, Sparkles, AlertCircle } from "lucide-react";
 
 export const Dashboard = () => {
   console.log('Dashboard component rendering');
   
-  const { data: courses, isLoading: coursesLoading, error: coursesError } = useCourses();
-  const { data: userProgress, isLoading: progressLoading, error: progressError } = useUserProgress();
+  const { data: courses = [], isLoading: coursesLoading, error: coursesError } = useCourses();
+  const { data: userProgress = [], isLoading: progressLoading, error: progressError } = useUserProgress();
   const { data: totalPoints } = useUserTotalPoints();
   const { data: streak } = useUserStreak('study');
   const { data: userBadges } = useUserBadges();
@@ -53,6 +53,7 @@ export const Dashboard = () => {
     setIsCustomizing(false);
   };
 
+  // Show loading state
   if (coursesLoading || progressLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-8">
@@ -67,16 +68,25 @@ export const Dashboard = () => {
     );
   }
 
-  if (coursesError || progressError) {
+  // Show error state only if both queries have errors
+  const hasError = coursesError && progressError;
+  if (hasError) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-8">
         <div className="max-w-4xl mx-auto text-center py-20">
+          <AlertCircle className="h-16 w-16 text-destructive mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-destructive mb-6">
             Loading Error
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-muted-foreground mb-4">
             An error occurred while loading data.
           </p>
+          <p className="text-sm text-muted-foreground mb-6">
+            Please try refreshing the page or contact support if the problem persists.
+          </p>
+          <Button onClick={() => window.location.reload()}>
+            Refresh Page
+          </Button>
         </div>
       </div>
     );
@@ -92,7 +102,7 @@ export const Dashboard = () => {
               Dashboard
             </h1>
             <p className="text-lg text-muted-foreground">
-              Welcome to your learning area
+              Welcome to your learning hub
             </p>
           </div>
           

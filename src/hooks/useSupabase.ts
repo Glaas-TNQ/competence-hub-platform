@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -21,17 +22,36 @@ export const useCourses = () => {
   return useQuery({
     queryKey: ['courses'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('courses')
-        .select(`
-          *,
-          competence_areas (name, color)
-        `)
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      return data;
+      try {
+        // First try to get courses with competence areas
+        const { data, error } = await supabase
+          .from('courses')
+          .select(`
+            *,
+            competence_areas (name, color)
+          `)
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          console.error('Error fetching courses with areas:', error);
+          // Fallback: get courses without competence areas
+          const { data: coursesOnly, error: coursesError } = await supabase
+            .from('courses')
+            .select('*')
+            .order('created_at', { ascending: false });
+          
+          if (coursesError) throw coursesError;
+          return coursesOnly;
+        }
+        
+        return data;
+      } catch (error) {
+        console.error('Error in useCourses:', error);
+        // Return empty array as fallback
+        return [];
+      }
     },
+    retry: false,
   });
 };
 
@@ -39,14 +59,23 @@ export const useUsers = () => {
   return useQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      return data;
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          console.error('Error fetching users:', error);
+          return [];
+        }
+        return data;
+      } catch (error) {
+        console.error('Error in useUsers:', error);
+        return [];
+      }
     },
+    retry: false,
   });
 };
 
@@ -56,20 +85,41 @@ export const useUserProgress = () => {
   return useQuery({
     queryKey: ['user-progress', user?.id],
     queryFn: async () => {
-      if (!user) throw new Error('User not authenticated');
+      if (!user) return [];
       
-      const { data, error } = await supabase
-        .from('user_progress')
-        .select(`
-          *,
-          courses (*)
-        `)
-        .eq('user_id', user.id);
-      
-      if (error) throw error;
-      return data;
+      try {
+        // Try to get progress with courses
+        const { data, error } = await supabase
+          .from('user_progress')
+          .select(`
+            *,
+            courses (*)
+          `)
+          .eq('user_id', user.id);
+        
+        if (error) {
+          console.error('Error fetching progress with courses:', error);
+          // Fallback: get progress without courses
+          const { data: progressOnly, error: progressError } = await supabase
+            .from('user_progress')
+            .select('*')
+            .eq('user_id', user.id);
+          
+          if (progressError) {
+            console.error('Error fetching progress:', progressError);
+            return [];
+          }
+          return progressOnly;
+        }
+        
+        return data;
+      } catch (error) {
+        console.error('Error in useUserProgress:', error);
+        return [];
+      }
     },
     enabled: !!user,
+    retry: false,
   });
 };
 
