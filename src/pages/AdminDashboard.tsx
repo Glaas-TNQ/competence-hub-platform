@@ -163,37 +163,6 @@ export const AdminDashboard = () => {
     }
   };
 
-  const stats = [
-    {
-      title: 'Utenti Totali',
-      value: users?.length || 0,
-      icon: Users,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100'
-    },
-    {
-      title: 'Corsi Pubblicati',
-      value: courses?.filter(c => c.is_published)?.length || 0,
-      icon: BookOpen,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100'
-    },
-    {
-      title: 'Aree di Competenza',
-      value: '5',
-      icon: Target,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100'
-    },
-    {
-      title: 'Engagement',
-      value: '78%',
-      icon: TrendingUp,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-100'
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <div className="max-w-7xl mx-auto p-8">
