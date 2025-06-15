@@ -11,15 +11,17 @@ import {
   Shield,
   Database,
   Settings,
-  BarChart3
+  BarChart3,
+  Bot
 } from 'lucide-react';
 import { CourseManager } from '@/components/admin/CourseManager';
 import { UserManager } from '@/components/admin/UserManager';
 import { CompetenceAreaManager } from '@/components/admin/CompetenceAreaManager';
 import { LearningPathManager } from '@/components/admin/LearningPathManager';
+import { AgenticCourseCreator } from '@/components/admin/AgenticCourseCreator';
 import { useCourses, useUsers } from '@/hooks/useSupabase';
 
-type ActiveSection = 'overview' | 'courses' | 'users' | 'competence-areas' | 'learning-paths' | 'analytics' | 'settings';
+type ActiveSection = 'overview' | 'courses' | 'users' | 'competence-areas' | 'learning-paths' | 'agentic-creator' | 'analytics' | 'settings';
 
 export const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState<ActiveSection>('overview');
@@ -128,6 +130,8 @@ export const AdminDashboard = () => {
         return <CompetenceAreaManager />;
       case 'learning-paths':
         return <LearningPathManager />;
+      case 'agentic-creator':
+        return <AgenticCourseCreator />;
       case 'analytics':
         return (
           <Card className="border-0 shadow-sm bg-card/50 backdrop-blur-sm">
@@ -159,6 +163,37 @@ export const AdminDashboard = () => {
     }
   };
 
+  const stats = [
+    {
+      title: 'Utenti Totali',
+      value: users?.length || 0,
+      icon: Users,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-100'
+    },
+    {
+      title: 'Corsi Pubblicati',
+      value: courses?.filter(c => c.is_published)?.length || 0,
+      icon: BookOpen,
+      color: 'text-green-600',
+      bgColor: 'bg-green-100'
+    },
+    {
+      title: 'Aree di Competenza',
+      value: '5',
+      icon: Target,
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-100'
+    },
+    {
+      title: 'Engagement',
+      value: '78%',
+      icon: TrendingUp,
+      color: 'text-orange-600',
+      bgColor: 'bg-orange-100'
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <div className="max-w-7xl mx-auto p-8">
@@ -185,7 +220,7 @@ export const AdminDashboard = () => {
 
         {/* Navigation */}
         <Tabs value={activeSection} onValueChange={(value) => setActiveSection(value as ActiveSection)} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 h-auto p-1 bg-muted/50 rounded-xl">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-7 h-auto p-1 bg-muted/50 rounded-xl">
             <TabsTrigger value="overview" className="flex items-center gap-2 py-3 rounded-lg">
               <BarChart3 className="h-4 w-4" />
               <span className="hidden sm:inline">Panoramica</span>
@@ -205,6 +240,10 @@ export const AdminDashboard = () => {
             <TabsTrigger value="learning-paths" className="flex items-center gap-2 py-3 rounded-lg">
               <Database className="h-4 w-4" />
               <span className="hidden sm:inline">Percorsi</span>
+            </TabsTrigger>
+            <TabsTrigger value="agentic-creator" className="flex items-center gap-2 py-3 rounded-lg">
+              <Bot className="h-4 w-4" />
+              <span className="hidden sm:inline">AI Creator</span>
             </TabsTrigger>
             <TabsTrigger value="settings" className="flex items-center gap-2 py-3 rounded-lg">
               <Settings className="h-4 w-4" />
