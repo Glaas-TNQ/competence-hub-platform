@@ -51,6 +51,7 @@ export const useUpdateUserPreferences = () => {
           .from('profiles')
           .upsert({
             id: user.id,
+            email: user.email || '',
             full_name: fullName,
             updated_at: new Date().toISOString(),
           });
