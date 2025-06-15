@@ -5,6 +5,7 @@ import { useCourses, useUserProgress } from '../hooks/useSupabase';
 import { CourseCard } from '../components/CourseCard';
 import { UserLevel } from '../components/gamification/UserLevel';
 import { UserBadges } from '../components/gamification/UserBadges';
+import { UserStreak } from '../components/gamification/UserStreak';
 import { BookOpen, Trophy, Target, Clock } from 'lucide-react';
 
 export const Dashboard = () => {
@@ -40,10 +41,15 @@ export const Dashboard = () => {
       </div>
 
       {/* Gamification Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
         {/* User Level */}
         <div className="lg:col-span-1">
           <UserLevel />
+        </div>
+        
+        {/* User Streak */}
+        <div className="lg:col-span-1">
+          <UserStreak />
         </div>
         
         {/* User Badges */}

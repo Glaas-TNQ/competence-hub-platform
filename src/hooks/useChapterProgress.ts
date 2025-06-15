@@ -2,7 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAwardPoints, useCheckAndAwardBadges } from './useGamification';
+import { useAwardPoints, useCheckAndAwardBadges, useRecordActivity } from './useGamification';
 
 interface ChapterProgress {
   id: string;
@@ -39,10 +39,13 @@ export const useMarkChapterComplete = () => {
   const { user } = useAuth();
   const awardPoints = useAwardPoints();
   const checkBadges = useCheckAndAwardBadges();
+  const recordActivity = useRecordActivity();
   
   return useMutation({
     mutationFn: async ({ courseId, chapterIndex }: { courseId: string; chapterIndex: number }) => {
       if (!user) throw new Error('User not authenticated');
+      
+      const startTime = Date.now();
       
       const { data, error } = await supabase
         .from('chapter_progress')
@@ -56,6 +59,19 @@ export const useMarkChapterComplete = () => {
         .single();
       
       if (error) throw error;
+      
+      const completionTime = Date.now() - startTime;
+      
+      // Record activity with completion time
+      await recordActivity.mutateAsync({
+        activityType: 'chapter_complete',
+        activityData: { 
+          completion_time_ms: completionTime,
+          chapter_index: chapterIndex 
+        },
+        courseId: courseId,
+        chapterIndex: chapterIndex,
+      });
       
       // Award points for chapter completion (10 points)
       await awardPoints.mutateAsync({
@@ -81,6 +97,7 @@ export const useCalculateProgress = () => {
   const { user } = useAuth();
   const awardPoints = useAwardPoints();
   const checkBadges = useCheckAndAwardBadges();
+  const recordActivity = useRecordActivity();
   
   return useMutation({
     mutationFn: async ({ courseId, totalChapters }: { courseId: string; totalChapters: number }) => {
@@ -124,6 +141,16 @@ export const useCalculateProgress = () => {
       
       // Award points for course completion (50 points) - only if just completed
       if (wasCompleted && !wasAlreadyCompleted) {
+        // Record course completion activity
+        await recordActivity.mutateAsync({
+          activityType: 'course_complete',
+          activityData: { 
+            total_chapters: totalChapters,
+            completion_percentage: 100 
+          },
+          courseId: courseId,
+        });
+        
         await awardPoints.mutateAsync({
           points: 50,
           activityType: 'course_completion',

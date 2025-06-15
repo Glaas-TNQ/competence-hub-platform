@@ -26,6 +26,13 @@ interface BadgeCriteria {
   count?: number;
   points?: number;
   max_hours?: number;
+  days?: number;
+  competence_area?: string;
+  before_hour?: number;
+  after_hour?: number;
+  level?: number;
+  position?: number;
+  courses?: number;
 }
 
 interface Badge {
@@ -46,6 +53,25 @@ interface UserBadge {
   badge_id: string;
   earned_at: string;
   badges: Badge;
+}
+
+interface DailyStreak {
+  id: string;
+  user_id: string;
+  streak_date: string;
+  activity_type: string;
+  created_at: string;
+}
+
+interface UserActivity {
+  id: string;
+  user_id: string;
+  activity_type: string;
+  activity_data: any;
+  competence_area_id: string | null;
+  course_id: string | null;
+  chapter_index: number | null;
+  created_at: string;
 }
 
 export const useUserTotalPoints = () => {
@@ -144,6 +170,99 @@ export const useAllBadges = () => {
   });
 };
 
+export const useUserStreak = (activityType = 'study') => {
+  const { user } = useAuth();
+  
+  return useQuery({
+    queryKey: ['user-streak', user?.id, activityType],
+    queryFn: async () => {
+      if (!user) throw new Error('User not authenticated');
+      
+      const { data, error } = await supabase.rpc('get_user_current_streak', {
+        p_user_id: user.id,
+        p_activity_type: activityType,
+      });
+      
+      if (error) throw error;
+      return data as number;
+    },
+    enabled: !!user,
+  });
+};
+
+export const useUserActivities = (limit = 20) => {
+  const { user } = useAuth();
+  
+  return useQuery({
+    queryKey: ['user-activities', user?.id, limit],
+    queryFn: async () => {
+      if (!user) throw new Error('User not authenticated');
+      
+      const { data, error } = await supabase
+        .from('user_activities')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+      
+      if (error) throw error;
+      return data as UserActivity[];
+    },
+    enabled: !!user,
+  });
+};
+
+export const useRecordActivity = () => {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+  
+  return useMutation({
+    mutationFn: async ({ 
+      activityType, 
+      activityData,
+      competenceAreaId,
+      courseId,
+      chapterIndex 
+    }: { 
+      activityType: string;
+      activityData?: any;
+      competenceAreaId?: string;
+      courseId?: string;
+      chapterIndex?: number;
+    }) => {
+      if (!user) throw new Error('User not authenticated');
+      
+      // Record the activity
+      const { error: activityError } = await supabase
+        .from('user_activities')
+        .insert({
+          user_id: user.id,
+          activity_type: activityType,
+          activity_data: activityData,
+          competence_area_id: competenceAreaId,
+          course_id: courseId,
+          chapter_index: chapterIndex,
+        });
+      
+      if (activityError) throw activityError;
+      
+      // Record daily streak for study activities
+      if (['chapter_complete', 'course_complete'].includes(activityType)) {
+        await supabase.rpc('record_daily_activity', {
+          p_user_id: user.id,
+          p_activity_type: 'study',
+        });
+      }
+      
+      return { success: true };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-activities'] });
+      queryClient.invalidateQueries({ queryKey: ['user-streak'] });
+    },
+  });
+};
+
 export const useAwardPoints = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
@@ -204,13 +323,17 @@ export const useCheckAndAwardBadges = () => {
         { data: userProgress },
         { data: chapterProgress },
         { data: userBadges },
-        { data: allBadges }
+        { data: allBadges },
+        { data: userActivities },
+        { data: competenceAreas }
       ] = await Promise.all([
         supabase.from('user_total_points').select('*').eq('user_id', user.id).single(),
         supabase.from('user_progress').select('*').eq('user_id', user.id),
         supabase.from('chapter_progress').select('*').eq('user_id', user.id),
         supabase.from('user_badges').select('badge_id').eq('user_id', user.id),
-        supabase.from('badges').select('*').eq('is_active', true)
+        supabase.from('badges').select('*').eq('is_active', true),
+        supabase.from('user_activities').select('*').eq('user_id', user.id),
+        supabase.from('competence_areas').select('*')
       ]);
       
       if (!allBadges || !userBadges) return { newBadges: [] };
@@ -244,6 +367,65 @@ export const useCheckAndAwardBadges = () => {
             break;
           case 'badge_collection':
             shouldEarn = userBadges.length >= (criteria.count || 0);
+            break;
+          case 'daily_streak':
+            const { data: streakData } = await supabase.rpc('get_user_current_streak', {
+              p_user_id: user.id,
+              p_activity_type: 'study',
+            });
+            shouldEarn = (streakData || 0) >= (criteria.days || 0);
+            break;
+          case 'competence_area_mastery':
+            // Find competence area by name and check if all courses are completed
+            const competenceArea = competenceAreas?.find(ca => 
+              ca.name.toLowerCase().includes(criteria.competence_area?.toLowerCase() || '')
+            );
+            if (competenceArea) {
+              const { data: areaCourses } = await supabase
+                .from('courses')
+                .select('id')
+                .eq('competence_area_id', competenceArea.id);
+              
+              const completedInArea = userProgress?.filter(p => 
+                p.progress_percentage === 100 && 
+                areaCourses?.some(c => c.id === p.course_id)
+              ).length || 0;
+              
+              shouldEarn = completedInArea >= (areaCourses?.length || 0) && (areaCourses?.length || 0) > 0;
+            }
+            break;
+          case 'chapters_per_day':
+            // Check if user completed required chapters today
+            const today = new Date().toISOString().split('T')[0];
+            const todayChapters = userActivities?.filter(a => 
+              a.activity_type === 'chapter_complete' && 
+              a.created_at.startsWith(today)
+            ).length || 0;
+            shouldEarn = todayChapters >= (criteria.count || 0);
+            break;
+          case 'level_milestone':
+            shouldEarn = (totalPoints?.level || 0) >= (criteria.level || 0);
+            break;
+          case 'total_chapters':
+            shouldEarn = (chapterProgress?.length || 0) >= (criteria.count || 0);
+            break;
+          case 'early_bird_completions':
+            const earlyCompletions = userActivities?.filter(a => {
+              const hour = new Date(a.created_at).getHours();
+              return a.activity_type === 'chapter_complete' && hour < (criteria.before_hour || 8);
+            }).length || 0;
+            shouldEarn = earlyCompletions >= (criteria.count || 0);
+            break;
+          case 'night_owl_completions':
+            const lateCompletions = userActivities?.filter(a => {
+              const hour = new Date(a.created_at).getHours();
+              return a.activity_type === 'chapter_complete' && hour >= (criteria.after_hour || 22);
+            }).length || 0;
+            shouldEarn = lateCompletions >= (criteria.count || 0);
+            break;
+          case 'early_adopter':
+            // This would need to be checked against user registration order
+            // For now, we'll skip this as it requires additional logic
             break;
         }
         

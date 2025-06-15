@@ -229,6 +229,30 @@ export type Database = {
           },
         ]
       }
+      daily_streaks: {
+        Row: {
+          activity_type: string
+          created_at: string
+          id: string
+          streak_date: string
+          user_id: string
+        }
+        Insert: {
+          activity_type?: string
+          created_at?: string
+          id?: string
+          streak_date: string
+          user_id: string
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string
+          id?: string
+          streak_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       html_content: {
         Row: {
           created_at: string
@@ -386,6 +410,54 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      user_activities: {
+        Row: {
+          activity_data: Json | null
+          activity_type: string
+          chapter_index: number | null
+          competence_area_id: string | null
+          course_id: string | null
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          activity_data?: Json | null
+          activity_type: string
+          chapter_index?: number | null
+          competence_area_id?: string | null
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          activity_data?: Json | null
+          activity_type?: string
+          chapter_index?: number | null
+          competence_area_id?: string | null
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_activities_competence_area_id_fkey"
+            columns: ["competence_area_id"]
+            isOneToOne: false
+            referencedRelation: "competence_areas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_activities_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_badges: {
         Row: {
@@ -566,9 +638,17 @@ export type Database = {
         Args: { points: number }
         Returns: number
       }
+      get_user_current_streak: {
+        Args: { p_user_id: string; p_activity_type?: string }
+        Returns: number
+      }
       points_to_next_level: {
         Args: { current_points: number }
         Returns: number
+      }
+      record_daily_activity: {
+        Args: { p_user_id: string; p_activity_type?: string }
+        Returns: undefined
       }
       update_user_total_points: {
         Args: { p_user_id: string; p_points: number }
