@@ -9,11 +9,13 @@ import { useCourses, useUserProgress } from "@/hooks/useSupabase";
 import { useUserTotalPoints, useUserStreak, useUserBadges } from "@/hooks/useGamification";
 import { useUserGoals } from "@/hooks/useUserGoals";
 import { useDashboardCustomization } from "@/hooks/useDashboardCustomization";
+import { useTranslation } from "@/contexts/LanguageContext";
 import { Settings, Sparkles, AlertCircle } from "lucide-react";
 
 export const Dashboard = () => {
   console.log('Dashboard component rendering');
   
+  const { t } = useTranslation();
   const { data: courses = [], isLoading: coursesLoading, error: coursesError } = useCourses();
   const { data: userProgress = [], isLoading: progressLoading, error: progressError } = useUserProgress();
   const { data: totalPoints } = useUserTotalPoints();
@@ -76,16 +78,16 @@ export const Dashboard = () => {
         <div className="max-w-4xl mx-auto text-center py-20">
           <AlertCircle className="h-16 w-16 text-destructive mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-destructive mb-6">
-            Loading Error
+            {t('dashboard.loadingError')}
           </h2>
           <p className="text-lg text-muted-foreground mb-4">
-            An error occurred while loading data.
+            {t('dashboard.loadingErrorDesc')}
           </p>
           <p className="text-sm text-muted-foreground mb-6">
-            Please try refreshing the page or contact support if the problem persists.
+            {t('dashboard.loadingErrorContact')}
           </p>
           <Button onClick={() => window.location.reload()}>
-            Refresh Page
+            {t('common.refreshPage')}
           </Button>
         </div>
       </div>
@@ -99,10 +101,10 @@ export const Dashboard = () => {
         <div className="flex justify-between items-start mb-12">
           <div className="space-y-3">
             <h1 className="text-4xl font-bold text-foreground tracking-tight">
-              Dashboard
+              {t('dashboard.title')}
             </h1>
             <p className="text-lg text-muted-foreground">
-              Welcome to your learning hub
+              {t('dashboard.welcome')}
             </p>
           </div>
           
@@ -113,7 +115,7 @@ export const Dashboard = () => {
               className="flex items-center gap-2 rounded-full px-6"
             >
               {isCustomizing ? <Sparkles className="h-4 w-4" /> : <Settings className="h-4 w-4" />}
-              {isCustomizing ? 'Finish Customization' : 'Customize'}
+              {isCustomizing ? t('dashboard.finishCustomization') : t('dashboard.customize')}
             </Button>
             
             {isCustomizing && (
@@ -123,7 +125,7 @@ export const Dashboard = () => {
                 className="flex items-center gap-2 rounded-full px-6"
               >
                 <Settings className="h-4 w-4" />
-                Settings
+                {t('dashboard.settings')}
               </Button>
             )}
           </div>
@@ -150,7 +152,7 @@ export const Dashboard = () => {
           {/* Custom Widgets (only if customizing) */}
           {isCustomizing && (
             <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-foreground">Custom Widgets</h3>
+              <h3 className="text-2xl font-semibold text-foreground">{t('dashboard.overview')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {safeDashboardWidgets
                   .filter(widget => widget && widget.visible && !['stats', 'recent-courses', 'goals'].includes(widget.type))

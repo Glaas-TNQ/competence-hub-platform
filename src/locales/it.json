@@ -15,7 +15,8 @@
     "next": "Avanti",
     "previous": "Precedente",
     "yes": "Sì",
-    "no": "No"
+    "no": "No",
+    "refreshPage": "Aggiorna Pagina"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -27,7 +28,10 @@
     "settings": "Impostazioni",
     "adminPanel": "Pannello Admin",
     "myAccount": "Il Mio Account",
-    "logout": "Logout"
+    "logout": "Logout",
+    "learningPaths": "Percorsi di Apprendimento",
+    "analytics": "Analytics",
+    "myLearning": "I Miei Corsi"
   },
   "header": {
     "searchPlaceholder": "Cerca contenuti...",
@@ -74,7 +78,166 @@
     "quickStats": "Statistiche Rapide",
     "recommendations": "Raccomandazioni",
     "progress": "Progresso",
-    "achievements": "Traguardi"
+    "achievements": "Traguardi",
+    "customize": "Personalizza",
+    "finishCustomization": "Termina Personalizzazione",
+    "settings": "Impostazioni",
+    "loadingError": "Errore di Caricamento",
+    "loadingErrorDesc": "Si è verificato un errore durante il caricamento dei dati.",
+    "loadingErrorContact": "Prova ad aggiornare la pagina o contatta il supporto se il problema persiste.",
+    "stats": {
+      "completedCourses": "Corsi Completati",
+      "inProgressCourses": "Corsi in Corso",
+      "totalPoints": "Punti Totali",
+      "level": "Livello",
+      "streak": "Serie",
+      "badges": "Badge"
+    }
+  },
+  "competenceAreas": {
+    "title": "Aree di Competenza",
+    "subtitle": "Esplora le diverse aree di competenza e sviluppa le tue skills",
+    "backToAreas": "Torna alle Aree di Competenza",
+    "courses": "corsi",
+    "completed": "completati",
+    "completion": "Completamento",
+    "inProgress": "In Corso",
+    "toStart": "Da Iniziare",
+    "allCourses": "Tutti i Corsi",
+    "completedFilter": "Completati",
+    "noCoursesFound": "Nessun corso trovato",
+    "noCoursesDesc": "Non ci sono corsi che corrispondono ai filtri selezionati.",
+    "noAreasAvailable": "Nessuna area di competenza disponibile",
+    "noAreasDesc": "Le aree di competenza verranno caricate a breve.",
+    "stats": {
+      "totalCourses": "Corsi Totali",
+      "totalDuration": "Durata Totale",
+      "completion": "Completamento",
+      "completed": "Completati"
+    }
+  },
+  "courses": {
+    "notFound": "Corso non trovato",
+    "backToCourses": "Torna ai corsi",
+    "accessDenied": "Accesso Negato",
+    "noAccess": "Non hai accesso a questo contenuto.",
+    "backToCourse": "Torna al corso",
+    "duration": "Durata",
+    "level": "Livello",
+    "points": {
+      "perChapter": "Punti per capitolo",
+      "completion": "Punti completamento",
+      "yourLevel": "Il tuo livello"
+    },
+    "progress": "Progresso",
+    "content": "Contenuto del Corso",
+    "limitedAccess": "Accesso Limitato",
+    "requiresSubscription": "Questo corso richiede un abbonamento per accedere al contenuto.",
+    "requestAccess": "Richiedi Accesso",
+    "contentInPreparation": "Contenuto in Preparazione",
+    "contentSoon": "Il contenuto di questo corso sarà disponibile a breve.",
+    "chapter": "Capitolo"
+  },
+  "chapters": {
+    "notFound": "Capitolo non trovato",
+    "backToCourse": "Torna al corso",
+    "markComplete": "Segna come Completato",
+    "nextChapter": "Prossimo Capitolo",
+    "congratulations": "Congratulazioni!",
+    "chapterCompleted": "Hai completato questo capitolo.",
+    "courseCompleted": "Corso Completato!",
+    "courseCompletedDesc": "Complimenti! Hai completato tutto il corso."
+  },
+  "learningPaths": {
+    "title": "Percorsi di Apprendimento",
+    "subtitle": "Segui percorsi strutturati per un apprendimento guidato e completo",
+    "searchPaths": "Cerca percorsi",
+    "searchPlaceholder": "Titolo o descrizione...",
+    "resetFilters": "Reset Filtri",
+    "pathsFound": "percorsi trovati",
+    "pathFound": "percorso trovato",
+    "noPathsFound": "Nessun percorso trovato",
+    "tryModifyFilters": "Prova a modificare i filtri di ricerca",
+    "noPathsAvailable": "Nessun percorso disponibile",
+    "pathsSoon": "I percorsi di apprendimento saranno presto disponibili",
+    "backToPath": "Indietro",
+    "pathProgress": "Progresso del Percorso",
+    "coursesCompleted": "corsi completati",
+    "contentTypes": "Tipi di Contenuto",
+    "pathCourses": "Corsi del Percorso"
+  },
+  "myLearning": {
+    "title": "I Miei Corsi",
+    "subtitle": "Monitora i tuoi progressi e continua l'apprendimento",
+    "overallProgress": "Progresso Complessivo",
+    "coursesCompleted": "corsi completati",
+    "completed": "completato",
+    "inProgressCourses": "Corsi in Corso",
+    "completedCourses": "Corsi Completati",
+    "noCourses": "Nessun corso iniziato",
+    "noCoursesDesc": "Inizia il tuo percorso di apprendimento esplorando le nostre aree di competenza",
+    "exploreCourses": "Esplora Corsi",
+    "stats": {
+      "inProgress": "In Corso",
+      "completed": "Completati",
+      "total": "Totali",
+      "averageProgress": "Progresso Medio"
+    }
+  },
+  "analytics": {
+    "title": "Analytics e Insights",
+    "subtitle": "Analizza il tuo progresso e scopri insights personalizzati",
+    "overview": "Panoramica",
+    "activity": "Attività",
+    "performance": "Performance",
+    "insights": "Insights",
+    "summaryAnalytics": "Riepilogo Analytics",
+    "recommendations": "Raccomandazioni",
+    "personalizedInsights": "Insights Personalizzati",
+    "activityMap": "Mappa Attività",
+    "detailedInsights": "Insights Dettagliati",
+    "advancedRecommendations": "Raccomandazioni Avanzate"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "subtitle": "Gestisci la piattaforma educativa",
+    "administrator": "Amministratore",
+    "overview": "Panoramica",
+    "courses": "Corsi",
+    "users": "Utenti",
+    "areas": "Aree",
+    "paths": "Percorsi",
+    "aiCreator": "AI Creator",
+    "settings": "Settings",
+    "stats": {
+      "totalUsers": "Utenti Totali",
+      "publishedCourses": "Corsi Pubblicati",
+      "competenceAreas": "Aree di Competenza",
+      "engagement": "Engagement"
+    },
+    "recentActivity": "Attività Recenti",
+    "newCoursePublished": "Nuovo corso pubblicato:",
+    "newUsersRegistered": "nuovi utenti registrati",
+    "competenceAreaUpdated": "Aggiornata area di competenza",
+    "analyticsInDevelopment": "Funzionalità analytics in sviluppo...",
+    "systemSettings": "Impostazioni Sistema",
+    "settingsInDevelopment": "Pannello impostazioni in sviluppo...",
+    "hoursAgo": "h fa",
+    "daysAgo": "d fa"
+  },
+  "badges": {
+    "title": "Badge",
+    "subtitle": "I tuoi risultati e riconoscimenti",
+    "earned": "Ottenuti",
+    "available": "Disponibili"
+  },
+  "certificates": {
+    "title": "Certificati",
+    "subtitle": "I tuoi certificati e attestati"
+  },
+  "goals": {
+    "title": "Obiettivi",
+    "subtitle": "Gestisci i tuoi obiettivi di apprendimento"
   },
   "settings": {
     "title": "Impostazioni",

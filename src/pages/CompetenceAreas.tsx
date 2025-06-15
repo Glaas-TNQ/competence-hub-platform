@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -17,9 +18,11 @@ import {
 } from 'lucide-react';
 import { useCompetenceAreas, useCourses, useUserProgress } from '@/hooks/useSupabase';
 import { CourseCardById } from '@/components/CourseCardById';
+import { useTranslation } from '@/contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 
 export const CompetenceAreas = () => {
+  const { t } = useTranslation();
   const [selectedArea, setSelectedArea] = useState<string | null>(null);
   const [filterCompleted, setFilterCompleted] = useState<'all' | 'completed' | 'in-progress'>('all');
   const navigate = useNavigate();
@@ -100,7 +103,7 @@ export const CompetenceAreas = () => {
             className="mb-6 rounded-full hover:bg-muted/50"
           >
             <ChevronRight className="h-4 w-4 mr-2 rotate-180" />
-            Torna alle Aree di Competenza
+            {t('competenceAreas.backToAreas')}
           </Button>
 
           {/* Area Header */}
@@ -116,7 +119,7 @@ export const CompetenceAreas = () => {
                 variant="secondary" 
                 className="bg-primary/10 text-primary border-primary/20 px-4 py-2 rounded-full"
               >
-                {selectedAreaData.coursesCount} corsi
+                {selectedAreaData.coursesCount} {t('competenceAreas.courses')}
               </Badge>
             </div>
 
@@ -128,25 +131,25 @@ export const CompetenceAreas = () => {
                     <div className="text-3xl font-bold text-primary mb-2">
                       {selectedAreaData.progressPercentage}%
                     </div>
-                    <div className="text-sm text-muted-foreground">Completamento</div>
+                    <div className="text-sm text-muted-foreground">{t('competenceAreas.completion')}</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-success mb-2">
                       {selectedAreaData.completedCount}
                     </div>
-                    <div className="text-sm text-muted-foreground">Completati</div>
+                    <div className="text-sm text-muted-foreground">{t('competenceAreas.completed')}</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-warning mb-2">
                       {selectedAreaData.inProgressCount}
                     </div>
-                    <div className="text-sm text-muted-foreground">In Corso</div>
+                    <div className="text-sm text-muted-foreground">{t('competenceAreas.inProgress')}</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-muted-foreground mb-2">
                       {selectedAreaData.coursesCount - selectedAreaData.completedCount - selectedAreaData.inProgressCount}
                     </div>
-                    <div className="text-sm text-muted-foreground">Da Iniziare</div>
+                    <div className="text-sm text-muted-foreground">{t('competenceAreas.toStart')}</div>
                   </div>
                 </div>
                 <div className="mt-6">
@@ -163,21 +166,21 @@ export const CompetenceAreas = () => {
               onClick={() => setFilterCompleted('all')}
               className="rounded-full"
             >
-              Tutti i Corsi
+              {t('competenceAreas.allCourses')}
             </Button>
             <Button
               variant={filterCompleted === 'in-progress' ? 'default' : 'outline'}
               onClick={() => setFilterCompleted('in-progress')}
               className="rounded-full"
             >
-              In Corso
+              {t('competenceAreas.inProgress')}
             </Button>
             <Button
               variant={filterCompleted === 'completed' ? 'default' : 'outline'}
               onClick={() => setFilterCompleted('completed')}
               className="rounded-full"
             >
-              Completati
+              {t('competenceAreas.completedFilter')}
             </Button>
           </div>
 
@@ -192,10 +195,10 @@ export const CompetenceAreas = () => {
             <div className="text-center py-12">
               <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-foreground mb-2">
-                Nessun corso trovato
+                {t('competenceAreas.noCoursesFound')}
               </h3>
               <p className="text-muted-foreground">
-                Non ci sono corsi che corrispondono ai filtri selezionati.
+                {t('competenceAreas.noCoursesDesc')}
               </p>
             </div>
           )}
@@ -210,10 +213,10 @@ export const CompetenceAreas = () => {
         {/* Header */}
         <div className="mb-12">
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Aree di Competenza
+            {t('competenceAreas.title')}
           </h1>
           <p className="text-lg text-muted-foreground">
-            Esplora le diverse aree di competenza e sviluppa le tue skills
+            {t('competenceAreas.subtitle')}
           </p>
         </div>
 
@@ -244,18 +247,18 @@ export const CompetenceAreas = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center gap-2">
                     <BookOpen className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-medium">{area.coursesCount} corsi</span>
+                    <span className="text-sm font-medium">{area.coursesCount} {t('competenceAreas.courses')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Award className="h-4 w-4 text-success" />
-                    <span className="text-sm font-medium">{area.completedCount} completati</span>
+                    <span className="text-sm font-medium">{area.completedCount} {t('competenceAreas.completed')}</span>
                   </div>
                 </div>
 
                 {/* Progress */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Progresso</span>
+                    <span className="text-sm text-muted-foreground">{t('competenceAreas.completion')}</span>
                     <span className="text-sm font-medium">{area.progressPercentage}%</span>
                   </div>
                   <Progress value={area.progressPercentage} className="h-2" />
@@ -264,15 +267,15 @@ export const CompetenceAreas = () => {
                 {/* Status Badge */}
                 {area.progressPercentage === 100 ? (
                   <Badge variant="default" className="bg-success/10 text-success border-success/20">
-                    Completato
+                    {t('competenceAreas.completed')}
                   </Badge>
                 ) : area.progressPercentage > 0 ? (
                   <Badge variant="default" className="bg-warning/10 text-warning border-warning/20">
-                    In Corso
+                    {t('competenceAreas.inProgress')}
                   </Badge>
                 ) : (
                   <Badge variant="outline">
-                    Da Iniziare
+                    {t('competenceAreas.toStart')}
                   </Badge>
                 )}
               </CardContent>
@@ -284,10 +287,10 @@ export const CompetenceAreas = () => {
           <div className="text-center py-12">
             <Target className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-foreground mb-2">
-              Nessuna area di competenza disponibile
+              {t('competenceAreas.noAreasAvailable')}
             </h3>
             <p className="text-muted-foreground">
-              Le aree di competenza verranno caricate a breve.
+              {t('competenceAreas.noAreasDesc')}
             </p>
           </div>
         )}

@@ -15,7 +15,8 @@
     "next": "Next",
     "previous": "Previous",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "refreshPage": "Refresh Page"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -27,7 +28,10 @@
     "settings": "Settings",
     "adminPanel": "Admin Panel",
     "myAccount": "My Account",
-    "logout": "Logout"
+    "logout": "Logout",
+    "learningPaths": "Learning Paths",
+    "analytics": "Analytics",
+    "myLearning": "My Learning"
   },
   "header": {
     "searchPlaceholder": "Search content...",
@@ -74,7 +78,166 @@
     "quickStats": "Quick Stats",
     "recommendations": "Recommendations",
     "progress": "Progress",
-    "achievements": "Achievements"
+    "achievements": "Achievements",
+    "customize": "Customize",
+    "finishCustomization": "Finish Customization",
+    "settings": "Settings",
+    "loadingError": "Loading Error",
+    "loadingErrorDesc": "An error occurred while loading data.",
+    "loadingErrorContact": "Please try refreshing the page or contact support if the problem persists.",
+    "stats": {
+      "completedCourses": "Completed Courses",
+      "inProgressCourses": "Courses in Progress",
+      "totalPoints": "Total Points",
+      "level": "Level",
+      "streak": "Streak",
+      "badges": "Badges"
+    }
+  },
+  "competenceAreas": {
+    "title": "Competence Areas",
+    "subtitle": "Explore different competence areas and develop your skills",
+    "backToAreas": "Back to Competence Areas",
+    "courses": "courses",
+    "completed": "completed",
+    "completion": "Completion",
+    "inProgress": "In Progress",
+    "toStart": "To Start",
+    "allCourses": "All Courses",
+    "completedFilter": "Completed",
+    "noCoursesFound": "No courses found",
+    "noCoursesDesc": "There are no courses matching the selected filters.",
+    "noAreasAvailable": "No competence areas available",
+    "noAreasDesc": "Competence areas will be loaded soon.",
+    "stats": {
+      "totalCourses": "Total Courses",
+      "totalDuration": "Total Duration",
+      "completion": "Completion",
+      "completed": "Completed"
+    }
+  },
+  "courses": {
+    "notFound": "Course not found",
+    "backToCourses": "Back to courses",
+    "accessDenied": "Access Denied",
+    "noAccess": "You don't have access to this content.",
+    "backToCourse": "Back to course",
+    "duration": "Duration",
+    "level": "Level",
+    "points": {
+      "perChapter": "Points per chapter",
+      "completion": "Completion points",
+      "yourLevel": "Your level"
+    },
+    "progress": "Progress",
+    "content": "Course Content",
+    "limitedAccess": "Limited Access",
+    "requiresSubscription": "This course requires a subscription to access the content.",
+    "requestAccess": "Request Access",
+    "contentInPreparation": "Content in Preparation",
+    "contentSoon": "The content of this course will be available soon.",
+    "chapter": "Chapter"
+  },
+  "chapters": {
+    "notFound": "Chapter not found",
+    "backToCourse": "Back to course",
+    "markComplete": "Mark as Complete",
+    "nextChapter": "Next Chapter",
+    "congratulations": "Congratulations!",
+    "chapterCompleted": "You have completed this chapter.",
+    "courseCompleted": "Course Completed!",
+    "courseCompletedDesc": "Congratulations! You have completed the entire course."
+  },
+  "learningPaths": {
+    "title": "Learning Paths",
+    "subtitle": "Follow structured paths for guided and complete learning",
+    "searchPaths": "Search paths",
+    "searchPlaceholder": "Title or description...",
+    "resetFilters": "Reset Filters",
+    "pathsFound": "paths found",
+    "pathFound": "path found",
+    "noPathsFound": "No paths found",
+    "tryModifyFilters": "Try modifying the search filters",
+    "noPathsAvailable": "No paths available",
+    "pathsSoon": "Learning paths will be available soon",
+    "backToPath": "Back",
+    "pathProgress": "Path Progress",
+    "coursesCompleted": "courses completed",
+    "contentTypes": "Content Types",
+    "pathCourses": "Path Courses"
+  },
+  "myLearning": {
+    "title": "My Learning",
+    "subtitle": "Track your progress and continue learning",
+    "overallProgress": "Overall Progress",
+    "coursesCompleted": "courses completed",
+    "completed": "completed",
+    "inProgressCourses": "Courses in Progress",
+    "completedCourses": "Completed Courses",
+    "noCourses": "No courses started",
+    "noCoursesDesc": "Start your learning journey by exploring our competence areas",
+    "exploreCourses": "Explore Courses",
+    "stats": {
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "total": "Total",
+      "averageProgress": "Average Progress"
+    }
+  },
+  "analytics": {
+    "title": "Analytics and Insights",
+    "subtitle": "Analyze your progress and discover personalized insights",
+    "overview": "Overview",
+    "activity": "Activity",
+    "performance": "Performance",
+    "insights": "Insights",
+    "summaryAnalytics": "Analytics Summary",
+    "recommendations": "Recommendations",
+    "personalizedInsights": "Personalized Insights",
+    "activityMap": "Activity Map",
+    "detailedInsights": "Detailed Insights",
+    "advancedRecommendations": "Advanced Recommendations"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "subtitle": "Manage the educational platform",
+    "administrator": "Administrator",
+    "overview": "Overview",
+    "courses": "Courses",
+    "users": "Users",
+    "areas": "Areas",
+    "paths": "Paths",
+    "aiCreator": "AI Creator",
+    "settings": "Settings",
+    "stats": {
+      "totalUsers": "Total Users",
+      "publishedCourses": "Published Courses",
+      "competenceAreas": "Competence Areas",
+      "engagement": "Engagement"
+    },
+    "recentActivity": "Recent Activity",
+    "newCoursePublished": "New course published:",
+    "newUsersRegistered": "new users registered",
+    "competenceAreaUpdated": "Updated competence area",
+    "analyticsInDevelopment": "Analytics functionality in development...",
+    "systemSettings": "System Settings",
+    "settingsInDevelopment": "Settings panel in development...",
+    "hoursAgo": "h ago",
+    "daysAgo": "d ago"
+  },
+  "badges": {
+    "title": "Badges",
+    "subtitle": "Your achievements and recognitions",
+    "earned": "Earned",
+    "available": "Available"
+  },
+  "certificates": {
+    "title": "Certificates",
+    "subtitle": "Your certificates and credentials"
+  },
+  "goals": {
+    "title": "Goals",
+    "subtitle": "Manage your learning objectives"
   },
   "settings": {
     "title": "Settings",

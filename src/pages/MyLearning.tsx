@@ -7,8 +7,10 @@ import { Progress } from '@/components/ui/progress';
 import { BookOpen, TrendingUp, Target, Trophy } from 'lucide-react';
 import { CourseCardById } from '../components/CourseCardById';
 import { useUserProgress, useCourses } from '../hooks/useSupabase';
+import { useTranslation } from '@/contexts/LanguageContext';
 
 export const MyLearning = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: userProgress = [], isLoading: progressLoading } = useUserProgress();
   const { data: allCourses = [], isLoading: coursesLoading } = useCourses();
@@ -49,10 +51,10 @@ export const MyLearning = () => {
         {/* Header */}
         <div className="space-y-4">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            I Miei Corsi
+            {t('myLearning.title')}
           </h1>
           <p className="text-lg text-muted-foreground">
-            Monitora i tuoi progressi e continua l'apprendimento
+            {t('myLearning.subtitle')}
           </p>
         </div>
 
@@ -62,7 +64,7 @@ export const MyLearning = () => {
             <CardContent className="p-6 text-center">
               <BookOpen className="h-10 w-10 text-primary mx-auto mb-3" />
               <div className="text-3xl font-bold text-foreground mb-2">{inProgressCourses.length}</div>
-              <div className="text-sm text-muted-foreground">In Corso</div>
+              <div className="text-sm text-muted-foreground">{t('myLearning.stats.inProgress')}</div>
             </CardContent>
           </Card>
           
@@ -70,7 +72,7 @@ export const MyLearning = () => {
             <CardContent className="p-6 text-center">
               <Trophy className="h-10 w-10 text-success mx-auto mb-3" />
               <div className="text-3xl font-bold text-foreground mb-2">{completedCourses.length}</div>
-              <div className="text-sm text-muted-foreground">Completati</div>
+              <div className="text-sm text-muted-foreground">{t('myLearning.stats.completed')}</div>
             </CardContent>
           </Card>
           
@@ -78,7 +80,7 @@ export const MyLearning = () => {
             <CardContent className="p-6 text-center">
               <Target className="h-10 w-10 text-secondary mx-auto mb-3" />
               <div className="text-3xl font-bold text-foreground mb-2">{myCourses.length}</div>
-              <div className="text-sm text-muted-foreground">Totali</div>
+              <div className="text-sm text-muted-foreground">{t('myLearning.stats.total')}</div>
             </CardContent>
           </Card>
           
@@ -86,7 +88,7 @@ export const MyLearning = () => {
             <CardContent className="p-6 text-center">
               <TrendingUp className="h-10 w-10 text-focus mx-auto mb-3" />
               <div className="text-3xl font-bold text-foreground mb-2">{totalProgress}%</div>
-              <div className="text-sm text-muted-foreground">Progresso Medio</div>
+              <div className="text-sm text-muted-foreground">{t('myLearning.stats.averageProgress')}</div>
             </CardContent>
           </Card>
         </div>
@@ -95,14 +97,14 @@ export const MyLearning = () => {
         {myCourses.length > 0 && (
           <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="text-xl">Progresso Complessivo</CardTitle>
+              <CardTitle className="text-xl">{t('myLearning.overallProgress')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <Progress value={totalProgress} className="h-3" />
                 <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>{completedCourses.length} di {myCourses.length} corsi completati</span>
-                  <span>{totalProgress}% completato</span>
+                  <span>{completedCourses.length} {t('common.of')} {myCourses.length} {t('myLearning.coursesCompleted')}</span>
+                  <span>{totalProgress}% {t('myLearning.completed')}</span>
                 </div>
               </div>
             </CardContent>
@@ -112,7 +114,7 @@ export const MyLearning = () => {
         {/* In Progress Courses */}
         {inProgressCourses.length > 0 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-foreground">Corsi in Corso</h2>
+            <h2 className="text-2xl font-bold text-foreground">{t('myLearning.inProgressCourses')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {inProgressCourses.map((course) => (
                 <CourseCardById key={course.id} courseId={course.id} />
@@ -124,7 +126,7 @@ export const MyLearning = () => {
         {/* Completed Courses */}
         {completedCourses.length > 0 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-foreground">Corsi Completati</h2>
+            <h2 className="text-2xl font-bold text-foreground">{t('myLearning.completedCourses')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {completedCourses.map((course) => (
                 <CourseCardById key={course.id} courseId={course.id} />
@@ -140,15 +142,15 @@ export const MyLearning = () => {
               <div className="w-24 h-24 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-6">
                 <BookOpen className="w-12 h-12 text-muted-foreground" />
               </div>
-              <h3 className="text-2xl font-semibold text-foreground mb-4">Nessun corso iniziato</h3>
+              <h3 className="text-2xl font-semibold text-foreground mb-4">{t('myLearning.noCourses')}</h3>
               <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-                Inizia il tuo percorso di apprendimento esplorando le nostre aree di competenza
+                {t('myLearning.noCoursesDesc')}
               </p>
               <Button 
                 onClick={() => navigate('/areas')}
                 className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-8 py-3 rounded-full font-medium transition-all duration-200 hover:scale-105"
               >
-                Esplora Corsi
+                {t('myLearning.exploreCourses')}
               </Button>
             </CardContent>
           </Card>
