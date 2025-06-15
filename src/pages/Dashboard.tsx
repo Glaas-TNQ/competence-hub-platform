@@ -41,26 +41,26 @@ export const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
           title="Corsi Completati"
-          value={completedCourses}
-          icon={Award}
+          value={completedCourses.toString()}
+          icon={<Award className="h-6 w-6" />}
           color="green"
         />
         <StatsCard
           title="In Corso"
-          value={inProgressCourses}
-          icon={BookOpen}
+          value={inProgressCourses.toString()}
+          icon={<BookOpen className="h-6 w-6" />}
           color="blue"
         />
         <StatsCard
           title="Punti Totali"
-          value={totalPoints?.total_points || 0}
-          icon={TrendingUp}
+          value={(totalPoints?.total_points || 0).toString()}
+          icon={<TrendingUp className="h-6 w-6" />}
           color="purple"
         />
         <StatsCard
           title="Livello"
-          value={totalPoints?.level || 1}
-          icon={Target}
+          value={(totalPoints?.level || 1).toString()}
+          icon={<Target className="h-6 w-6" />}
           color="orange"
         />
       </div>
@@ -80,7 +80,19 @@ export const Dashboard = () => {
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Corsi Disponibili</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses?.slice(0, 6).map((course) => (
-            <CourseCard key={course.id} course={course} />
+            <CourseCard 
+              key={course.id} 
+              title={course.title}
+              description={course.description}
+              duration={course.duration}
+              type={course.course_type as 'text' | 'video' | 'arcade'}
+              image={course.image_url || 'photo-1546410531-bb4caa6b424d'}
+              level={course.level as 'Principiante' | 'Intermedio' | 'Avanzato'}
+              requiresPayment={course.requires_payment || false}
+              price={Number(course.price) || 0}
+              courseId={course.id}
+              progress={userProgress?.find(p => p.course_id === course.id)?.progress_percentage}
+            />
           ))}
         </div>
       </div>

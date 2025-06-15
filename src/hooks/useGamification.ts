@@ -4,6 +4,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCheckCertificates } from './useCertificates';
 
+interface BadgeCriteria {
+  courses_completed?: number;
+  points_minimum?: number;
+  streak_days?: number;
+}
+
 export const useUserTotalPoints = () => {
   const { user } = useAuth();
   
@@ -159,41 +165,42 @@ export const useCheckAndAwardBadges = () => {
         if (earnedBadgeIds.includes(badge.id)) continue;
         
         let shouldAward = false;
+        const criteria = badge.criteria as BadgeCriteria;
         
         // Simple badge criteria checking based on badge category
         switch (badge.category) {
           case 'progress':
-            if (badge.criteria.courses_completed) {
+            if (criteria.courses_completed) {
               const { data: completedCourses } = await supabase
                 .from('user_progress')
                 .select('id')
                 .eq('user_id', user.id)
                 .eq('progress_percentage', 100);
               
-              shouldAward = (completedCourses?.length || 0) >= badge.criteria.courses_completed;
+              shouldAward = (completedCourses?.length || 0) >= criteria.courses_completed;
             }
             break;
             
           case 'points':
-            if (badge.criteria.points_minimum) {
+            if (criteria.points_minimum) {
               const { data: totalPoints } = await supabase
                 .from('user_total_points')
                 .select('total_points')
                 .eq('user_id', user.id)
                 .single();
               
-              shouldAward = (totalPoints?.total_points || 0) >= badge.criteria.points_minimum;
+              shouldAward = (totalPoints?.total_points || 0) >= criteria.points_minimum;
             }
             break;
             
           case 'streak':
-            if (badge.criteria.streak_days) {
+            if (criteria.streak_days) {
               const { data: streak } = await supabase.rpc('get_user_current_streak', {
                 p_user_id: user.id,
                 p_activity_type: 'study'
               });
               
-              shouldAward = (streak || 0) >= badge.criteria.streak_days;
+              shouldAward = (streak || 0) >= criteria.streak_days;
             }
             break;
         }
