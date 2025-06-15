@@ -36,6 +36,21 @@ export const useCourses = () => {
   });
 };
 
+export const useUsers = () => {
+  return useQuery({
+    queryKey: ['users'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data;
+    },
+  });
+};
+
 export const useUserProgress = () => {
   const { user } = useAuth();
   

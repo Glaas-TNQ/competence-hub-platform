@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useLearningPath, useLearningPathProgress } from '@/hooks/useLearningPaths';
 import { useCourses, useUserProgress } from '@/hooks/useSupabase';
-import { CourseCard } from '@/components/CourseCard';
+import { CourseCardById } from '@/components/CourseCardById';
 
 export const LearningPathView = () => {
   const { id } = useParams<{ id: string }>();
@@ -172,7 +173,7 @@ export const LearningPathView = () => {
                       <CheckCircle className="h-8 w-8 text-success bg-background rounded-full" />
                     </div>
                   )}
-                  <CourseCard courseId={course.id} />
+                  <CourseCardById courseId={course.id} />
                 </div>
               );
             })}

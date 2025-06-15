@@ -16,7 +16,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { useCompetenceAreas, useCourses, useUserProgress } from '@/hooks/useSupabase';
-import { CourseCard } from '@/components/CourseCard';
+import { CourseCardById } from '@/components/CourseCardById';
 import { useNavigate } from 'react-router-dom';
 
 export const CompetenceAreas = () => {
@@ -184,7 +184,7 @@ export const CompetenceAreas = () => {
           {/* Courses Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCourses.map((course) => (
-              <CourseCard key={course.id} courseId={course.id} />
+              <CourseCardById key={course.id} courseId={course.id} />
             ))}
           </div>
 
