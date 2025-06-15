@@ -99,25 +99,25 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
 
   if (isLoading) {
     return (
-      <div className={`space-y-3 ${className}`}>
+      <div className={`space-y-4 ${className}`}>
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-16 bg-muted/50 rounded-lg animate-pulse"></div>
+          <div key={i} className="h-20 bg-muted/50 rounded-xl animate-pulse"></div>
         ))}
       </div>
     );
   }
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-6 ${className}`}>
       {/* Add Note Button */}
       {!isCreating && (
         <Button
           onClick={() => setIsCreating(true)}
           variant="outline"
           size="sm"
-          className="w-full gap-2 border-dashed border-2 h-10 text-sm font-medium hover:bg-muted/50"
+          className="w-full gap-2 border-dashed border-2 h-12 text-sm font-medium hover:bg-muted/50 transition-all"
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="h-5 w-5" />
           Nuova Nota
         </Button>
       )}
@@ -125,33 +125,33 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
       {/* Create Note Form */}
       {isCreating && (
         <Card className="border-2 border-dashed border-primary/30 bg-primary/5">
-          <CardContent className="p-4 space-y-4">
-            <div className="flex gap-1">
+          <CardContent className="p-6 space-y-5">
+            <div className="grid grid-cols-3 gap-2">
               <Button
                 variant={newNoteType === 'personal' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setNewNoteType('personal')}
-                className="h-8 px-3 text-xs flex-1"
+                className="h-10 text-xs flex items-center justify-center gap-2"
               >
-                <FileText className="h-3 w-3 mr-1" />
+                <FileText className="h-4 w-4" />
                 Nota
               </Button>
               <Button
                 variant={newNoteType === 'bookmark' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setNewNoteType('bookmark')}
-                className="h-8 px-3 text-xs flex-1"
+                className="h-10 text-xs flex items-center justify-center gap-2"
               >
-                <Bookmark className="h-3 w-3 mr-1" />
+                <Bookmark className="h-4 w-4" />
                 Bookmark
               </Button>
               <Button
                 variant={newNoteType === 'highlight' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setNewNoteType('highlight')}
-                className="h-8 px-3 text-xs flex-1"
+                className="h-10 text-xs flex items-center justify-center gap-2"
               >
-                <BookOpen className="h-3 w-3 mr-1" />
+                <BookOpen className="h-4 w-4" />
                 Highlight
               </Button>
             </div>
@@ -160,22 +160,22 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
               placeholder="Scrivi la tua nota..."
               value={newNoteContent}
               onChange={(e) => setNewNoteContent(e.target.value)}
-              className="min-h-[80px] text-sm resize-none"
+              className="min-h-[100px] text-sm resize-none"
             />
 
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <Switch
                   id="share-note"
                   checked={isShared}
                   onCheckedChange={setIsShared}
                 />
-                <label htmlFor="share-note" className="text-xs text-muted-foreground font-medium">
+                <label htmlFor="share-note" className="text-sm text-muted-foreground font-medium">
                   Condividi
                 </label>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <Button
                   variant="outline"
                   size="sm"
@@ -185,7 +185,7 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
                     setIsShared(false);
                     setNewNoteType('personal');
                   }}
-                  className="h-8 px-3 text-xs"
+                  className="h-9 px-4 text-sm"
                 >
                   Annulla
                 </Button>
@@ -193,7 +193,7 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
                   size="sm"
                   onClick={handleCreateNote}
                   disabled={!newNoteContent.trim() || createNote.isPending}
-                  className="h-8 px-3 text-xs"
+                  className="h-9 px-4 text-sm"
                 >
                   {createNote.isPending ? 'Salvando...' : 'Salva'}
                 </Button>
@@ -204,7 +204,7 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
       )}
 
       {/* Notes List */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {notes && notes.length > 0 ? (
           notes.map((note) => (
             <NoteCard
@@ -219,12 +219,12 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
             />
           ))
         ) : (
-          <div className="text-center py-8 border-2 border-dashed border-border rounded-lg bg-muted/30">
-            <FileText className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-            <h4 className="text-sm font-medium text-foreground mb-2">
+          <div className="text-center py-12 border-2 border-dashed border-border rounded-xl bg-muted/30">
+            <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h4 className="text-lg font-medium text-foreground mb-2">
               Nessuna nota trovata
             </h4>
-            <p className="text-xs text-muted-foreground mb-4">
+            <p className="text-sm text-muted-foreground">
               Le tue note per questo capitolo appariranno qui.
             </p>
           </div>
@@ -267,63 +267,63 @@ const NoteCard: React.FC<NoteCardProps> = ({
   };
 
   return (
-    <Card className="border border-border hover:shadow-md transition-all duration-200 bg-card/80">
-      <CardContent className="p-4 space-y-3">
+    <Card className="border border-border hover:shadow-lg transition-all duration-300 bg-card/90">
+      <CardContent className="p-5 space-y-4">
         <div className="flex items-start justify-between">
-          <div className="flex items-center gap-2 flex-1">
+          <div className="flex items-center gap-3 flex-1">
             {getNoteIcon(note.note_type)}
-            <Badge variant="secondary" className={`${getNoteTypeColor(note.note_type)} text-xs px-2 py-1`}>
+            <Badge variant="secondary" className={`${getNoteTypeColor(note.note_type)} text-sm px-3 py-1`}>
               {note.note_type === 'personal' ? 'Nota' : 
                note.note_type === 'bookmark' ? 'Bookmark' : 'Highlight'}
             </Badge>
             {note.is_shared && (
-              <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs px-2 py-1 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800">
+              <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-sm px-3 py-1 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800">
                 <Share2 className="h-3 w-3 mr-1" />
                 Condivisa
               </Badge>
             )}
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => onEdit(note.id)}
-              className="h-7 w-7 p-0 hover:bg-muted"
+              className="h-8 w-8 p-0 hover:bg-muted"
             >
-              <Edit className="h-3 w-3" />
+              <Edit className="h-4 w-4" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => onDelete(note.id)}
-              className="h-7 w-7 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+              className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
             >
-              <Trash2 className="h-3 w-3" />
+              <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         </div>
 
         {isEditing ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             <Textarea
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              className="min-h-[60px] text-sm resize-none"
+              className="min-h-[80px] text-sm resize-none"
             />
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <Switch
                   checked={editShared}
                   onCheckedChange={setEditShared}
                 />
-                <span className="text-xs text-muted-foreground font-medium">Condivisa</span>
+                <span className="text-sm text-muted-foreground font-medium">Condivisa</span>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={handleCancel} className="h-7 px-3 text-xs">
+              <div className="flex gap-3">
+                <Button variant="outline" size="sm" onClick={handleCancel} className="h-8 px-4 text-sm">
                   Annulla
                 </Button>
-                <Button size="sm" onClick={handleSave} className="h-7 px-3 text-xs">
+                <Button size="sm" onClick={handleSave} className="h-8 px-4 text-sm">
                   Salva
                 </Button>
               </div>
@@ -334,7 +334,7 @@ const NoteCard: React.FC<NoteCardProps> = ({
             <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words">
               {note.content}
             </p>
-            <div className="text-xs text-muted-foreground border-t border-border pt-2">
+            <div className="text-xs text-muted-foreground border-t border-border pt-3">
               {formatDistanceToNow(new Date(note.created_at), { 
                 addSuffix: true, 
                 locale: it 

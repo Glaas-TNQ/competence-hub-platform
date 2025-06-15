@@ -108,6 +108,12 @@ export const GoalsWidget: React.FC = () => {
                       <span className="text-educational-small font-medium text-accent-foreground">
                         {getGoalTypeLabel(goal.goal_type)}
                       </span>
+                      <Badge 
+                        variant="outline" 
+                        className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200"
+                      >
+                        In corso
+                      </Badge>
                     </div>
                     
                     <div className="space-y-educational-xs">

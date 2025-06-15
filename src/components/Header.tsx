@@ -32,35 +32,6 @@ export const Header = () => {
           <h2 className="text-educational-h2 font-bold text-accent-foreground">
             FairMind Academy
           </h2>
-          {profile?.role === 'admin' && (
-            <div className="flex items-center space-x-educational-sm">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate('/admin')}
-                className="bg-destructive/5 border-destructive/20 text-destructive hover:bg-destructive/10 hover-educational"
-              >
-                <Shield className="h-4 w-4 mr-2" />
-                Admin Panel
-              </Button>
-              <span className="text-educational-caption bg-destructive/10 text-destructive px-educational-sm py-1 rounded-pill">
-                Amministratore
-              </span>
-            </div>
-          )}
-          {user?.email === 'admin@academy.com' && !profile && (
-            <div className="flex items-center space-x-educational-sm">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate('/admin')}
-                className="bg-secondary/10 border-secondary/20 text-secondary-foreground hover:bg-secondary/20 hover-educational"
-              >
-                <Shield className="h-4 w-4 mr-2" />
-                Admin Panel (Caricamento...)
-              </Button>
-            </div>
-          )}
         </div>
         
         <div className="flex items-center space-x-educational-md">
