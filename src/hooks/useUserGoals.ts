@@ -12,15 +12,24 @@ interface UserGoal {
   period_start: string;
   period_end: string;
   is_completed: boolean;
-  completed_at?: string;
+  completed_at: string | null;
   created_at: string;
   updated_at: string;
 }
 
+interface CreateGoalData {
+  goal_type: string;
+  target_value: number;
+  current_value: number;
+  period_start: string;
+  period_end: string;
+}
+
 export const useUserGoals = () => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   
-  return useQuery({
+  const goalsQuery = useQuery({
     queryKey: ['user-goals', user?.id],
     queryFn: async () => {
       if (!user) throw new Error('User not authenticated');
@@ -36,44 +45,9 @@ export const useUserGoals = () => {
     },
     enabled: !!user,
   });
-};
 
-export const useActiveGoals = () => {
-  const { user } = useAuth();
-  
-  return useQuery({
-    queryKey: ['active-goals', user?.id],
-    queryFn: async () => {
-      if (!user) throw new Error('User not authenticated');
-      
-      const today = new Date().toISOString().split('T')[0];
-      
-      const { data, error } = await supabase
-        .from('user_goals')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('is_completed', false)
-        .lte('period_start', today)
-        .gte('period_end', today);
-      
-      if (error) throw error;
-      return data as UserGoal[];
-    },
-    enabled: !!user,
-  });
-};
-
-export const useCreateGoal = () => {
-  const queryClient = useQueryClient();
-  const { user } = useAuth();
-  
-  return useMutation({
-    mutationFn: async (goalData: {
-      goal_type: string;
-      target_value: number;
-      period_start: string;
-      period_end: string;
-    }) => {
+  const createGoal = useMutation({
+    mutationFn: async (goalData: CreateGoalData) => {
       if (!user) throw new Error('User not authenticated');
       
       const { data, error } = await supabase
@@ -90,34 +64,18 @@ export const useCreateGoal = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-goals'] });
-      queryClient.invalidateQueries({ queryKey: ['active-goals'] });
     },
   });
-};
 
-export const useUpdateGoalProgress = () => {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: async ({ goalId, currentValue }: { goalId: string; currentValue: number }) => {
+  const updateGoal = useMutation({
+    mutationFn: async ({ goalId, updates }: { goalId: string; updates: Partial<UserGoal> }) => {
+      if (!user) throw new Error('User not authenticated');
+      
       const { data, error } = await supabase
         .from('user_goals')
-        .update({ 
-          current_value: currentValue,
-          is_completed: currentValue >= (await supabase
-            .from('user_goals')
-            .select('target_value')
-            .eq('id', goalId)
-            .single()
-          ).data?.target_value,
-          completed_at: currentValue >= (await supabase
-            .from('user_goals')
-            .select('target_value')
-            .eq('id', goalId)
-            .single()
-          ).data?.target_value ? new Date().toISOString() : null
-        })
+        .update(updates)
         .eq('id', goalId)
+        .eq('user_id', user.id)
         .select()
         .single();
       
@@ -126,7 +84,65 @@ export const useUpdateGoalProgress = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-goals'] });
-      queryClient.invalidateQueries({ queryKey: ['active-goals'] });
     },
+  });
+
+  const deleteGoal = useMutation({
+    mutationFn: async (goalId: string) => {
+      if (!user) throw new Error('User not authenticated');
+      
+      const { error } = await supabase
+        .from('user_goals')
+        .delete()
+        .eq('id', goalId)
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-goals'] });
+    },
+  });
+
+  return {
+    data: goalsQuery.data,
+    isLoading: goalsQuery.isLoading,
+    error: goalsQuery.error,
+    createGoal,
+    updateGoal,
+    deleteGoal,
+  };
+};
+
+// Hook separato per le statistiche degli obiettivi
+export const useGoalStats = () => {
+  const { user } = useAuth();
+  
+  return useQuery({
+    queryKey: ['goal-stats', user?.id],
+    queryFn: async () => {
+      if (!user) throw new Error('User not authenticated');
+      
+      const { data: goals, error } = await supabase
+        .from('user_goals')
+        .select('*')
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+      
+      const total = goals.length;
+      const completed = goals.filter(g => g.is_completed).length;
+      const active = goals.filter(g => !g.is_completed && new Date(g.period_end) >= new Date()).length;
+      const expired = goals.filter(g => !g.is_completed && new Date(g.period_end) < new Date()).length;
+      
+      return {
+        total,
+        completed,
+        active,
+        expired,
+        completionRate: total > 0 ? (completed / total) * 100 : 0,
+      };
+    },
+    enabled: !!user,
   });
 };
