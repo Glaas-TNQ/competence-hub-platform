@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -41,6 +40,7 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ config, onConf
   } | null>(null);
 
   const validateUrl = (url: string) => {
+    if (!url.trim()) return false;
     try {
       const urlObj = new URL(url);
       return urlObj.protocol === 'https:' || urlObj.protocol === 'http:';
@@ -50,7 +50,9 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ config, onConf
   };
 
   const handleSave = () => {
-    if (!localConfig.endpoint) {
+    console.log('Attempting to save configuration:', localConfig);
+    
+    if (!localConfig.endpoint || !localConfig.endpoint.trim()) {
       toast({
         title: "Endpoint obbligatorio",
         description: "Inserisci l'URL del webhook.",
@@ -70,27 +72,44 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ config, onConf
 
     setIsSaving(true);
     
+    // Simulate save operation
     setTimeout(() => {
       const newConfig = {
-        ...localConfig,
+        endpoint: localConfig.endpoint.trim(),
+        apiKey: localConfig.apiKey.trim(),
         isConfigured: true
       };
 
-      // Save to localStorage
-      localStorage.setItem('agentic-webhook-config', JSON.stringify(newConfig));
+      console.log('Saving configuration to localStorage:', newConfig);
       
-      onConfigUpdate(newConfig);
-      setIsSaving(false);
-      
-      toast({
-        title: "Configurazione salvata",
-        description: "Le impostazioni del webhook sono state salvate con successo.",
-      });
+      try {
+        // Save to localStorage
+        localStorage.setItem('agentic-webhook-config', JSON.stringify(newConfig));
+        
+        // Update parent component
+        onConfigUpdate(newConfig);
+        
+        console.log('Configuration saved successfully');
+        
+        toast({
+          title: "Configurazione salvata",
+          description: "Le impostazioni del webhook sono state salvate con successo.",
+        });
+      } catch (error) {
+        console.error('Error saving configuration:', error);
+        toast({
+          title: "Errore nel salvataggio",
+          description: "Si è verificato un errore durante il salvataggio della configurazione.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsSaving(false);
+      }
     }, 500);
   };
 
   const handleTest = async () => {
-    if (!validateUrl(localConfig.endpoint)) {
+    if (!localConfig.endpoint || !validateUrl(localConfig.endpoint)) {
       toast({
         title: "URL non valido",
         description: "Inserisci un URL valido prima di testare.",
@@ -108,6 +127,8 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ config, onConf
         message: "Test connection from FairMind Academy Admin Panel",
         timestamp: new Date().toISOString()
       };
+
+      console.log('Testing webhook connection to:', localConfig.endpoint);
 
       const response = await fetch(localConfig.endpoint, {
         method: 'POST',
@@ -197,7 +218,7 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ config, onConf
           <div className="flex gap-2">
             <Button
               onClick={handleSave}
-              disabled={isSaving}
+              disabled={isSaving || !localConfig.endpoint?.trim()}
               className="flex-1"
             >
               {isSaving ? (
@@ -215,7 +236,7 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ config, onConf
 
             <Button
               onClick={handleTest}
-              disabled={isTesting || !localConfig.endpoint}
+              disabled={isTesting || !localConfig.endpoint?.trim()}
               variant="outline"
             >
               {isTesting ? (
