@@ -65,13 +65,11 @@ export const Sidebar = () => {
         }`}>
           <div className="flex items-center justify-between p-8">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center border border-primary/20">
-                <BookOpen size={22} className="text-primary" />
-              </div>
-              <div>
-                <h1 className="text-xl font-semibold text-foreground">FairMind Academy</h1>
-                <p className="text-sm text-muted-foreground">Learning Platform</p>
-              </div>
+              <img 
+                src="/lovable-uploads/a00c60b8-e61f-425d-a9d2-0b978977292c.png" 
+                alt="FairMind Logo"
+                className="h-10 w-auto"
+              />
             </div>
             <Button
               variant="ghost"
@@ -137,13 +135,11 @@ export const Sidebar = () => {
       {!isCollapsed && (
         <div className="p-8">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center border border-primary/20">
-              <BookOpen size={22} className="text-primary" />
-            </div>
-            <div>
-              <h1 className="text-xl font-semibold text-foreground">FairMind Academy</h1>
-              <p className="text-sm text-muted-foreground">Learning Platform</p>
-            </div>
+            <img 
+              src="/lovable-uploads/a00c60b8-e61f-425d-a9d2-0b978977292c.png" 
+              alt="FairMind Logo"
+              className="h-10 w-auto"
+            />
           </div>
         </div>
       )}
@@ -151,9 +147,11 @@ export const Sidebar = () => {
       {/* Central icon when collapsed */}
       {isCollapsed && (
         <div className="p-4 flex justify-center">
-          <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center border border-primary/20">
-            <BookOpen size={22} className="text-primary" />
-          </div>
+          <img 
+            src="/lovable-uploads/a00c60b8-e61f-425d-a9d2-0b978977292c.png" 
+            alt="FairMind Logo"
+            className="h-10 w-auto"
+          />
         </div>
       )}
 

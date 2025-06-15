@@ -29,9 +29,11 @@ export const Header = () => {
     <header className="bg-background border-b border-border px-educational-lg py-educational-md">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-educational-md">
-          <h2 className="text-educational-h2 font-bold text-accent-foreground">
-            FairMind Academy
-          </h2>
+          <img 
+            src="/lovable-uploads/a00c60b8-e61f-425d-a9d2-0b978977292c.png" 
+            alt="FairMind Logo"
+            className="h-8 w-auto"
+          />
         </div>
         
         <div className="flex items-center space-x-educational-md">
