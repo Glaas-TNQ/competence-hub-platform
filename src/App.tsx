@@ -29,9 +29,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="ui-theme">
-        <AuthProvider>
-          <LanguageProvider>
-            <Router>
+        <Router>
+          <AuthProvider>
+            <LanguageProvider>
               <div className="min-h-screen bg-background">
                 <Routes>
                   <Route path="/auth" element={<Auth />} />
@@ -65,9 +65,9 @@ function App() {
                   } />
                 </Routes>
               </div>
-            </Router>
-          </LanguageProvider>
-        </AuthProvider>
+            </LanguageProvider>
+          </AuthProvider>
+        </Router>
       </ThemeProvider>
     </QueryClientProvider>
   );
