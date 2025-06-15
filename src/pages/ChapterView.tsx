@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, BookOpen, Play, CheckCircle } from 'lucide-react';
 import { useCourses, useUpdateProgress } from '../hooks/useSupabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/button';
+import { BlockRenderer } from '../components/chapter/BlockRenderer';
 
 export const ChapterView = () => {
   const { courseId, chapterIndex } = useParams<{ courseId: string; chapterIndex: string }>();
@@ -138,38 +138,86 @@ export const ChapterView = () => {
     }
   };
 
-  const renderChapterContent = () => {
-    // Handle different content structures
-    let contentToRender = '';
+  const parseContentBlocks = (content: any) => {
+    if (!content) return [];
     
-    if (!currentChapter.content) {
-      contentToRender = '';
-    } else if (typeof currentChapter.content === 'string') {
-      contentToRender = currentChapter.content;
-    } else if (Array.isArray(currentChapter.content)) {
-      // If content is an array, join the elements
-      contentToRender = currentChapter.content.map(item => {
-        if (typeof item === 'string') return item;
-        if (typeof item === 'object' && item !== null) return JSON.stringify(item);
-        return String(item);
-      }).join('\n\n');
-    } else if (typeof currentChapter.content === 'object' && currentChapter.content !== null) {
-      // If content is an object, try to extract meaningful text
-      const contentObj = currentChapter.content as any;
-      if (contentObj.text) {
-        contentToRender = contentObj.text;
-      } else if (contentObj.html) {
-        contentToRender = contentObj.html;
-      } else {
-        contentToRender = JSON.stringify(currentChapter.content, null, 2);
+    // Handle string content that might be JSON
+    if (typeof content === 'string') {
+      // Check if it looks like a JSON block format
+      if (content.includes('"id":"block-') && content.includes('"type":')) {
+        try {
+          // Parse individual blocks from the string
+          const blockMatches = content.match(/\{"id":"block-[^}]+\}/g);
+          if (blockMatches) {
+            return blockMatches.map((blockStr, index) => {
+              try {
+                const block = JSON.parse(blockStr);
+                return {
+                  id: block.id || `block-${index}`,
+                  type: block.type || 'text',
+                  data: block.data || {},
+                  order: block.order || index
+                };
+              } catch (e) {
+                console.error('Error parsing block:', e);
+                return {
+                  id: `block-${index}`,
+                  type: 'text',
+                  data: { text: blockStr },
+                  order: index
+                };
+              }
+            });
+          }
+        } catch (e) {
+          console.error('Error parsing content blocks:', e);
+        }
       }
-    } else {
-      contentToRender = String(currentChapter.content || '');
+      
+      // If it's just plain text, return as a single text block
+      return [{
+        id: 'block-0',
+        type: 'text',
+        data: { text: content },
+        order: 0
+      }];
     }
+    
+    // Handle array of blocks
+    if (Array.isArray(content)) {
+      return content.map((block, index) => ({
+        id: block.id || `block-${index}`,
+        type: block.type || 'text',
+        data: block.data || block,
+        order: block.order !== undefined ? block.order : index
+      }));
+    }
+    
+    // Handle single object
+    if (typeof content === 'object' && content !== null) {
+      if (content.id && content.type && content.data) {
+        // Single block object
+        return [content];
+      } else {
+        // Generic object, treat as text
+        return [{
+          id: 'block-0',
+          type: 'text',
+          data: { text: JSON.stringify(content, null, 2) },
+          order: 0
+        }];
+      }
+    }
+    
+    return [];
+  };
 
-    console.log('Content to render:', contentToRender);
+  const renderChapterContent = () => {
+    const blocks = parseContentBlocks(currentChapter.content);
+    
+    console.log('Parsed blocks:', blocks);
 
-    if (!contentToRender || contentToRender.trim() === '') {
+    if (blocks.length === 0) {
       return (
         <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-lg">
           <BookOpen className="mx-auto h-12 w-12 text-slate-400 mb-4" />
@@ -181,17 +229,7 @@ export const ChapterView = () => {
       );
     }
 
-    // Check if content looks like HTML
-    if (contentToRender.includes('<') && contentToRender.includes('>')) {
-      return <div dangerouslySetInnerHTML={{ __html: contentToRender }} />;
-    } else {
-      // Render as plain text with line breaks preserved
-      return (
-        <div className="whitespace-pre-wrap">
-          {contentToRender}
-        </div>
-      );
-    }
+    return <BlockRenderer blocks={blocks} />;
   };
 
   return (
@@ -234,23 +272,7 @@ export const ChapterView = () => {
       {/* Chapter Content */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-6">
         <div className="prose max-w-none">
-          {currentChapter.type === 'video' && currentChapter.video_url ? (
-            <div className="mb-6">
-              <div className="aspect-video bg-slate-100 rounded-lg flex items-center justify-center">
-                <div className="text-center">
-                  <Play size={48} className="mx-auto text-slate-400 mb-2" />
-                  <p className="text-slate-600">Video placeholder</p>
-                  <p className="text-sm text-slate-500">
-                    {currentChapter.video_url}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ) : null}
-          
-          <div className="text-slate-800 leading-relaxed">
-            {renderChapterContent()}
-          </div>
+          {renderChapterContent()}
         </div>
       </div>
 
