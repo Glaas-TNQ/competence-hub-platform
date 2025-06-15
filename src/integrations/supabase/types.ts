@@ -66,6 +66,41 @@ export type Database = {
         }
         Relationships: []
       }
+      chapter_progress: {
+        Row: {
+          chapter_index: number
+          completed_at: string
+          course_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          chapter_index: number
+          completed_at?: string
+          course_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          chapter_index?: number
+          completed_at?: string
+          course_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chapter_progress_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       competence_areas: {
         Row: {
           color: string | null
