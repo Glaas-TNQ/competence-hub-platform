@@ -1,6 +1,6 @@
 export interface DashboardWidget {
   id: string;
-  type: 'stats' | 'certificates' | 'streak' | 'level' | 'badges' | 'recent-courses' | 'goals' | 'notes';
+  type: 'stats' | 'certificates' | 'streak' | 'level' | 'badges' | 'recent-courses' | 'goals' | 'notes' | 'analytics';
   title: string;
   size: 'small' | 'medium' | 'large';
   position: {
@@ -88,6 +88,14 @@ export const DEFAULT_WIDGETS: DashboardWidget[] = [
     title: 'Corsi Disponibili',
     size: 'large',
     position: { x: 0, y: 3 },
+    visible: true,
+  },
+  {
+    id: 'analytics-widget',
+    type: 'analytics',
+    title: 'Analytics e Insights',
+    size: 'large',
+    position: { x: 0, y: 4 },
     visible: true,
   },
 ];

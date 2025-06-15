@@ -9,6 +9,7 @@ import { UserBadges } from '@/components/gamification/UserBadges';
 import { RecentCourses } from '@/components/courses/RecentCourses';
 import { NotesWidget } from '@/components/notes/NotesWidget';
 import { GoalsWidget } from '@/components/goals/GoalsWidget';
+import { AnalyticsOverview } from '@/components/analytics/AnalyticsOverview';
 import { DashboardWidgetProps } from '@/types/dashboard';
 
 export const DashboardWidget: React.FC<DashboardWidgetProps> = ({ 
@@ -41,6 +42,8 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
         return <NotesWidget />;
       case 'goals':
         return <GoalsWidget />;
+      case 'analytics':
+        return <AnalyticsOverview />;
       default:
         return <div className="p-4 text-gray-500">Widget non riconosciuto</div>;
     }

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -20,6 +21,7 @@ import { Badges } from './pages/Badges';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Notes } from './pages/Notes';
 import { Goals } from './pages/Goals';
+import { Analytics } from './pages/Analytics';
 import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -52,6 +54,7 @@ function App() {
                             <Route path="/badges" element={<Badges />} />
                             <Route path="/notes" element={<Notes />} />
                             <Route path="/goals" element={<Goals />} />
+                            <Route path="/analytics" element={<Analytics />} />
                             <Route path="/admin" element={<AdminDashboard />} />
                             <Route path="*" element={<NotFound />} />
                           </Routes>
