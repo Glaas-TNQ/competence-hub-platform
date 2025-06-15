@@ -1,4 +1,3 @@
-
 import { Bell, User, LogOut, Settings as SettingsIcon, Bot } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -47,22 +46,18 @@ export const Header = () => {
           </div>
           
           <div className="flex items-center space-x-educational-md">
-            <Button
-              onClick={() => setIsChatOpen(true)}
-              variant="outline"
-              size="icon"
-              className="hover-educational relative bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20 hover:from-primary/20 hover:to-secondary/20"
-              title="Assistente AI"
-            >
-              <Bot className="h-5 w-5 text-primary" />
-            </Button>
-            
-            <button className="relative p-educational-sm text-muted-foreground hover:text-accent-foreground transition-colors hover-educational rounded-educational">
-              <Bell size={20} />
-              <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-educational-caption rounded-full w-5 h-5 flex items-center justify-center">
-                3
-              </span>
-            </button>
+            <div className="flex items-center space-x-2">
+              <Button
+                onClick={() => setIsChatOpen(true)}
+                variant="outline"
+                size="icon"
+                className="hover-educational relative bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20 hover:from-primary/20 hover:to-secondary/20"
+                title="Assistente AI"
+              >
+                <Bot className="h-5 w-5 text-primary" />
+              </Button>
+              <span className="text-sm text-muted-foreground">Need Help?</span>
+            </div>
 
             <ThemeToggle />
             

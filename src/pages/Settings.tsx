@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/contexts/LanguageContext';
 import { useUpdateUserPreferences, useUserPreferences } from '@/hooks/useUserPreferences';
 import { useToast } from '@/hooks/use-toast';
-import { User, Palette } from 'lucide-react';
+import { User, Globe } from 'lucide-react';
 
 type Language = 'it' | 'en';
 
@@ -23,7 +23,6 @@ export const Settings: React.FC = () => {
   const [formData, setFormData] = useState({
     firstName: profile?.full_name?.split(' ')[0] || '',
     lastName: profile?.full_name?.split(' ')[1] || '',
-    theme: 'light',
     language: language,
   });
 
@@ -31,7 +30,6 @@ export const Settings: React.FC = () => {
     if (preferences) {
       setFormData(prev => ({
         ...prev,
-        theme: preferences.theme_settings?.theme || 'light',
         language: preferences.theme_settings?.language || language,
       }));
     }
@@ -41,7 +39,6 @@ export const Settings: React.FC = () => {
     try {
       await updatePreferences.mutateAsync({
         theme_settings: {
-          theme: formData.theme,
           language: formData.language
         },
         personal_goals: {
@@ -55,12 +52,12 @@ export const Settings: React.FC = () => {
       
       toast({
         title: t('common.success'),
-        description: "Le tue impostazioni sono state aggiornate con successo.",
+        description: t('settings.settingsUpdated'),
       });
     } catch (error) {
       toast({
         title: t('common.error'),
-        description: "Si è verificato un errore durante il salvataggio.",
+        description: t('settings.errorSaving'),
         variant: "destructive",
       });
     }
@@ -69,6 +66,7 @@ export const Settings: React.FC = () => {
   const handleLanguageChange = (newLanguage: string) => {
     const validLanguage = newLanguage as Language;
     setFormData({...formData, language: validLanguage});
+    setLanguage(validLanguage);
   };
 
   return (
@@ -130,29 +128,15 @@ export const Settings: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Appearance Settings */}
+          {/* Language Settings */}
           <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Palette className="w-5 h-5 text-secondary" />
-                {t('settings.appearanceTheme')}
+                <Globe className="w-5 h-5 text-secondary" />
+                {t('settings.language')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div>
-                <Label className="text-sm font-medium text-foreground">{t('settings.theme')}</Label>
-                <Select value={formData.theme} onValueChange={(value) => setFormData({...formData, theme: value})}>
-                  <SelectTrigger className="mt-2 border-0 bg-background/50 rounded-xl">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="light">{t('settings.themeLight')}</SelectItem>
-                    <SelectItem value="dark">{t('settings.themeDark')}</SelectItem>
-                    <SelectItem value="system">{t('settings.themeSystem')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
               <div>
                 <Label className="text-sm font-medium text-foreground">{t('settings.language')}</Label>
                 <Select value={formData.language} onValueChange={handleLanguageChange}>
