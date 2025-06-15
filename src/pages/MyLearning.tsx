@@ -1,9 +1,10 @@
 
-
 import { CourseCard } from '../components/CourseCard';
 import { useUserProgress, useCourses } from '../hooks/useSupabase';
+import { useNavigate } from 'react-router-dom';
 
 export const MyLearning = () => {
+  const navigate = useNavigate();
   const { data: userProgress = [], isLoading: progressLoading } = useUserProgress();
   const { data: allCourses = [], isLoading: coursesLoading } = useCourses();
 
@@ -110,7 +111,10 @@ export const MyLearning = () => {
           </div>
           <h3 className="text-xl font-semibold text-slate-600 mb-2">Nessun corso iniziato</h3>
           <p className="text-slate-500 mb-6">Inizia il tuo percorso di apprendimento esplorando le nostre aree di competenza</p>
-          <button className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:from-blue-700 hover:to-blue-600 transition-all duration-200">
+          <button 
+            onClick={() => navigate('/areas')}
+            className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:from-blue-700 hover:to-blue-600 transition-all duration-200"
+          >
             Esplora Corsi
           </button>
         </div>
@@ -118,4 +122,3 @@ export const MyLearning = () => {
     </div>
   );
 };
-
