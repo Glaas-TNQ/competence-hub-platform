@@ -78,7 +78,7 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
   const getNoteIcon = (type: string) => {
     switch (type) {
       case 'bookmark':
-        return <Bookmark className="h-4 w-4 text-yellow-600" />;
+        return <Bookmark className="h-4 w-4 text-amber-600" />;
       case 'highlight':
         return <BookOpen className="h-4 w-4 text-blue-600" />;
       default:
@@ -89,49 +89,49 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
   const getNoteTypeColor = (type: string) => {
     switch (type) {
       case 'bookmark':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-800';
       case 'highlight':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800';
       default:
-        return 'bg-slate-100 text-slate-800 border-slate-200';
+        return 'bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-950/30 dark:text-slate-400 dark:border-slate-800';
     }
   };
 
   if (isLoading) {
     return (
-      <div className={`space-y-4 ${className}`}>
+      <div className={`space-y-3 ${className}`}>
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-20 bg-muted/50 rounded-lg animate-pulse"></div>
+          <div key={i} className="h-16 bg-muted/50 rounded-lg animate-pulse"></div>
         ))}
       </div>
     );
   }
 
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className={`space-y-4 ${className}`}>
       {/* Add Note Button */}
       {!isCreating && (
         <Button
           onClick={() => setIsCreating(true)}
           variant="outline"
           size="sm"
-          className="w-full gap-2 border-dashed"
+          className="w-full gap-2 border-dashed border-2 h-10 text-sm font-medium hover:bg-muted/50"
         >
           <Plus className="h-4 w-4" />
-          Aggiungi Nota
+          Nuova Nota
         </Button>
       )}
 
       {/* Create Note Form */}
       {isCreating && (
-        <div className="bg-muted/30 rounded-xl p-4 border border-dashed border-border">
-          <div className="space-y-4">
+        <Card className="border-2 border-dashed border-primary/30 bg-primary/5">
+          <CardContent className="p-4 space-y-4">
             <div className="flex gap-1">
               <Button
                 variant={newNoteType === 'personal' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setNewNoteType('personal')}
-                className="h-8 px-3 text-xs"
+                className="h-8 px-3 text-xs flex-1"
               >
                 <FileText className="h-3 w-3 mr-1" />
                 Nota
@@ -140,7 +140,7 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
                 variant={newNoteType === 'bookmark' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setNewNoteType('bookmark')}
-                className="h-8 px-3 text-xs"
+                className="h-8 px-3 text-xs flex-1"
               >
                 <Bookmark className="h-3 w-3 mr-1" />
                 Bookmark
@@ -149,7 +149,7 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
                 variant={newNoteType === 'highlight' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setNewNoteType('highlight')}
-                className="h-8 px-3 text-xs"
+                className="h-8 px-3 text-xs flex-1"
               >
                 <BookOpen className="h-3 w-3 mr-1" />
                 Highlight
@@ -160,7 +160,7 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
               placeholder="Scrivi la tua nota..."
               value={newNoteContent}
               onChange={(e) => setNewNoteContent(e.target.value)}
-              className="min-h-[80px] text-sm"
+              className="min-h-[80px] text-sm resize-none"
             />
 
             <div className="flex items-center justify-between">
@@ -170,7 +170,7 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
                   checked={isShared}
                   onCheckedChange={setIsShared}
                 />
-                <label htmlFor="share-note" className="text-xs text-muted-foreground">
+                <label htmlFor="share-note" className="text-xs text-muted-foreground font-medium">
                   Condividi
                 </label>
               </div>
@@ -183,6 +183,7 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
                     setIsCreating(false);
                     setNewNoteContent('');
                     setIsShared(false);
+                    setNewNoteType('personal');
                   }}
                   className="h-8 px-3 text-xs"
                 >
@@ -198,8 +199,8 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
                 </Button>
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Notes List */}
@@ -218,23 +219,14 @@ export const NotesManager: React.FC<NotesManagerProps> = ({
             />
           ))
         ) : (
-          <div className="text-center py-8">
-            <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+          <div className="text-center py-8 border-2 border-dashed border-border rounded-lg bg-muted/30">
+            <FileText className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
             <h4 className="text-sm font-medium text-foreground mb-2">
               Nessuna nota trovata
             </h4>
             <p className="text-xs text-muted-foreground mb-4">
-              Inizia a prendere note per questo capitolo.
+              Le tue note per questo capitolo appariranno qui.
             </p>
-            <Button 
-              onClick={() => setIsCreating(true)}
-              size="sm"
-              variant="outline"
-              className="gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              Crea la prima nota
-            </Button>
           </div>
         )}
       </div>
@@ -275,83 +267,85 @@ const NoteCard: React.FC<NoteCardProps> = ({
   };
 
   return (
-    <div className="bg-card/50 border border-border rounded-lg p-4 space-y-3 hover:bg-card/70 transition-colors">
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-2 flex-1">
-          {getNoteIcon(note.note_type)}
-          <Badge variant="secondary" className={`${getNoteTypeColor(note.note_type)} text-xs`}>
-            {note.note_type === 'personal' ? 'Nota' : 
-             note.note_type === 'bookmark' ? 'Bookmark' : 'Highlight'}
-          </Badge>
-          {note.is_shared && (
-            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs">
-              <Share2 className="h-3 w-3 mr-1" />
-              Condivisa
+    <Card className="border border-border hover:shadow-md transition-all duration-200 bg-card/80">
+      <CardContent className="p-4 space-y-3">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-2 flex-1">
+            {getNoteIcon(note.note_type)}
+            <Badge variant="secondary" className={`${getNoteTypeColor(note.note_type)} text-xs px-2 py-1`}>
+              {note.note_type === 'personal' ? 'Nota' : 
+               note.note_type === 'bookmark' ? 'Bookmark' : 'Highlight'}
             </Badge>
-          )}
-        </div>
-
-        <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onEdit(note.id)}
-            className="h-7 w-7 p-0 hover:bg-muted"
-          >
-            <Edit className="h-3 w-3" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onDelete(note.id)}
-            className="h-7 w-7 p-0 text-red-500 hover:text-red-600 hover:bg-red-50"
-          >
-            <Trash2 className="h-3 w-3" />
-          </Button>
-        </div>
-      </div>
-
-      {isEditing ? (
-        <div className="space-y-3">
-          <Textarea
-            value={editContent}
-            onChange={(e) => setEditContent(e.target.value)}
-            className="min-h-[60px] text-sm"
-          />
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Switch
-                checked={editShared}
-                onCheckedChange={setEditShared}
-              />
-              <span className="text-xs text-muted-foreground">Condivisa</span>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={handleCancel} className="h-7 px-3 text-xs">
-                Annulla
-              </Button>
-              <Button size="sm" onClick={handleSave} className="h-7 px-3 text-xs">
-                Salva
-              </Button>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <>
-          <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
-            {note.content}
-          </p>
-          <div className="text-xs text-muted-foreground">
-            {formatDistanceToNow(new Date(note.created_at), { 
-              addSuffix: true, 
-              locale: it 
-            })}
-            {note.chapter_index !== null && (
-              <span className="ml-2">• Capitolo {note.chapter_index + 1}</span>
+            {note.is_shared && (
+              <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs px-2 py-1 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800">
+                <Share2 className="h-3 w-3 mr-1" />
+                Condivisa
+              </Badge>
             )}
           </div>
-        </>
-      )}
-    </div>
+
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onEdit(note.id)}
+              className="h-7 w-7 p-0 hover:bg-muted"
+            >
+              <Edit className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onDelete(note.id)}
+              className="h-7 w-7 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
+          </div>
+        </div>
+
+        {isEditing ? (
+          <div className="space-y-3">
+            <Textarea
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+              className="min-h-[60px] text-sm resize-none"
+            />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  checked={editShared}
+                  onCheckedChange={setEditShared}
+                />
+                <span className="text-xs text-muted-foreground font-medium">Condivisa</span>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={handleCancel} className="h-7 px-3 text-xs">
+                  Annulla
+                </Button>
+                <Button size="sm" onClick={handleSave} className="h-7 px-3 text-xs">
+                  Salva
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words">
+              {note.content}
+            </p>
+            <div className="text-xs text-muted-foreground border-t border-border pt-2">
+              {formatDistanceToNow(new Date(note.created_at), { 
+                addSuffix: true, 
+                locale: it 
+              })}
+              {note.chapter_index !== null && (
+                <span className="ml-2">• Capitolo {note.chapter_index + 1}</span>
+              )}
+            </div>
+          </>
+        )}
+      </CardContent>
+    </Card>
   );
 };

@@ -11,23 +11,25 @@ interface ImageBlockProps {
 
 export const ImageBlock: React.FC<ImageBlockProps> = ({ data }) => {
   return (
-    <div className="mb-6">
+    <div className="mb-8">
       {data.title && (
-        <h3 className="text-xl font-semibold text-slate-800 mb-3">
+        <h3 className="text-xl font-semibold text-foreground mb-4">
           {data.title}
         </h3>
       )}
       {data.imageUrl && (
-        <div className="rounded-lg overflow-hidden border border-slate-200">
-          <img 
-            src={data.imageUrl} 
-            alt={data.description || 'Course content image'}
-            className="w-full h-auto"
-          />
+        <div className="w-full max-w-4xl mx-auto">
+          <div className="aspect-video bg-muted rounded-xl overflow-hidden border border-border shadow-sm">
+            <img 
+              src={data.imageUrl} 
+              alt={data.description || 'Course content image'}
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
       )}
       {data.description && (
-        <p className="text-sm text-slate-600 mt-2 italic">
+        <p className="text-sm text-muted-foreground mt-3 text-center italic">
           {data.description}
         </p>
       )}

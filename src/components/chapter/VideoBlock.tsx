@@ -24,32 +24,34 @@ export const VideoBlock: React.FC<VideoBlockProps> = ({ data }) => {
   };
 
   return (
-    <div className="mb-6">
+    <div className="mb-8">
       {data.title && (
-        <h3 className="text-xl font-semibold text-slate-800 mb-3">
+        <h3 className="text-xl font-semibold text-foreground mb-4">
           {data.title}
         </h3>
       )}
-      {data.videoUrl ? (
-        <div className="aspect-video bg-slate-100 rounded-lg overflow-hidden border border-slate-200">
-          <iframe
-            src={getEmbedUrl(data.videoUrl)}
-            title={data.title || 'Course video'}
-            className="w-full h-full"
-            allowFullScreen
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          />
-        </div>
-      ) : (
-        <div className="aspect-video bg-slate-100 rounded-lg flex items-center justify-center border-2 border-dashed border-slate-300">
-          <div className="text-center">
-            <Play size={48} className="mx-auto text-slate-400 mb-2" />
-            <p className="text-slate-600">Video non disponibile</p>
+      <div className="w-full max-w-4xl mx-auto">
+        {data.videoUrl ? (
+          <div className="aspect-video bg-black rounded-xl overflow-hidden border border-border shadow-lg">
+            <iframe
+              src={getEmbedUrl(data.videoUrl)}
+              title={data.title || 'Course video'}
+              className="w-full h-full"
+              allowFullScreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            />
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="aspect-video bg-muted rounded-xl flex items-center justify-center border-2 border-dashed border-border">
+            <div className="text-center">
+              <Play size={48} className="mx-auto text-muted-foreground mb-3" />
+              <p className="text-muted-foreground font-medium">Video non disponibile</p>
+            </div>
+          </div>
+        )}
+      </div>
       {data.description && (
-        <p className="text-sm text-slate-600 mt-2">
+        <p className="text-sm text-muted-foreground mt-3 text-center">
           {data.description}
         </p>
       )}
