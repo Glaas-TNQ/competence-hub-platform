@@ -65,12 +65,11 @@ export const useMarkChapterComplete = () => {
       // Record activity with completion time
       await recordActivity.mutateAsync({
         activityType: 'chapter_complete',
-        activityData: { 
+        metadata: { 
           completion_time_ms: completionTime,
-          chapter_index: chapterIndex 
+          chapter_index: chapterIndex,
+          course_id: courseId
         },
-        courseId: courseId,
-        chapterIndex: chapterIndex,
       });
       
       // Award points for chapter completion (10 points)
@@ -144,11 +143,11 @@ export const useCalculateProgress = () => {
         // Record course completion activity
         await recordActivity.mutateAsync({
           activityType: 'course_complete',
-          activityData: { 
+          metadata: { 
             total_chapters: totalChapters,
-            completion_percentage: 100 
+            completion_percentage: 100,
+            course_id: courseId
           },
-          courseId: courseId,
         });
         
         await awardPoints.mutateAsync({

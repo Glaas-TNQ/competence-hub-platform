@@ -25,15 +25,31 @@ const categoryLabels = {
   special: 'Speciale',
 };
 
+interface BadgeType {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: string;
+  criteria: any;
+  points_reward: number;
+  rarity: string;
+}
+
+interface UserBadgeType {
+  badge_id: string;
+  badges: BadgeType;
+}
+
 export const BadgeExplorer = () => {
   const { data: userBadges } = useUserBadges();
   const { data: allBadges } = useAllBadges();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
 
-  const earnedBadgeIds = new Set(userBadges?.map(ub => ub.badge_id) || []);
+  const earnedBadgeIds = new Set((userBadges as UserBadgeType[])?.map(ub => ub.badge_id) || []);
   
-  const filteredBadges = allBadges?.filter(badge => {
+  const filteredBadges = (allBadges as BadgeType[])?.filter(badge => {
     const categoryMatch = selectedCategory === 'all' || badge.category === selectedCategory;
     const statusMatch = selectedStatus === 'all' || 
       (selectedStatus === 'earned' && earnedBadgeIds.has(badge.id)) ||
@@ -42,10 +58,12 @@ export const BadgeExplorer = () => {
     return categoryMatch && statusMatch;
   }) || [];
 
-  const categories = ['all', ...new Set(allBadges?.map(b => b.category) || [])];
+  const categories = ['all', ...new Set((allBadges as BadgeType[])?.map(b => b.category) || [])];
 
-  const getBadgeDescription = (badge: any) => {
+  const getBadgeDescription = (badge: BadgeType) => {
     const criteria = badge.criteria;
+    if (!criteria || typeof criteria !== 'object') return badge.description;
+    
     switch (criteria.type) {
       case 'chapter_completion':
         return `Completa ${criteria.count} capitoli`;
@@ -163,7 +181,7 @@ export const BadgeExplorer = () => {
               {/* Rarity and points */}
               <div className="flex items-center justify-between text-sm">
                 <Badge variant="outline" className="text-xs border-current">
-                  {rarityLabels[badge.rarity as keyof typeof rarityLabels]}
+                  {rarityLabels[badge.rarity as keyof typeof rarityLabels] || badge.rarity}
                 </Badge>
                 <span className="font-medium">
                   {badge.points_reward} punti

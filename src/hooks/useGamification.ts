@@ -103,6 +103,32 @@ export const useUserBadges = () => {
   });
 };
 
+export const useAllBadges = () => {
+  return useQuery({
+    queryKey: ['all-badges'],
+    queryFn: async () => {
+      try {
+        const { data, error } = await supabase
+          .from('badges')
+          .select('*')
+          .eq('is_active', true)
+          .order('name');
+        
+        if (error) {
+          console.error('Error fetching all badges:', error);
+          return [];
+        }
+        
+        return data || [];
+      } catch (error) {
+        console.error('Error in useAllBadges:', error);
+        return [];
+      }
+    },
+    retry: false,
+  });
+};
+
 export const useUserPoints = () => {
   const { user } = useAuth();
   
@@ -183,6 +209,33 @@ export const useAwardPoints = () => {
   });
 };
 
+export const useCheckAndAwardBadges = () => {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+  
+  return useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error('User not authenticated');
+      
+      try {
+        const { error } = await supabase
+          .rpc('check_and_award_badges_safe', {
+            p_user_id: user.id
+          });
+        
+        if (error) throw error;
+        return true;
+      } catch (error) {
+        console.error('Error checking badges:', error);
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-badges'] });
+    },
+  });
+};
+
 export const useRecordActivity = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
@@ -202,7 +255,7 @@ export const useRecordActivity = () => {
             user_id: user.id,
             activity_type: activityType,
             activity_id: activityId,
-            metadata: metadata || {},
+            activity_data: metadata || {},
           })
           .select()
           .single();

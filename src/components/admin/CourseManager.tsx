@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,8 +11,11 @@ import { Plus, Edit, Trash2, Eye, FileText, Euro, Lock } from 'lucide-react';
 import { useCourses, useCompetenceAreas, useCreateCourse, useUpdateCourse } from '@/hooks/useSupabase';
 import { CourseContentEditor } from './CourseContentEditor';
 import { toast } from '@/hooks/use-toast';
+import { sanitizeText, validateImageUrl, sanitizeUrl } from '@/utils/security';
+import { useAdminSecurity } from '@/hooks/useAdminSecurity';
 
 export const CourseManager = () => {
+  const { isAdmin, requireAdmin } = useAdminSecurity();
   const { data: courses, isLoading: coursesLoading } = useCourses();
   const { data: competenceAreas } = useCompetenceAreas();
   const createCourseMutation = useCreateCourse();
@@ -34,21 +36,54 @@ export const CourseManager = () => {
     price: 0
   });
 
+  // Security check
+  if (!isAdmin) {
+    return (
+      <div className="text-center py-20">
+        <h2 className="text-2xl font-bold text-destructive mb-4">Access Denied</h2>
+        <p className="text-muted-foreground">Admin privileges required to access course management.</p>
+      </div>
+    );
+  }
+
   const handleCreateCourse = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.description || !formData.competence_area_id || 
-        !formData.course_type || !formData.level || !formData.duration) {
-      toast({
-        title: "Errore",
-        description: "Compila tutti i campi obbligatori",
-        variant: "destructive"
-      });
-      return;
-    }
-
     try {
-      await createCourseMutation.mutateAsync(formData);
+      requireAdmin();
+      
+      // Validate required fields
+      if (!formData.title || !formData.description || !formData.competence_area_id || 
+          !formData.course_type || !formData.level || !formData.duration) {
+        toast({
+          title: "Errore",
+          description: "Compila tutti i campi obbligatori",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Sanitize and validate inputs
+      const sanitizedData = {
+        ...formData,
+        title: sanitizeText(formData.title.trim()),
+        description: sanitizeText(formData.description.trim()),
+        duration: sanitizeText(formData.duration.trim()),
+        image_url: formData.image_url ? sanitizeUrl(formData.image_url) : '',
+        price: Math.max(0, formData.price)
+      };
+
+      // Validate image URL if provided
+      if (sanitizedData.image_url && !validateImageUrl(sanitizedData.image_url)) {
+        toast({
+          title: "Errore",
+          description: "URL immagine non valido",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      await createCourseMutation.mutateAsync(sanitizedData);
       toast({
         title: "Successo",
         description: "Corso creato con successo"
@@ -77,6 +112,8 @@ export const CourseManager = () => {
 
   const handleSaveCourseContent = async (courseId: string, content: any) => {
     try {
+      requireAdmin();
+      
       await updateCourseMutation.mutateAsync({
         id: courseId,
         updates: { content }
@@ -93,6 +130,12 @@ export const CourseManager = () => {
         variant: "destructive"
       });
     }
+  };
+
+  const getCompetenceAreaName = (course: any) => {
+    if (!course.competence_area_id || !competenceAreas) return 'N/A';
+    const area = competenceAreas.find(area => area.id === course.competence_area_id);
+    return area?.name || 'N/A';
   };
 
   const getTypeColor = (type: string) => {
@@ -346,7 +389,7 @@ export const CourseManager = () => {
               </div>
               <div className="text-sm text-slate-600">
                 <p>Durata: {course.duration}</p>
-                <p>Area: {course.competence_areas?.name}</p>
+                <p>Area: {getCompetenceAreaName(course)}</p>
                 {course.requires_payment && course.price > 0 && (
                   <p className="flex items-center gap-1 text-purple-600 font-medium">
                     <Euro className="h-3 w-3" />
