@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { StatsCard } from "@/components/StatsCard";
 import { CourseCard } from "@/components/CourseCard";
@@ -15,8 +16,10 @@ import { useDashboardCustomization } from "@/hooks/useDashboardCustomization";
 import { BookOpen, Award, TrendingUp, Target, Settings } from "lucide-react";
 
 export const Dashboard = () => {
-  const { data: courses, isLoading: coursesLoading } = useCourses();
-  const { data: userProgress, isLoading: progressLoading } = useUserProgress();
+  console.log('Dashboard component rendering');
+  
+  const { data: courses, isLoading: coursesLoading, error: coursesError } = useCourses();
+  const { data: userProgress, isLoading: progressLoading, error: progressError } = useUserProgress();
   const { data: totalPoints } = useUserTotalPoints();
   
   const {
@@ -28,26 +31,54 @@ export const Dashboard = () => {
 
   const [showCustomizer, setShowCustomizer] = useState(false);
 
-  const completedCourses = userProgress?.filter(p => p.progress_percentage === 100)?.length || 0;
-  const inProgressCourses = userProgress?.filter(p => p.progress_percentage > 0 && p.progress_percentage < 100)?.length || 0;
+  console.log('Dashboard data:', { courses, userProgress, totalPoints, dashboardLayout });
+  console.log('Dashboard loading states:', { coursesLoading, progressLoading });
+  console.log('Dashboard errors:', { coursesError, progressError });
+
+  // Safe array access with fallbacks
+  const safeUserProgress = userProgress || [];
+  const safeCourses = courses || [];
+  const safeDashboardWidgets = dashboardLayout?.widgets || [];
+
+  const completedCourses = safeUserProgress.filter(p => p.progress_percentage === 100)?.length || 0;
+  const inProgressCourses = safeUserProgress.filter(p => p.progress_percentage > 0 && p.progress_percentage < 100)?.length || 0;
+
+  console.log('Dashboard calculated values:', { completedCourses, inProgressCourses });
 
   if (coursesLoading || progressLoading) {
     return (
-      <div className="p-6 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="container-educational layout-educational space-educational">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-educational-md">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-32 bg-gray-200 rounded-lg animate-pulse"></div>
+            <div key={i} className="h-32 bg-gray-200 rounded-educational animate-educational-pulse"></div>
           ))}
         </div>
       </div>
     );
   }
 
+  if (coursesError || progressError) {
+    return (
+      <div className="container-educational layout-educational space-educational">
+        <div className="text-center py-educational-5xl">
+          <h2 className="heading-educational-section text-destructive mb-educational-md">
+            Errore nel caricamento
+          </h2>
+          <p className="text-educational-body text-muted-foreground">
+            Si è verificato un errore durante il caricamento dei dati.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const renderWidget = (widget: any) => {
+    console.log('Rendering widget:', widget);
+    
     switch (widget.type) {
       case 'stats':
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-educational-md">
             <StatsCard
               title="Corsi Completati"
               value={completedCourses.toString()}
@@ -92,10 +123,10 @@ export const Dashboard = () => {
 
       case 'recent-courses':
         return (
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Corsi Disponibili</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {courses?.slice(0, 6).map((course) => (
+          <div className="space-y-educational-md">
+            <h3 className="heading-educational-section">Corsi Disponibili</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-educational-md">
+              {safeCourses.slice(0, 6).map((course) => (
                 <CourseCard 
                   key={course.id} 
                   title={course.title}
@@ -107,7 +138,7 @@ export const Dashboard = () => {
                   requiresPayment={course.requires_payment || false}
                   price={Number(course.price) || 0}
                   courseId={course.id}
-                  progress={userProgress?.find(p => p.course_id === course.id)?.progress_percentage}
+                  progress={safeUserProgress.find(p => p.course_id === course.id)?.progress_percentage}
                 />
               ))}
             </div>
@@ -115,24 +146,29 @@ export const Dashboard = () => {
         );
 
       default:
+        console.log('Unknown widget type:', widget.type);
         return <div>Widget non supportato: {widget.type}</div>;
     }
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="container-educational layout-educational space-educational">
       {/* Header con controlli personalizzazione */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-2">Benvenuto nella tua area di apprendimento</p>
+      <div className="flex justify-between items-center mb-educational-2xl">
+        <div className="space-y-educational-xs">
+          <h1 className="heading-educational-display text-accent-foreground">
+            Dashboard
+          </h1>
+          <p className="text-educational-body text-muted-foreground">
+            Benvenuto nella tua area di apprendimento
+          </p>
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex gap-educational-sm">
           <Button
             variant={isCustomizing ? "default" : "outline"}
             onClick={() => setIsCustomizing(!isCustomizing)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 hover-educational"
           >
             <Settings className="h-4 w-4" />
             {isCustomizing ? 'Fine Personalizzazione' : 'Personalizza'}
@@ -142,7 +178,7 @@ export const Dashboard = () => {
             <Button
               variant="outline"
               onClick={() => setShowCustomizer(true)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 hover-educational"
             >
               <Settings className="h-4 w-4" />
               Impostazioni
@@ -152,8 +188,8 @@ export const Dashboard = () => {
       </div>
 
       {/* Dashboard Widgets */}
-      <div className={`grid gap-6 ${dashboardLayout.compactMode ? 'gap-4' : 'gap-6'}`}>
-        {dashboardLayout.widgets
+      <div className="space-y-educational-lg">
+        {safeDashboardWidgets
           .filter(widget => widget.visible || isCustomizing)
           .map((widget) => (
             <DashboardWidget
