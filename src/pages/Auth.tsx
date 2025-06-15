@@ -77,11 +77,13 @@ export const Auth = () => {
         <div className="hidden lg:block space-y-8 animate-educational-fade-in">
           <div className="space-y-4">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-primary-foreground" />
-              </div>
+              <img 
+                src="/lovable-uploads/a00c60b8-e61f-425d-a9d2-0b978977292c.png" 
+                alt="FairMind Logo"
+                className="h-12 w-auto"
+              />
               <h1 className="heading-educational-display text-primary">
-                Academy Corporate
+                FairMind Academy
               </h1>
             </div>
             <p className="text-educational-h4 text-muted-foreground leading-relaxed">
@@ -134,11 +136,13 @@ export const Auth = () => {
           <Card className="w-full max-w-md mx-auto shadow-educational-xl">
             <CardHeader className="space-y-1 text-center pb-6">
               <div className="flex justify-center mb-4 lg:hidden">
-                <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center">
-                  <GraduationCap className="w-6 h-6 text-primary-foreground" />
-                </div>
+                <img 
+                  src="/lovable-uploads/a00c60b8-e61f-425d-a9d2-0b978977292c.png" 
+                  alt="FairMind Logo"
+                  className="h-12 w-auto"
+                />
               </div>
-              <CardTitle className="text-educational-h2">Academy Corporate</CardTitle>
+              <CardTitle className="text-educational-h2">FairMind Academy</CardTitle>
               <CardDescription className="text-educational-body">
                 Accedi alla tua piattaforma di formazione
               </CardDescription>
