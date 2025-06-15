@@ -7,15 +7,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Edit, Trash2, Eye, FileText, Euro, Lock } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, FileText, Euro, Lock, AlertCircle } from 'lucide-react';
 import { useCourses, useCompetenceAreas, useCreateCourse, useUpdateCourse } from '@/hooks/useSupabase';
 import { CourseContentEditor } from './CourseContentEditor';
 import { toast } from '@/hooks/use-toast';
 import { sanitizeText, validateImageUrl, sanitizeUrl } from '@/utils/security';
 import { useAdminSecurity } from '@/hooks/useAdminSecurity';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const CourseManager = () => {
-  const { isAdmin, requireAdmin } = useAdminSecurity();
+  const { user, profile } = useAuth();
+  const { isAdmin, isLoading: adminLoading, requireAdmin } = useAdminSecurity();
   const { data: courses, isLoading: coursesLoading } = useCourses();
   const { data: competenceAreas } = useCompetenceAreas();
   const createCourseMutation = useCreateCourse();
@@ -36,12 +38,38 @@ export const CourseManager = () => {
     price: 0
   });
 
-  // Security check
+  console.log('CourseManager - user:', user?.email);
+  console.log('CourseManager - profile role:', profile?.role);
+  console.log('CourseManager - isAdmin:', isAdmin);
+  console.log('CourseManager - adminLoading:', adminLoading);
+
+  // Show loading while checking admin status
+  if (adminLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Verificando privilegi di amministratore...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Security check with better error messaging
   if (!isAdmin) {
     return (
       <div className="text-center py-20">
-        <h2 className="text-2xl font-bold text-destructive mb-4">Access Denied</h2>
-        <p className="text-muted-foreground">Admin privileges required to access course management.</p>
+        <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+        <h2 className="text-2xl font-bold text-destructive mb-4">Accesso Negato</h2>
+        <p className="text-muted-foreground mb-4">
+          Sono richiesti privilegi di amministratore per accedere alla gestione corsi.
+        </p>
+        <div className="text-sm text-muted-foreground bg-muted p-4 rounded-lg max-w-md mx-auto">
+          <p><strong>Debug Info:</strong></p>
+          <p>Email: {user?.email}</p>
+          <p>Ruolo profilo: {profile?.role || 'Non definito'}</p>
+          <p>Admin rilevato: {isAdmin ? 'Sì' : 'No'}</p>
+        </div>
       </div>
     );
   }
