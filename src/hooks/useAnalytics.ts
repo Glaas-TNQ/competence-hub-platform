@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -33,6 +32,11 @@ export const useAnalytics = () => {
         .eq('user_id', user.id)
         .gte('created_at', format(subDays(new Date(), 30), 'yyyy-MM-dd'));
 
+      // Get competence areas separately
+      const { data: competenceAreas } = await supabase
+        .from('competence_areas')
+        .select('*');
+
       // Calcola statistiche base
       const completedCourses = userProgress?.filter(p => p.progress_percentage === 100)?.length || 0;
       const totalProgress = userProgress?.length > 0 
@@ -62,16 +66,16 @@ export const useAnalytics = () => {
 
       // Distribuzione per competenza
       const competenceDistribution = courses?.reduce((acc: any[], course) => {
-        const area = course.competence_areas;
-        if (area) {
-          const existing = acc.find(item => item.name === area.name);
+        const competenceArea = competenceAreas?.find(area => area.id === course.competence_area_id);
+        if (competenceArea) {
+          const existing = acc.find(item => item.name === competenceArea.name);
           if (existing) {
             existing.hours += 2; // Stima ore per corso
           } else {
             acc.push({
-              name: area.name,
+              name: competenceArea.name,
               hours: 2,
-              color: area.color || '#3b82f6'
+              color: competenceArea.color || '#3b82f6'
             });
           }
         }
@@ -89,7 +93,7 @@ export const useAnalytics = () => {
       }).reverse();
 
       // Raccomandazioni intelligenti
-      const recommendations = generateRecommendations(courses, userProgress, goals);
+      const recommendations = generateRecommendations(courses, userProgress, goals, competenceAreas);
 
       // Insights automatici
       const insights = generateInsights(userProgress, totalPoints, dailyStreaks);
@@ -128,25 +132,27 @@ export const useAnalytics = () => {
   });
 };
 
-function generateRecommendations(courses: any[], userProgress: any[], goals: any[]) {
+function generateRecommendations(courses: any[], userProgress: any[], goals: any[], competenceAreas: any[]) {
   const recommendations = [];
 
   // Raccomanda corsi basati su aree non completate
   const completedAreas = new Set(
     userProgress?.filter(p => p.progress_percentage === 100)
-      .map(p => p.courses?.competence_area_id)
+      .map(p => p.course_id)
   );
 
   const availableAreas = courses?.filter(course => 
-    !completedAreas.has(course.competence_area_id)
+    !completedAreas.has(course.id)
   ) || [];
 
   if (availableAreas.length > 0) {
     const recommendedCourse = availableAreas[0];
+    const competenceArea = competenceAreas?.find(area => area.id === recommendedCourse.competence_area_id);
+    
     recommendations.push({
       type: 'course',
       title: `Inizia: ${recommendedCourse.title}`,
-      description: `Basato sulla tua area di interesse in ${recommendedCourse.competence_areas?.name}`,
+      description: `Basato sulla tua area di interesse in ${competenceArea?.name || 'sviluppo competenze'}`,
       reason: 'Area non ancora esplorata',
       priority: 'Alta',
       action: 'start-course',

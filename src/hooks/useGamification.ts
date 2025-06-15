@@ -218,12 +218,63 @@ export const useCheckAndAwardBadges = () => {
       if (!user) throw new Error('User not authenticated');
       
       try {
-        const { error } = await supabase
-          .rpc('check_and_award_badges_safe', {
-            p_user_id: user.id
-          });
+        // Manual badge checking since RPC function may not be available
+        const { data: badges, error: badgesError } = await supabase
+          .from('badges')
+          .select('*')
+          .eq('is_active', true);
         
-        if (error) throw error;
+        if (badgesError) throw badgesError;
+        
+        const { data: userBadges, error: userBadgesError } = await supabase
+          .from('user_badges')
+          .select('badge_id')
+          .eq('user_id', user.id);
+        
+        if (userBadgesError) throw userBadgesError;
+        
+        const earnedBadgeIds = new Set(userBadges?.map(ub => ub.badge_id) || []);
+        
+        // Get user stats
+        const { data: totalPoints } = await supabase
+          .from('user_total_points')
+          .select('total_points')
+          .eq('user_id', user.id)
+          .single();
+        
+        const { data: completedCourses } = await supabase
+          .from('user_progress')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('progress_percentage', 100);
+        
+        const userPointsTotal = totalPoints?.total_points || 0;
+        const coursesCompleted = completedCourses?.length || 0;
+        
+        // Check each badge
+        for (const badge of badges || []) {
+          if (earnedBadgeIds.has(badge.id)) continue;
+          
+          let shouldAward = false;
+          
+          if (badge.criteria?.min_points && userPointsTotal >= badge.criteria.min_points) {
+            shouldAward = true;
+          }
+          
+          if (badge.criteria?.min_courses_completed && coursesCompleted >= badge.criteria.min_courses_completed) {
+            shouldAward = true;
+          }
+          
+          if (shouldAward) {
+            await supabase
+              .from('user_badges')
+              .insert({
+                user_id: user.id,
+                badge_id: badge.id
+              });
+          }
+        }
+        
         return true;
       } catch (error) {
         console.error('Error checking badges:', error);

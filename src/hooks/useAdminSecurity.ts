@@ -12,15 +12,19 @@ export const useAdminSecurity = () => {
       if (!user) return false;
       
       try {
-        // Server-side admin check using the security definer function
-        const { data, error } = await supabase.rpc('is_admin');
+        // Check admin role directly from profile
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
         
         if (error) {
           console.error('Admin check error:', error);
           return false;
         }
         
-        return data === true;
+        return data?.role === 'admin';
       } catch (error) {
         console.error('Admin security check failed:', error);
         return false;
