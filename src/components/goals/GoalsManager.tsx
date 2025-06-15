@@ -10,17 +10,30 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useUserGoals } from '@/hooks/useUserGoals';
 import { Plus, Target, TrendingUp, CheckCircle } from 'lucide-react';
-import { format, addDays } from 'date-fns';
+import { format, addDays, isValid } from 'date-fns';
 
 const GOAL_TYPES = [
-  { value: 'courses_completed', label: 'Corsi Completati', icon: <Target className="h-4 w-4" /> },
-  { value: 'study_days', label: 'Giorni di Studio', icon: <Target className="h-4 w-4" /> },
-  { value: 'points_earned', label: 'Punti Guadagnati', icon: <TrendingUp className="h-4 w-4" /> },
+  { value: 'courses_completed', label: 'Courses Completed', icon: <Target className="h-4 w-4" /> },
+  { value: 'study_days', label: 'Study Days', icon: <Target className="h-4 w-4" /> },
+  { value: 'points_earned', label: 'Points Earned', icon: <TrendingUp className="h-4 w-4" /> },
 ];
 
 export const GoalsManager: React.FC = () => {
   const { data: goals, isLoading } = useUserGoals();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      if (isValid(date)) {
+        return format(date, 'MMM dd, yyyy');
+      }
+      return 'No end date';
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Invalid date';
+    }
+  };
 
   if (isLoading) {
     return (
@@ -45,37 +58,37 @@ export const GoalsManager: React.FC = () => {
       <div className="flex items-center justify-between mb-educational-2xl">
         <div className="space-y-educational-xs">
           <h1 className="heading-educational-display text-accent-foreground">
-            I Miei Obiettivi
+            My Goals
           </h1>
           <p className="text-educational-body text-muted-foreground">
-            Crea e monitora i tuoi obiettivi di apprendimento
+            Create and track your learning objectives
           </p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button size="lg" className="flex items-center gap-2 hover-educational">
               <Plus className="h-5 w-5" />
-              Nuovo Obiettivo
+              New Goal
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle className="text-educational-h2">Crea Nuovo Obiettivo</DialogTitle>
+              <DialogTitle className="text-educational-h2">Create New Goal</DialogTitle>
             </DialogHeader>
             <CreateGoalForm onSuccess={() => setIsCreateDialogOpen(false)} />
           </DialogContent>
         </Dialog>
       </div>
 
-      {/* Obiettivi Attivi */}
+      {/* Active Goals */}
       <section className="section-educational">
         <h2 className="heading-educational-section text-accent-foreground mb-educational-lg">
-          Obiettivi Attivi
+          Active Goals
         </h2>
         {activeGoals.length > 0 ? (
           <div className="grid gap-educational-md md:grid-cols-2 lg:grid-cols-3">
             {activeGoals.map((goal) => (
-              <GoalCard key={goal.id} goal={goal} />
+              <GoalCard key={goal.id} goal={goal} formatDate={formatDate} />
             ))}
           </div>
         ) : (
@@ -85,31 +98,31 @@ export const GoalsManager: React.FC = () => {
                 <Target className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-educational-h3 font-semibold text-accent-foreground mb-educational-sm">
-                Nessun obiettivo attivo
+                No active goals
               </h3>
               <p className="text-educational-body text-muted-foreground text-center mb-educational-lg max-w-sm">
-                Crea il tuo primo obiettivo per iniziare a monitorare i progressi!
+                Create your first goal to start tracking progress!
               </p>
               <Button 
                 onClick={() => setIsCreateDialogOpen(true)}
                 className="hover-educational"
               >
-                Crea Primo Obiettivo
+                Create First Goal
               </Button>
             </CardContent>
           </Card>
         )}
       </section>
 
-      {/* Obiettivi Completati */}
+      {/* Completed Goals */}
       {completedGoals.length > 0 && (
         <section className="section-educational">
           <h2 className="heading-educational-section text-accent-foreground mb-educational-lg">
-            Obiettivi Completati
+            Completed Goals
           </h2>
           <div className="grid gap-educational-md md:grid-cols-2 lg:grid-cols-3">
             {completedGoals.map((goal) => (
-              <GoalCard key={goal.id} goal={goal} />
+              <GoalCard key={goal.id} goal={goal} formatDate={formatDate} />
             ))}
           </div>
         </section>
@@ -120,9 +133,10 @@ export const GoalsManager: React.FC = () => {
 
 interface GoalCardProps {
   goal: any;
+  formatDate: (dateString: string) => string;
 }
 
-const GoalCard: React.FC<GoalCardProps> = ({ goal }) => {
+const GoalCard: React.FC<GoalCardProps> = ({ goal, formatDate }) => {
   const goalType = GOAL_TYPES.find(type => type.value === goal.goal_type);
   const progress = Math.min((goal.current_value / goal.target_value) * 100, 100);
 
@@ -151,21 +165,25 @@ const GoalCard: React.FC<GoalCardProps> = ({ goal }) => {
       <CardContent className="space-y-educational-md">
         <div className="space-y-educational-sm">
           <div className="flex items-center justify-between text-educational-small">
-            <span className="text-muted-foreground">Progresso</span>
+            <span className="text-muted-foreground">Progress</span>
             <span className="font-medium text-accent-foreground">
               {goal.current_value} / {goal.target_value}
             </span>
           </div>
           <Progress value={progress} className="h-3" />
           <div className="text-educational-caption text-muted-foreground text-center">
-            {progress.toFixed(0)}% completato
+            {progress.toFixed(0)}% completed
           </div>
+        </div>
+
+        <div className="text-educational-caption text-muted-foreground">
+          Ends: {formatDate(goal.period_end)}
         </div>
 
         <div className="flex items-center justify-center">
           {goal.is_completed && (
             <Badge className="text-educational-caption bg-success hover:bg-success/90">
-              Completato
+              Completed
             </Badge>
           )}
         </div>
@@ -201,7 +219,7 @@ const CreateGoalForm: React.FC<CreateGoalFormProps> = ({ onSuccess }) => {
       });
       onSuccess();
     } catch (error) {
-      console.error('Errore nella creazione dell\'obiettivo:', error);
+      console.error('Error creating goal:', error);
     }
   };
 
@@ -210,10 +228,10 @@ const CreateGoalForm: React.FC<CreateGoalFormProps> = ({ onSuccess }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-educational-md">
       <div className="space-y-educational-xs">
-        <Label htmlFor="goalType">Tipo di Obiettivo</Label>
+        <Label htmlFor="goalType">Goal Type</Label>
         <Select value={goalType} onValueChange={setGoalType}>
           <SelectTrigger>
-            <SelectValue placeholder="Seleziona il tipo di obiettivo" />
+            <SelectValue placeholder="Select goal type" />
           </SelectTrigger>
           <SelectContent>
             {GOAL_TYPES.map((type) => (
@@ -230,7 +248,7 @@ const CreateGoalForm: React.FC<CreateGoalFormProps> = ({ onSuccess }) => {
 
       <div className="space-y-educational-xs">
         <Label htmlFor="targetValue">
-          Valore Target
+          Target Value
           {selectedGoalType && (
             <span className="text-educational-small text-muted-foreground ml-1">
               ({selectedGoalType.label.toLowerCase()})
@@ -243,7 +261,7 @@ const CreateGoalForm: React.FC<CreateGoalFormProps> = ({ onSuccess }) => {
           min="1"
           value={targetValue}
           onChange={(e) => setTargetValue(e.target.value)}
-          placeholder="Es. 5"
+          placeholder="e.g. 5"
         />
       </div>
 
@@ -253,10 +271,10 @@ const CreateGoalForm: React.FC<CreateGoalFormProps> = ({ onSuccess }) => {
           disabled={!goalType || !targetValue || createGoal.isPending}
           className="flex-1"
         >
-          {createGoal.isPending ? 'Creazione...' : 'Crea Obiettivo'}
+          {createGoal.isPending ? 'Creating...' : 'Create Goal'}
         </Button>
         <Button type="button" variant="outline" onClick={onSuccess}>
-          Annulla
+          Cancel
         </Button>
       </div>
     </form>

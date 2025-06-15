@@ -1,27 +1,17 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { 
-  BookOpen, 
-  Award, 
-  TrendingUp, 
-  Target, 
-  Flame, 
-  Trophy,
-  Clock,
-  BarChart3,
-  Star
-} from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { BookOpen, Trophy, Zap, Star, TrendingUp, Target } from 'lucide-react';
 
 interface CompactStatsCardProps {
   completedCourses: number;
   inProgressCourses: number;
   totalPoints: number;
   level: number;
-  streak?: number;
-  badges?: number;
+  streak: number;
+  badges: number;
 }
 
 export const CompactStatsCard: React.FC<CompactStatsCardProps> = ({
@@ -29,157 +19,117 @@ export const CompactStatsCard: React.FC<CompactStatsCardProps> = ({
   inProgressCourses,
   totalPoints,
   level,
-  streak = 0,
-  badges = 0,
+  streak,
+  badges
 }) => {
-  const totalCourses = completedCourses + inProgressCourses;
-  const completionRate = totalCourses > 0 ? (completedCourses / totalCourses) * 100 : 0;
+  const stats = [
+    {
+      title: 'Progress',
+      subtitle: 'Courses completed',
+      value: completedCourses,
+      secondaryValue: inProgressCourses,
+      secondaryLabel: 'In progress',
+      icon: BookOpen,
+      iconBg: 'bg-blue-100',
+      iconColor: 'text-blue-600',
+      badge: {
+        text: `${Math.round((completedCourses / Math.max(completedCourses + inProgressCourses, 1)) * 100)}%`,
+        variant: 'default' as const
+      },
+      footer: completedCourses === 0 ? 'Start your first course!' : undefined
+    },
+    {
+      title: 'Level',
+      subtitle: 'Experience gained',
+      value: level,
+      secondaryValue: totalPoints,
+      secondaryLabel: 'experience points',
+      icon: Trophy,
+      iconBg: 'bg-yellow-100',
+      iconColor: 'text-yellow-600',
+      badge: {
+        text: `Level ${level}`,
+        variant: 'default' as const
+      },
+      footer: streak === 0 ? 'Start today!' : undefined
+    },
+    {
+      title: 'Streak',
+      subtitle: 'Consecutive days',
+      value: streak,
+      secondaryValue: 0,
+      secondaryLabel: 'days',
+      icon: Zap,
+      iconBg: 'bg-orange-100',
+      iconColor: 'text-orange-600',
+      badge: {
+        text: `${streak} days`,
+        variant: 'default' as const
+      },
+      footer: streak === 0 ? 'Start today!' : undefined
+    },
+    {
+      title: 'Results',
+      subtitle: 'Badges and certificates',
+      value: badges,
+      secondaryValue: 0,
+      secondaryLabel: 'Certificates',
+      icon: Star,
+      iconBg: 'bg-purple-100',
+      iconColor: 'text-purple-600',
+      badge: {
+        text: 'Badges',
+        variant: 'secondary' as const
+      }
+    }
+  ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-      
-      {/* Card Progresso */}
-      <Card className="border-0 shadow-educational-sm bg-card/30 backdrop-blur-sm hover:bg-card/40 transition-all duration-300">
-        <CardContent className="p-8 space-y-6">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/10 rounded-2xl border border-primary/20">
-              <BookOpen className="h-6 w-6 text-primary" strokeWidth={1.5} />
-            </div>
-            <div>
-              <h3 className="text-lg font-medium text-foreground">Progresso</h3>
-              <p className="text-sm text-muted-foreground">Corsi completati</p>
-            </div>
-          </div>
-          
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="text-center">
-                <div className="text-4xl font-semibold text-primary mb-2">{completedCourses}</div>
-                <div className="text-sm font-medium text-muted-foreground">Completati</div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {stats.map((stat, index) => (
+        <Card 
+          key={index} 
+          className="shadow-educational-lg border-0 bg-card/50 backdrop-blur-sm hover:shadow-educational-xl transition-all duration-300 group"
+        >
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className={`w-12 h-12 ${stat.iconBg} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                <stat.icon className={`h-6 w-6 ${stat.iconColor}`} />
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-medium text-muted-foreground mb-2">{inProgressCourses}</div>
-                <div className="text-sm font-medium text-muted-foreground">In corso</div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-foreground">Completamento</span>
-                <span className="text-sm font-semibold text-primary">
-                  {Math.round(completionRate)}%
-                </span>
-              </div>
-              <Progress value={completionRate} className="h-2" />
-              {totalCourses === 0 ? (
-                <p className="text-sm text-muted-foreground italic text-center">
-                  Inizia il tuo primo corso!
-                </p>
-              ) : (
-                <p className="text-sm text-muted-foreground text-center">
-                  {totalCourses} {totalCourses === 1 ? 'corso totale' : 'corsi totali'}
-                </p>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Card Livello */}
-      <Card className="border-0 shadow-educational-sm bg-card/30 backdrop-blur-sm hover:bg-card/40 transition-all duration-300">
-        <CardContent className="p-8 space-y-6">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-secondary/10 rounded-2xl border border-secondary/20">
-              <Trophy className="h-6 w-6 text-secondary" strokeWidth={1.5} />
-            </div>
-            <div>
-              <h3 className="text-lg font-medium text-foreground">Livello</h3>
-              <p className="text-sm text-muted-foreground">Esperienza guadagnata</p>
-            </div>
-          </div>
-          
-          <div className="space-y-6 text-center">
-            <div className="flex items-center justify-center gap-4">
-              <div className="text-5xl font-semibold text-secondary">{level}</div>
-              <Badge variant="secondary" className="px-4 py-2 rounded-2xl text-sm font-medium">
-                Livello
+              <Badge variant={stat.badge.variant} className="text-xs">
+                {stat.badge.text}
               </Badge>
             </div>
             
-            <div className="pt-4 border-t border-border/50">
-              <div className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground text-base">{totalPoints.toLocaleString()}</span>
-                <br />
-                <span className="text-xs">punti esperienza</span>
+            <div className="space-y-3">
+              <div>
+                <h3 className="text-2xl font-bold text-foreground">
+                  {stat.value}
+                </h3>
+                <p className="text-sm font-medium text-foreground">
+                  {stat.title}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {stat.subtitle}
+                </p>
               </div>
+              
+              {stat.secondaryValue > 0 && (
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">{stat.secondaryLabel}</span>
+                  <span className="font-medium text-foreground">{stat.secondaryValue}</span>
+                </div>
+              )}
+              
+              {stat.footer && (
+                <p className="text-xs text-muted-foreground italic border-t pt-2">
+                  {stat.footer}
+                </p>
+              )}
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Card Streak */}
-      <Card className="border-0 shadow-educational-sm bg-card/30 backdrop-blur-sm hover:bg-card/40 transition-all duration-300">
-        <CardContent className="p-8 space-y-6">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-orange-500/10 rounded-2xl border border-orange-500/20">
-              <Flame className="h-6 w-6 text-orange-500" strokeWidth={1.5} />
-            </div>
-            <div>
-              <h3 className="text-lg font-medium text-foreground">Streak</h3>
-              <p className="text-sm text-muted-foreground">Giorni consecutivi</p>
-            </div>
-          </div>
-          
-          <div className="space-y-6 text-center">
-            <div className="flex items-baseline justify-center gap-3">
-              <span className="text-5xl font-semibold text-orange-500">{streak}</span>
-              <span className="text-sm text-muted-foreground font-medium">
-                {streak === 1 ? 'giorno' : 'giorni'}
-              </span>
-            </div>
-            
-            <div className="pt-4 border-t border-border/50">
-              <div className={`text-sm font-medium ${
-                streak === 0 ? 'text-muted-foreground' : 
-                streak < 7 ? 'text-orange-500' : 
-                streak < 30 ? 'text-purple-500' : 'text-yellow-500'
-              }`}>
-                {streak === 0 ? 'Inizia oggi!' : 
-                 streak < 7 ? 'Ottimo inizio!' : 
-                 streak < 30 ? 'Fantastico!' : 'Incredibile!'}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Card Risultati */}
-      <Card className="border-0 shadow-educational-sm bg-card/30 backdrop-blur-sm hover:bg-card/40 transition-all duration-300">
-        <CardContent className="p-8 space-y-6">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-purple-500/10 rounded-2xl border border-purple-500/20">
-              <Award className="h-6 w-6 text-purple-500" strokeWidth={1.5} />
-            </div>
-            <div>
-              <h3 className="text-lg font-medium text-foreground">Risultati</h3>
-              <p className="text-sm text-muted-foreground">Badge e certificati</p>
-            </div>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-4 bg-muted/20 rounded-2xl border border-muted/50">
-                <div className="text-3xl font-semibold text-purple-500 mb-2">{badges}</div>
-                <div className="text-xs font-medium text-muted-foreground">Badge</div>
-              </div>
-              <div className="text-center p-4 bg-muted/20 rounded-2xl border border-muted/50">
-                <div className="text-3xl font-semibold text-success mb-2">{completedCourses}</div>
-                <div className="text-xs font-medium text-muted-foreground">Certificati</div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 };

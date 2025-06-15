@@ -4,6 +4,7 @@ import { Target, Plus, Trophy, Calendar, CheckCircle } from 'lucide-react';
 import { useUserGoals } from '@/hooks/useUserGoals';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { format, isValid } from 'date-fns';
 
 interface Goal {
   id: string;
@@ -30,7 +31,7 @@ export const GoalsWidget = () => {
       case 'chapters_completed':
         return 'Chapters Completed';
       default:
-        return type;
+        return type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
     }
   };
 
@@ -44,6 +45,19 @@ export const GoalsWidget = () => {
         return <Target className="h-5 w-5 text-purple-500" />;
       default:
         return <Target className="h-5 w-5 text-gray-500" />;
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      if (isValid(date)) {
+        return format(date, 'MMM dd, yyyy');
+      }
+      return 'No end date';
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Invalid date';
     }
   };
 
@@ -114,7 +128,7 @@ export const GoalsWidget = () => {
                 </div>
                 
                 <div className="text-xs text-muted-foreground">
-                  Ends: {new Date(goal.period_end).toLocaleDateString()}
+                  Ends: {formatDate(goal.period_end)}
                 </div>
               </div>
             ))}
