@@ -4,9 +4,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { 
   BookOpen, 
   Target, 
-  Play, 
   Award, 
-  BarChart3, 
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -15,9 +13,7 @@ import {
   Menu,
   X,
   Trophy,
-  StickyNote,
-  TrendingUp,
-  Users
+  StickyNote
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -28,11 +24,9 @@ const menuItems = [
   { id: 'areas', label: 'Aree di Competenza', icon: Target, path: '/areas' },
   { id: 'my-learning', label: 'I Miei Corsi', icon: BookOpen, path: '/my-learning' },
   { id: 'badges', label: 'Badge', icon: Trophy, path: '/badges' },
-  { id: 'analytics', label: 'Analytics', icon: TrendingUp, path: '/analytics' },
   { id: 'certificates', label: 'Certificati', icon: Award, path: '/certificates' },
   { id: 'notes', label: 'Note', icon: StickyNote, path: '/notes' },
-  { id: 'goals', label: 'Obiettivi', icon: BarChart3, path: '/goals' },
-  { id: 'collaboration', label: 'Collaborazione', icon: Users, path: '/collaboration' },
+  { id: 'goals', label: 'Obiettivi', icon: Target, path: '/goals' },
   { id: 'settings', label: 'Impostazioni', icon: Settings, path: '/settings' }
 ];
 
@@ -172,16 +166,16 @@ export const Sidebar = () => {
             <NavLink
               key={item.id}
               to={item.path}
-              className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-4'} px-4 py-3 rounded-2xl transition-all duration-200 group ${
+              className={`flex items-center ${isCollapsed ? 'justify-center w-12 h-12 mx-auto' : 'space-x-4'} px-4 py-3 rounded-2xl transition-all duration-200 group ${
                 isActive 
                   ? isCollapsed 
-                    ? 'bg-primary/15 text-primary relative after:content-[""] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-1 after:h-6 after:bg-primary after:rounded-l-full' 
+                    ? 'bg-primary/15 text-primary' 
                     : 'bg-primary/10 text-primary border-l-4 border-primary'
                   : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
               }`}
               title={isCollapsed ? item.label : undefined}
             >
-              <item.icon size={20} className={`${isActive ? 'text-primary' : ''} flex-shrink-0 ${isCollapsed ? 'mx-auto' : ''}`} />
+              <item.icon size={20} className={`${isActive ? 'text-primary' : ''} flex-shrink-0`} />
               {!isCollapsed && <span className="font-medium">{item.label}</span>}
             </NavLink>
           );
@@ -190,16 +184,16 @@ export const Sidebar = () => {
         {isAdmin && (
           <NavLink
             to="/admin"
-            className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-4'} px-4 py-3 rounded-2xl transition-all duration-200 mt-6 pt-6 border-t border-border ${
+            className={`flex items-center ${isCollapsed ? 'justify-center w-12 h-12 mx-auto' : 'space-x-4'} px-4 py-3 rounded-2xl transition-all duration-200 mt-6 pt-6 border-t border-border ${
               location.pathname === '/admin'
                 ? isCollapsed
-                  ? 'bg-destructive/15 text-destructive relative after:content-[""] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-1 after:h-6 after:bg-destructive after:rounded-l-full'
+                  ? 'bg-destructive/15 text-destructive'
                   : 'bg-destructive/10 text-destructive border-l-4 border-destructive'
                 : 'hover:bg-destructive/5 text-muted-foreground hover:text-destructive'
             }`}
             title={isCollapsed ? "Admin Panel" : undefined}
           >
-            <Shield size={20} className={`flex-shrink-0 ${isCollapsed ? 'mx-auto' : ''}`} />
+            <Shield size={20} className="flex-shrink-0" />
             {!isCollapsed && <span className="font-medium">Admin Panel</span>}
           </NavLink>
         )}

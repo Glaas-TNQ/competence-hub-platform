@@ -8,6 +8,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { Dashboard } from './pages/Dashboard';
 import { MyLearning } from './pages/MyLearning';
 import { CourseView } from './pages/CourseView';
+import { ChapterView } from './pages/ChapterView';
 import { CompetenceAreas } from './pages/CompetenceAreas';
 import { Settings } from './pages/Settings';
 import { Header } from './components/Header';
@@ -17,10 +18,8 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { LearningPaths } from '@/pages/LearningPaths';
 import { LearningPathView } from '@/pages/LearningPathView';
 import { Badges } from '@/pages/Badges';
-import { Analytics } from '@/pages/Analytics';
 import { Certificates } from '@/pages/Certificates';
 import { Notes } from '@/pages/Notes';
-import { Collaboration } from '@/pages/Collaboration';
 import { Auth } from './pages/Auth';
 
 const queryClient = new QueryClient();
@@ -47,14 +46,13 @@ function App() {
                             <Route path="/areas" element={<CompetenceAreas />} />
                             <Route path="/my-learning" element={<MyLearning />} />
                             <Route path="/course/:courseId" element={<CourseView />} />
+                            <Route path="/course/:courseId/chapter/:chapterIndex" element={<ChapterView />} />
                             <Route path="/learning-paths" element={<LearningPaths />} />
                             <Route path="/learning-path/:id" element={<LearningPathView />} />
                             <Route path="/badges" element={<Badges />} />
-                            <Route path="/analytics" element={<Analytics />} />
                             <Route path="/certificates" element={<Certificates />} />
                             <Route path="/notes" element={<Notes />} />
                             <Route path="/goals" element={<Goals />} />
-                            <Route path="/collaboration" element={<Collaboration />} />
                             <Route path="/settings" element={<Settings />} />
                             <Route path="/admin" element={<AdminDashboard />} />
                           </Routes>
