@@ -27,9 +27,9 @@ export const ChapterView = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-6">
         <div className="text-center py-12">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Corso non trovato</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Course not found</h1>
           <Button onClick={() => navigate('/areas')} variant="outline">
-            Torna ai corsi
+            Back to courses
           </Button>
         </div>
       </div>
@@ -45,10 +45,10 @@ export const ChapterView = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-6">
         <div className="text-center py-12">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Accesso Negato</h1>
-          <p className="text-muted-foreground mb-4">Non hai accesso a questo contenuto.</p>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Access Denied</h1>
+          <p className="text-muted-foreground mb-4">You don't have access to this content.</p>
           <Button onClick={() => navigate(`/course/${courseId}`)} variant="outline">
-            Torna al corso
+            Back to course
           </Button>
         </div>
       </div>
@@ -96,9 +96,9 @@ export const ChapterView = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-6">
         <div className="text-center py-12">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Capitolo non trovato</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Chapter not found</h1>
           <Button onClick={() => navigate(`/course/${courseId}`)} variant="outline">
-            Torna al corso
+            Back to course
           </Button>
         </div>
       </div>
@@ -242,9 +242,9 @@ export const ChapterView = () => {
       return (
         <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
           <BookOpen className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-medium text-foreground mb-2">Contenuto in Preparazione</h3>
+          <h3 className="text-lg font-medium text-foreground mb-2">Content in Preparation</h3>
           <p className="text-muted-foreground">
-            Il contenuto di questo capitolo sarà disponibile a breve.
+            The content of this chapter will be available soon.
           </p>
         </div>
       );
@@ -267,7 +267,7 @@ export const ChapterView = () => {
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft size={20} />
-            Torna al corso
+            Back to course
           </button>
           
           <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-lg border p-8">
@@ -276,7 +276,7 @@ export const ChapterView = () => {
                 {getChapterIcon(currentChapter.type)}
                 <div>
                   <h1 className="text-3xl font-bold text-foreground mb-2">
-                    {currentChapter.title || `Capitolo ${chapterIdx + 1}`}
+                    {currentChapter.title || `Chapter ${chapterIdx + 1}`}
                   </h1>
                   <p className="text-lg text-muted-foreground mb-4">{course.title}</p>
                   
@@ -285,7 +285,7 @@ export const ChapterView = () => {
                       <Clock size={16} />
                       {currentChapter.duration || '5 min'}
                     </div>
-                    <span>Capitolo {chapterIdx + 1} di {chapters.length}</span>
+                    <span>Chapter {chapterIdx + 1} of {chapters.length}</span>
                   </div>
                 </div>
               </div>
@@ -293,7 +293,7 @@ export const ChapterView = () => {
               {isChapterCompleted && (
                 <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-2 rounded-full">
                   <CheckCircle size={20} />
-                  <span className="font-medium">Completato</span>
+                  <span className="font-medium">Completed</span>
                 </div>
               )}
             </div>
@@ -328,7 +328,7 @@ export const ChapterView = () => {
                 className="gap-2"
               >
                 <ArrowLeft size={18} />
-                Capitolo Precedente
+                Previous Chapter
               </Button>
 
               <div className="flex items-center gap-4">
@@ -340,7 +340,7 @@ export const ChapterView = () => {
                   disabled={isChapterCompleted || markChapterComplete.isPending}
                 >
                   <CheckCircle size={18} />
-                  {isChapterCompleted ? 'Completato' : 'Segna come Completato'}
+                  {isChapterCompleted ? 'Completed' : 'Mark as Completed'}
                 </Button>
 
                 <Button
@@ -350,12 +350,12 @@ export const ChapterView = () => {
                 >
                   {chapterIdx < chapters.length - 1 ? (
                     <>
-                      Prossimo Capitolo
+                      Next Chapter
                       <ArrowLeft size={18} className="rotate-180" />
                     </>
                   ) : (
                     <>
-                      Completa Corso
+                      Complete Course
                       <CheckCircle size={18} />
                     </>
                   )}
@@ -366,9 +366,9 @@ export const ChapterView = () => {
             {/* Progress indicator */}
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground font-medium">Progresso del corso</span>
+                <span className="text-muted-foreground font-medium">Course progress</span>
                 <span className="text-foreground font-semibold">
-                  {currentProgress}% ({completedChaptersCount}/{chapters.length} capitoli)
+                  {currentProgress}% ({completedChaptersCount}/{chapters.length} chapters)
                 </span>
               </div>
               <div className="w-full bg-muted rounded-full h-3">

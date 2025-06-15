@@ -39,7 +39,7 @@ export const Header = () => {
             <Search className="absolute left-educational-sm top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
             <input
               type="text"
-              placeholder="Cerca contenuti..."
+              placeholder="Search content..."
               className="pl-10 pr-educational-md py-educational-sm border border-input rounded-educational-lg focus:ring-2 focus:ring-focus focus:border-transparent w-80 bg-background text-educational-body transition-all duration-200"
             />
           </div>
@@ -65,18 +65,12 @@ export const Header = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel className="text-educational-body">Il mio account</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-educational-body">My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-educational-body">
                 <SettingsIcon className="mr-2 h-4 w-4" />
-                Impostazioni
+                Settings
               </DropdownMenuItem>
-              {(profile?.role === 'admin' || user?.email === 'admin@academy.com') && (
-                <DropdownMenuItem onClick={() => navigate('/admin')} className="text-educational-body">
-                  <Shield className="mr-2 h-4 w-4" />
-                  Admin Dashboard
-                </DropdownMenuItem>
-              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut} className="text-educational-body">
                 <LogOut className="mr-2 h-4 w-4" />

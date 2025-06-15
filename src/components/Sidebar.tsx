@@ -20,12 +20,12 @@ import { Button } from '@/components/ui/button';
 
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/dashboard' },
-  { id: 'areas', label: 'Aree di Competenza', icon: Target, path: '/areas' },
-  { id: 'my-learning', label: 'I Miei Corsi', icon: BookOpen, path: '/my-learning' },
-  { id: 'badges', label: 'Badge', icon: Trophy, path: '/badges' },
-  { id: 'certificates', label: 'Certificati', icon: Award, path: '/certificates' },
-  { id: 'goals', label: 'Obiettivi', icon: Target, path: '/goals' },
-  { id: 'settings', label: 'Impostazioni', icon: Settings, path: '/settings' }
+  { id: 'areas', label: 'Competence Areas', icon: Target, path: '/areas' },
+  { id: 'my-learning', label: 'My Courses', icon: BookOpen, path: '/my-learning' },
+  { id: 'badges', label: 'Badges', icon: Trophy, path: '/badges' },
+  { id: 'certificates', label: 'Certificates', icon: Award, path: '/certificates' },
+  { id: 'goals', label: 'Goals', icon: Target, path: '/goals' },
+  { id: 'settings', label: 'Settings', icon: Settings, path: '/settings' }
 ];
 
 export const Sidebar = () => {
@@ -70,7 +70,7 @@ export const Sidebar = () => {
               </div>
               <div>
                 <h1 className="text-xl font-semibold text-foreground">FairMind Academy</h1>
-                <p className="text-sm text-muted-foreground">Piattaforma educativa</p>
+                <p className="text-sm text-muted-foreground">Learning Platform</p>
               </div>
             </div>
             <Button
@@ -133,7 +133,7 @@ export const Sidebar = () => {
         {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
       </button>
 
-      {/* Header - solo quando non è collassato */}
+      {/* Header - only when not collapsed */}
       {!isCollapsed && (
         <div className="p-8">
           <div className="flex items-center space-x-3">
@@ -142,13 +142,13 @@ export const Sidebar = () => {
             </div>
             <div>
               <h1 className="text-xl font-semibold text-foreground">FairMind Academy</h1>
-              <p className="text-sm text-muted-foreground">Piattaforma educativa</p>
+              <p className="text-sm text-muted-foreground">Learning Platform</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Icona centrale quando collassato */}
+      {/* Central icon when collapsed */}
       {isCollapsed && (
         <div className="p-4 flex justify-center">
           <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center border border-primary/20">

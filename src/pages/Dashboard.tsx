@@ -72,10 +72,10 @@ export const Dashboard = () => {
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-8">
         <div className="max-w-4xl mx-auto text-center py-20">
           <h2 className="text-3xl font-bold text-destructive mb-6">
-            Errore nel caricamento
+            Loading Error
           </h2>
           <p className="text-lg text-muted-foreground">
-            Si è verificato un errore durante il caricamento dei dati.
+            An error occurred while loading data.
           </p>
         </div>
       </div>
@@ -92,7 +92,7 @@ export const Dashboard = () => {
               Dashboard
             </h1>
             <p className="text-lg text-muted-foreground">
-              Benvenuto nella tua area di apprendimento
+              Welcome to your learning area
             </p>
           </div>
           
@@ -103,7 +103,7 @@ export const Dashboard = () => {
               className="flex items-center gap-2 rounded-full px-6"
             >
               {isCustomizing ? <Sparkles className="h-4 w-4" /> : <Settings className="h-4 w-4" />}
-              {isCustomizing ? 'Fine Personalizzazione' : 'Personalizza'}
+              {isCustomizing ? 'Finish Customization' : 'Customize'}
             </Button>
             
             {isCustomizing && (
@@ -113,7 +113,7 @@ export const Dashboard = () => {
                 className="flex items-center gap-2 rounded-full px-6"
               >
                 <Settings className="h-4 w-4" />
-                Impostazioni
+                Settings
               </Button>
             )}
           </div>
@@ -121,7 +121,7 @@ export const Dashboard = () => {
 
         {/* Dashboard Content */}
         <div className="space-y-8">
-          {/* Stats Compatte */}
+          {/* Compact Stats */}
           <CompactStatsCard
             completedCourses={completedCourses}
             inProgressCourses={inProgressCourses}
@@ -131,16 +131,16 @@ export const Dashboard = () => {
             badges={userBadges?.length || 0}
           />
 
-          {/* Attività e Obiettivi */}
+          {/* Activity and Goals */}
           <CompactActivityCard
             recentCourses={safeCourses.slice(0, 6)}
             goals={safeGoals}
           />
 
-          {/* Widget Personalizzati (solo se customizing) */}
+          {/* Custom Widgets (only if customizing) */}
           {isCustomizing && (
             <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-foreground">Widget Personalizzati</h3>
+              <h3 className="text-2xl font-semibold text-foreground">Custom Widgets</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {safeDashboardWidgets
                   .filter(widget => widget && widget.visible && !['stats', 'recent-courses', 'goals'].includes(widget.type))
