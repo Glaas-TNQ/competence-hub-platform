@@ -3,93 +3,110 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
+/* Educational Design System - Apple-Inspired Foundation */
 
 @layer base {
   :root {
+    /* Educational Color Palette */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 224 71% 4%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 224 71% 4%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 224 71% 4%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary Educational Colors */
+    --primary: 253 67% 69%; /* #8c6bf4 - Viola-blu per interazioni */
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 43 89% 58%; /* #f2c13a - Giallo zafferano per CTA */
+    --secondary-foreground: 224 71% 4%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Support Colors */
+    --muted: 253 23% 75%; /* #b1afc8 - Neutro chiaro */
+    --muted-foreground: 253 23% 30%; /* #443c4c - Neutro scuro */
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 253 23% 95%;
+    --accent-foreground: 253 51% 29%; /* #4c3c95 - Blu scuro */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Educational Specific Colors */
+    --success: 158 64% 52%; /* #10b981 - Verde educativo */
+    --success-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --focus: 217 91% 60%; /* #3b82f6 - Blu concentrazione */
+    --focus-foreground: 0 0% 98%;
 
-    --radius: 0.5rem;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --sidebar-background: 0 0% 98%;
+    --border: 253 23% 91%;
+    --input: 253 23% 91%;
+    --ring: 253 67% 69%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    --radius: 1rem; /* 16px - educational friendly radius */
 
-    --sidebar-primary: 240 5.9% 10%;
-
+    /* Educational Sidebar */
+    --sidebar-background: 253 8% 97%;
+    --sidebar-foreground: 253 23% 30%;
+    --sidebar-primary: 253 67% 69%;
     --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 253 23% 95%;
+    --sidebar-accent-foreground: 253 51% 29%;
+    --sidebar-border: 253 23% 87%;
+    --sidebar-ring: 253 67% 69%;
 
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Educational Spacing System (8px base) */
+    --spacing-xs: 0.5rem; /* 8px */
+    --spacing-sm: 0.75rem; /* 12px */
+    --spacing-md: 1rem; /* 16px */
+    --spacing-lg: 1.5rem; /* 24px */
+    --spacing-xl: 2rem; /* 32px */
+    --spacing-2xl: 2.5rem; /* 40px */
+    --spacing-3xl: 3rem; /* 48px */
+    --spacing-4xl: 3.5rem; /* 56px */
+    --spacing-5xl: 4rem; /* 64px */
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Educational Dark Mode - Warm Dark Greys */
+    --background: 253 23% 8%;
+    --foreground: 253 23% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 253 23% 10%;
+    --card-foreground: 253 23% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 253 23% 8%;
+    --popover-foreground: 253 23% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 253 67% 69%;
+    --primary-foreground: 253 23% 8%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 43 89% 58%;
+    --secondary-foreground: 253 23% 8%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 253 23% 15%;
+    --muted-foreground: 253 23% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 253 23% 15%;
+    --accent-foreground: 253 23% 95%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 85% 97%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 253 23% 15%;
+    --input: 253 23% 15%;
+    --ring: 253 67% 69%;
+
+    --sidebar-background: 253 23% 6%;
+    --sidebar-foreground: 253 23% 85%;
+    --sidebar-primary: 253 67% 69%;
+    --sidebar-primary-foreground: 253 23% 8%;
+    --sidebar-accent: 253 23% 12%;
+    --sidebar-accent-foreground: 253 23% 85%;
+    --sidebar-border: 253 23% 12%;
+    --sidebar-ring: 253 67% 69%;
   }
 }
 
@@ -100,36 +117,194 @@
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Educational Typography Scale */
+  h1 {
+    @apply text-4xl font-bold leading-tight tracking-tight;
+    font-family: 'Playfair Display', serif;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold leading-tight tracking-tight;
+  }
+
+  h3 {
+    @apply text-xl font-medium leading-tight;
+  }
+
+  h4 {
+    @apply text-lg font-medium leading-tight;
+  }
+
+  /* Focus Management for Accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-focus ring-offset-2 ring-offset-background;
+  }
+
+  /* Smooth Transitions */
+  * {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
   }
 }
 
 @layer utilities {
-  /* Mobile-first responsive utilities */
-  .mobile-safe-area {
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
+  /* Educational Spacing System */
+  .space-educational {
+    @apply space-y-6;
   }
 
-  /* Text truncation utilities */
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  .container-educational {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
   }
 
-  /* Touch-friendly button sizes */
+  /* Educational Card Shadows */
+  .shadow-educational-sm {
+    box-shadow: 0 1px 3px 0 rgba(140, 107, 244, 0.1), 0 1px 2px -1px rgba(140, 107, 244, 0.1);
+  }
+
+  .shadow-educational {
+    box-shadow: 0 4px 6px -1px rgba(140, 107, 244, 0.1), 0 2px 4px -2px rgba(140, 107, 244, 0.1);
+  }
+
+  .shadow-educational-lg {
+    box-shadow: 0 10px 15px -3px rgba(140, 107, 244, 0.1), 0 4px 6px -4px rgba(140, 107, 244, 0.1);
+  }
+
+  .shadow-educational-xl {
+    box-shadow: 0 20px 25px -5px rgba(140, 107, 244, 0.1), 0 8px 10px -6px rgba(140, 107, 244, 0.1);
+  }
+
+  /* Educational Animations */
+  .animate-educational-fade-in {
+    animation: educational-fade-in 300ms ease-out;
+  }
+
+  .animate-educational-scale-in {
+    animation: educational-scale-in 200ms ease-out;
+  }
+
+  .hover-educational {
+    @apply transform transition-all duration-200 hover:scale-[1.02] hover:shadow-educational-lg;
+  }
+
+  /* Text Sizing for Readability */
+  .text-educational-body {
+    @apply text-base leading-relaxed;
+  }
+
+  .text-educational-small {
+    @apply text-sm leading-relaxed;
+  }
+
+  /* White Space Rule (50/50) */
+  .layout-educational {
+    @apply py-12 px-6;
+  }
+
+  .section-educational {
+    @apply py-16 space-y-8;
+  }
+
+  /* Responsive Typography */
+  .heading-educational-display {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-bold;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .heading-educational-section {
+    @apply text-2xl sm:text-3xl font-semibold;
+  }
+
+  /* Touch Targets (44px minimum) */
   .touch-target {
-    min-height: 44px;
-    min-width: 44px;
+    @apply min-h-11 min-w-11;
   }
+
+  /* Reduced Motion Support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Educational Button Variants */
+  .btn-educational-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6 py-3 font-medium touch-target;
+    @apply transition-all duration-200 hover:shadow-educational-lg hover:scale-105;
+  }
+
+  .btn-educational-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-xl px-6 py-3 font-medium touch-target;
+    @apply transition-all duration-200 hover:shadow-educational hover:scale-105;
+  }
+
+  .btn-educational-ghost {
+    @apply text-accent-foreground hover:bg-accent rounded-xl px-4 py-2 font-medium touch-target;
+    @apply transition-all duration-200;
+  }
+
+  /* Educational Card Component */
+  .card-educational {
+    @apply bg-card border border-border rounded-2xl shadow-educational-sm hover:shadow-educational;
+    @apply transition-all duration-200 hover:scale-[1.02];
+  }
+
+  /* Educational Input Component */
+  .input-educational {
+    @apply w-full rounded-xl border border-input bg-background px-4 py-3 text-base;
+    @apply focus:border-focus focus:ring-2 focus:ring-focus/20 focus:outline-none;
+    @apply transition-all duration-200;
+  }
+}
+
+/* Educational Keyframes */
+@keyframes educational-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes educational-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Success Animation for Educational Achievement */
+@keyframes educational-success {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-educational-success {
+  animation: educational-success 600ms ease-in-out;
 }
