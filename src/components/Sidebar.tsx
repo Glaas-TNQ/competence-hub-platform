@@ -165,21 +165,23 @@ export const Sidebar = () => {
         </div>
       )}
 
-      <nav className="px-6 space-y-2">
+      <nav className={`${isCollapsed ? 'px-2' : 'px-6'} space-y-2`}>
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <NavLink
               key={item.id}
               to={item.path}
-              className={`flex items-center space-x-4 px-4 py-3 rounded-2xl transition-all duration-200 group ${
+              className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-4'} px-4 py-3 rounded-2xl transition-all duration-200 group ${
                 isActive 
-                  ? 'bg-primary/10 text-primary border-l-4 border-primary' 
+                  ? isCollapsed 
+                    ? 'bg-primary/15 text-primary relative after:content-[""] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-1 after:h-6 after:bg-primary after:rounded-l-full' 
+                    : 'bg-primary/10 text-primary border-l-4 border-primary'
                   : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
               }`}
               title={isCollapsed ? item.label : undefined}
             >
-              <item.icon size={20} className={`${isActive ? 'text-primary' : ''} flex-shrink-0`} />
+              <item.icon size={20} className={`${isActive ? 'text-primary' : ''} flex-shrink-0 ${isCollapsed ? 'mx-auto' : ''}`} />
               {!isCollapsed && <span className="font-medium">{item.label}</span>}
             </NavLink>
           );
@@ -188,14 +190,16 @@ export const Sidebar = () => {
         {isAdmin && (
           <NavLink
             to="/admin"
-            className={`flex items-center space-x-4 px-4 py-3 rounded-2xl transition-all duration-200 mt-6 pt-6 border-t border-border ${
+            className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-4'} px-4 py-3 rounded-2xl transition-all duration-200 mt-6 pt-6 border-t border-border ${
               location.pathname === '/admin'
-                ? 'bg-destructive/10 text-destructive border-l-4 border-destructive' 
+                ? isCollapsed
+                  ? 'bg-destructive/15 text-destructive relative after:content-[""] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-1 after:h-6 after:bg-destructive after:rounded-l-full'
+                  : 'bg-destructive/10 text-destructive border-l-4 border-destructive'
                 : 'hover:bg-destructive/5 text-muted-foreground hover:text-destructive'
             }`}
             title={isCollapsed ? "Admin Panel" : undefined}
           >
-            <Shield size={20} className="flex-shrink-0" />
+            <Shield size={20} className={`flex-shrink-0 ${isCollapsed ? 'mx-auto' : ''}`} />
             {!isCollapsed && <span className="font-medium">Admin Panel</span>}
           </NavLink>
         )}

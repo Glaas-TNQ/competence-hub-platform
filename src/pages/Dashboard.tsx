@@ -5,7 +5,6 @@ import { CompactActivityCard } from "@/components/dashboard/CompactActivityCard"
 import { DashboardWidget } from "@/components/dashboard/DashboardWidget";
 import { DashboardCustomizer } from "@/components/dashboard/DashboardCustomizer";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { useCourses, useUserProgress } from "@/hooks/useSupabase";
 import { useUserTotalPoints, useUserStreak, useUserBadges } from "@/hooks/useGamification";
 import { useUserGoals } from "@/hooks/useUserGoals";
@@ -27,6 +26,7 @@ export const Dashboard = () => {
     isCustomizing,
     setIsCustomizing,
     toggleWidgetVisibility,
+    saveLayout,
   } = useDashboardCustomization();
 
   const [showCustomizer, setShowCustomizer] = useState(false);
@@ -45,6 +45,13 @@ export const Dashboard = () => {
   const inProgressCourses = safeUserProgress.filter(p => p?.progress_percentage > 0 && p?.progress_percentage < 100)?.length || 0;
 
   console.log('Dashboard calculated values:', { completedCourses, inProgressCourses });
+
+  const handleFinishCustomization = async () => {
+    if (dashboardLayout) {
+      await saveLayout(dashboardLayout);
+    }
+    setIsCustomizing(false);
+  };
 
   if (coursesLoading || progressLoading) {
     return (
@@ -90,8 +97,6 @@ export const Dashboard = () => {
           </div>
           
           <div className="flex gap-3">
-            <ThemeToggle />
-            
             <Button
               variant={isCustomizing ? "default" : "outline"}
               onClick={() => setIsCustomizing(!isCustomizing)}

@@ -17,12 +17,25 @@ export const useDashboardCustomization = () => {
 
   useEffect(() => {
     if (preferences?.dashboard_layout) {
-      setDashboardLayout(preferences.dashboard_layout as DashboardLayout);
+      try {
+        const layout = typeof preferences.dashboard_layout === 'string' 
+          ? JSON.parse(preferences.dashboard_layout) 
+          : preferences.dashboard_layout;
+        setDashboardLayout(layout as DashboardLayout);
+      } catch (error) {
+        console.error('Error parsing dashboard layout:', error);
+        setDashboardLayout({
+          widgets: DEFAULT_WIDGETS,
+          theme: 'light',
+          compactMode: false,
+        });
+      }
     }
   }, [preferences]);
 
   const saveLayout = async (layout: DashboardLayout) => {
     try {
+      console.log('Saving dashboard layout:', layout);
       await updatePreferences.mutateAsync({
         dashboard_layout: layout,
       });
@@ -40,6 +53,8 @@ export const useDashboardCustomization = () => {
       ),
     };
     setDashboardLayout(newLayout);
+    // Auto-save quando si aggiorna un widget
+    saveLayout(newLayout);
   };
 
   const toggleWidgetVisibility = (widgetId: string) => {
@@ -55,6 +70,7 @@ export const useDashboardCustomization = () => {
       widgets,
     };
     setDashboardLayout(newLayout);
+    saveLayout(newLayout);
   };
 
   const resetToDefault = () => {
@@ -64,6 +80,7 @@ export const useDashboardCustomization = () => {
       compactMode: false,
     };
     setDashboardLayout(defaultLayout);
+    saveLayout(defaultLayout);
   };
 
   return {

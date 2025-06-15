@@ -2,6 +2,7 @@
 import { Bell, Search, User, LogOut, Settings as SettingsIcon, Shield } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +30,7 @@ export const Header = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-educational-md">
           <h2 className="text-educational-h2 font-bold text-accent-foreground">
-            Academy Corporate
+            FairMind Academy
           </h2>
           {profile?.role === 'admin' && (
             <div className="flex items-center space-x-educational-sm">
@@ -78,6 +79,8 @@ export const Header = () => {
               3
             </span>
           </button>
+
+          <ThemeToggle />
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
