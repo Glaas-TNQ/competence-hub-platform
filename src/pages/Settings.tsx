@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,6 +12,8 @@ import { useTranslation } from '@/contexts/LanguageContext';
 import { useUpdateUserPreferences, useUserPreferences } from '@/hooks/useUserPreferences';
 import { useToast } from '@/hooks/use-toast';
 import { User, Shield, Palette, Download, Trash2 } from 'lucide-react';
+
+type Language = 'it' | 'en';
 
 export const Settings: React.FC = () => {
   const { user, profile } = useAuth();
@@ -61,7 +62,8 @@ export const Settings: React.FC = () => {
   };
 
   const handleLanguageChange = (newLanguage: string) => {
-    setLanguage(newLanguage as 'it' | 'en');
+    const validLanguage = newLanguage as Language;
+    setLanguage(validLanguage);
     setFormData({...formData, language: newLanguage});
   };
 
