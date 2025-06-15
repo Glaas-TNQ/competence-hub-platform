@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { NotesManager } from '@/components/notes/NotesManager';
 import { useUserNotes } from '@/hooks/useUserNotes';
 import { useCourses } from '@/hooks/useSupabase';
-import { BookOpen, Search, Filter, FileText } from 'lucide-react';
+import { BookOpen, Search, Filter, FileText, Bookmark, Highlight } from 'lucide-react';
 
 export const Notes = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -37,25 +37,20 @@ export const Notes = () => {
   })).filter(stat => stat.noteCount > 0) || [];
 
   const noteTypeStats = [
-    { type: 'personal', label: 'Personali', count: allNotes?.filter(n => n.note_type === 'personal').length || 0 },
-    { type: 'bookmark', label: 'Bookmark', count: allNotes?.filter(n => n.note_type === 'bookmark').length || 0 },
-    { type: 'highlight', label: 'Highlight', count: allNotes?.filter(n => n.note_type === 'highlight').length || 0 },
+    { type: 'personal', label: 'Personali', count: allNotes?.filter(n => n.note_type === 'personal').length || 0, icon: FileText },
+    { type: 'bookmark', label: 'Bookmark', count: allNotes?.filter(n => n.note_type === 'bookmark').length || 0, icon: Bookmark },
+    { type: 'highlight', label: 'Highlight', count: allNotes?.filter(n => n.note_type === 'highlight').length || 0, icon: Highlight },
   ];
 
   if (notesLoading) {
     return (
-      <div className="p-6 bg-slate-50 min-h-screen">
-        <div className="space-y-6">
-          <div className="h-8 bg-gray-200 rounded animate-pulse w-48"></div>
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <div className="lg:col-span-3 space-y-4">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="h-32 bg-gray-200 rounded-lg animate-pulse"></div>
-              ))}
-            </div>
-            <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-24 bg-gray-200 rounded-lg animate-pulse"></div>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <div className="max-w-7xl mx-auto p-8">
+          <div className="space-y-6">
+            <div className="h-12 bg-card/50 rounded-2xl animate-pulse"></div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="h-32 bg-card/50 rounded-2xl animate-pulse"></div>
               ))}
             </div>
           </div>
@@ -65,43 +60,50 @@ export const Notes = () => {
   }
 
   return (
-    <div className="p-6 bg-slate-50 min-h-screen">
-      <div className="space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="max-w-7xl mx-auto p-8 space-y-8">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Le Mie Note</h1>
-          <p className="text-gray-600 mt-2">
+        <div className="space-y-4">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Le Mie Note
+          </h1>
+          <p className="text-lg text-muted-foreground">
             Gestisci tutte le tue note, bookmark e highlights in un unico posto
           </p>
         </div>
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm hover:shadow-educational-lg transition-all duration-300">
+            <CardContent className="p-6">
               <div className="flex items-center">
-                <FileText className="h-8 w-8 text-blue-600" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Totale Note</p>
-                  <p className="text-2xl font-bold text-gray-900">{allNotes?.length || 0}</p>
+                <div className="h-12 w-12 bg-primary/10 rounded-2xl flex items-center justify-center mr-4">
+                  <FileText className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Totale Note</p>
+                  <p className="text-2xl font-bold text-foreground">{allNotes?.length || 0}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {noteTypeStats.map((stat) => (
-            <Card key={stat.type}>
-              <CardContent className="p-4">
+            <Card key={stat.type} className="border-0 shadow-educational bg-card/50 backdrop-blur-sm hover:shadow-educational-lg transition-all duration-300">
+              <CardContent className="p-6">
                 <div className="flex items-center">
-                  <div className={`h-8 w-8 rounded-full flex items-center justify-center ${
-                    stat.type === 'personal' ? 'bg-gray-100' :
-                    stat.type === 'bookmark' ? 'bg-yellow-100' : 'bg-blue-100'
+                  <div className={`h-12 w-12 rounded-2xl flex items-center justify-center mr-4 ${
+                    stat.type === 'personal' ? 'bg-secondary/10' :
+                    stat.type === 'bookmark' ? 'bg-focus/10' : 'bg-success/10'
                   }`}>
-                    {stat.type === 'personal' ? '📝' : stat.type === 'bookmark' ? '🔖' : '🔍'}
+                    <stat.icon className={`h-6 w-6 ${
+                      stat.type === 'personal' ? 'text-secondary' :
+                      stat.type === 'bookmark' ? 'text-focus' : 'text-success'
+                    }`} />
                   </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">{stat.label}</p>
-                    <p className="text-2xl font-bold text-gray-900">{stat.count}</p>
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
+                    <p className="text-2xl font-bold text-foreground">{stat.count}</p>
                   </div>
                 </div>
               </CardContent>
@@ -109,28 +111,28 @@ export const Notes = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-3 space-y-6">
             {/* Search and Filters */}
-            <Card>
-              <CardContent className="p-4">
+            <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
+              <CardContent className="p-6">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                     <Input
                       placeholder="Cerca nelle note..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
+                      className="pl-10 border-0 bg-background/50 rounded-xl"
                     />
                   </div>
                   
-                  <div className="flex gap-2">
+                  <div className="flex gap-3">
                     <select
                       value={selectedCourse}
                       onChange={(e) => setSelectedCourse(e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                      className="px-4 py-2 border-0 bg-background/50 rounded-xl text-sm min-w-[140px]"
                     >
                       <option value="">Tutti i corsi</option>
                       {courses?.map((course) => (
@@ -143,7 +145,7 @@ export const Notes = () => {
                     <select
                       value={selectedType}
                       onChange={(e) => setSelectedType(e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                      className="px-4 py-2 border-0 bg-background/50 rounded-xl text-sm min-w-[120px]"
                     >
                       <option value="">Tutti i tipi</option>
                       <option value="personal">Personali</option>
@@ -155,36 +157,36 @@ export const Notes = () => {
 
                 {(searchQuery || selectedCourse || selectedType) && (
                   <div className="flex items-center gap-2 mt-4">
-                    <span className="text-sm text-gray-600">Filtri attivi:</span>
+                    <span className="text-sm text-muted-foreground">Filtri attivi:</span>
                     {searchQuery && (
-                      <Badge variant="secondary" className="gap-1">
+                      <Badge variant="secondary" className="gap-1 bg-primary/10 text-primary border-primary/20">
                         Ricerca: "{searchQuery}"
                         <button
                           onClick={() => setSearchQuery('')}
-                          className="ml-1 hover:bg-gray-300 rounded-full p-0.5"
+                          className="ml-1 hover:bg-primary/20 rounded-full p-0.5"
                         >
                           ×
                         </button>
                       </Badge>
                     )}
                     {selectedCourse && (
-                      <Badge variant="secondary" className="gap-1">
+                      <Badge variant="secondary" className="gap-1 bg-secondary/10 text-secondary border-secondary/20">
                         Corso: {courses?.find(c => c.id === selectedCourse)?.title}
                         <button
                           onClick={() => setSelectedCourse('')}
-                          className="ml-1 hover:bg-gray-300 rounded-full p-0.5"
+                          className="ml-1 hover:bg-secondary/20 rounded-full p-0.5"
                         >
                           ×
                         </button>
                       </Badge>
                     )}
                     {selectedType && (
-                      <Badge variant="secondary" className="gap-1">
+                      <Badge variant="secondary" className="gap-1 bg-focus/10 text-focus border-focus/20">
                         Tipo: {selectedType === 'personal' ? 'Personali' : 
                               selectedType === 'bookmark' ? 'Bookmark' : 'Highlight'}
                         <button
                           onClick={() => setSelectedType('')}
-                          className="ml-1 hover:bg-gray-300 rounded-full p-0.5"
+                          className="ml-1 hover:bg-focus/20 rounded-full p-0.5"
                         >
                           ×
                         </button>
@@ -195,28 +197,33 @@ export const Notes = () => {
               </CardContent>
             </Card>
 
-            {/* Notes Manager with filtered notes */}
+            {/* Notes Content */}
             <div>
               {filteredNotes.length > 0 ? (
                 <NotesManager />
               ) : (
-                <Card>
-                  <CardContent className="text-center py-12">
-                    <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h4 className="text-lg font-medium text-gray-800 mb-2">
+                <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
+                  <CardContent className="text-center py-16">
+                    <div className="w-24 h-24 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <BookOpen className="w-12 h-12 text-muted-foreground" />
+                    </div>
+                    <h4 className="text-xl font-semibold text-foreground mb-4">
                       {searchQuery || selectedCourse || selectedType 
                         ? 'Nessuna nota trovata con i filtri applicati'
                         : 'Nessuna nota trovata'
                       }
                     </h4>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-muted-foreground mb-6">
                       {searchQuery || selectedCourse || selectedType
                         ? 'Prova a modificare i filtri di ricerca.'
                         : 'Inizia a prendere note durante lo studio dei corsi.'
                       }
                     </p>
                     {(!searchQuery && !selectedCourse && !selectedType) && (
-                      <Button onClick={() => window.location.href = '/areas'}>
+                      <Button 
+                        onClick={() => window.location.href = '/areas'}
+                        className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-6 py-3 rounded-full"
+                      >
                         Vai ai Corsi
                       </Button>
                     )}
@@ -229,7 +236,7 @@ export const Notes = () => {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Course Notes Summary */}
-            <Card>
+            <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-lg">Note per Corso</CardTitle>
               </CardHeader>
@@ -239,18 +246,20 @@ export const Notes = () => {
                     {courseStats.map((course) => (
                       <div
                         key={course.id}
-                        className="flex items-center justify-between p-2 hover:bg-gray-50 rounded cursor-pointer"
+                        className="flex items-center justify-between p-3 hover:bg-background/50 rounded-xl cursor-pointer transition-colors"
                         onClick={() => setSelectedCourse(course.id)}
                       >
                         <span className="text-sm font-medium truncate mr-2">
                           {course.title}
                         </span>
-                        <Badge variant="secondary">{course.noteCount}</Badge>
+                        <Badge variant="secondary" className="bg-primary/10 text-primary">
+                          {course.noteCount}
+                        </Badge>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground text-center py-4">
                     Nessuna nota per corso trovata
                   </p>
                 )}
@@ -258,30 +267,30 @@ export const Notes = () => {
             </Card>
 
             {/* Quick Actions */}
-            <Card>
+            <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-lg">Azioni Rapide</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
+              <CardContent className="space-y-3">
                 <Button
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-start border-0 bg-background/50 hover:bg-background/80 rounded-xl"
                   onClick={() => setSelectedType('bookmark')}
                 >
-                  <BookOpen className="h-4 w-4 mr-2" />
+                  <Bookmark className="h-4 w-4 mr-2" />
                   Vedi tutti i Bookmark
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-start border-0 bg-background/50 hover:bg-background/80 rounded-xl"
                   onClick={() => setSelectedType('highlight')}
                 >
-                  <Search className="h-4 w-4 mr-2" />
+                  <Highlight className="h-4 w-4 mr-2" />
                   Vedi tutti gli Highlight
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-start border-0 bg-background/50 hover:bg-background/80 rounded-xl"
                   onClick={() => {
                     setSearchQuery('');
                     setSelectedCourse('');

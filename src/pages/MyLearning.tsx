@@ -1,7 +1,12 @@
 
-import { CourseCard } from '../components/CourseCard';
-import { useUserProgress, useCourses } from '../hooks/useSupabase';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { BookOpen, TrendingUp, Target, Trophy } from 'lucide-react';
+import { CourseCardById } from '../components/CourseCardById';
+import { useUserProgress, useCourses } from '../hooks/useSupabase';
 
 export const MyLearning = () => {
   const navigate = useNavigate();
@@ -10,10 +15,16 @@ export const MyLearning = () => {
 
   if (progressLoading || coursesLoading) {
     return (
-      <div className="p-6 bg-slate-50 min-h-screen">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">I Miei Corsi</h1>
-          <p className="text-slate-600">Caricamento in corso...</p>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <div className="max-w-7xl mx-auto p-8">
+          <div className="space-y-6">
+            <div className="h-12 bg-card/50 rounded-2xl animate-pulse"></div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-32 bg-card/50 rounded-2xl animate-pulse"></div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -27,98 +38,122 @@ export const MyLearning = () => {
 
   const completedCourses = myCourses.filter(course => course.progress === 100);
   const inProgressCourses = myCourses.filter(course => course.progress > 0 && course.progress < 100);
+  
+  const totalProgress = myCourses.length > 0 
+    ? Math.round(myCourses.reduce((sum, course) => sum + course.progress, 0) / myCourses.length)
+    : 0;
 
   return (
-    <div className="p-6 bg-slate-50 min-h-screen">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">I Miei Corsi</h1>
-        <p className="text-slate-600">Monitora i tuoi progressi e continua l'apprendimento</p>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="max-w-7xl mx-auto p-8 space-y-8">
+        {/* Header */}
+        <div className="space-y-4">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            I Miei Corsi
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Monitora i tuoi progressi e continua l'apprendimento
+          </p>
+        </div>
+
+        {/* Progress Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm hover:shadow-educational-lg transition-all duration-300">
+            <CardContent className="p-6 text-center">
+              <BookOpen className="h-10 w-10 text-primary mx-auto mb-3" />
+              <div className="text-3xl font-bold text-foreground mb-2">{inProgressCourses.length}</div>
+              <div className="text-sm text-muted-foreground">In Corso</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm hover:shadow-educational-lg transition-all duration-300">
+            <CardContent className="p-6 text-center">
+              <Trophy className="h-10 w-10 text-success mx-auto mb-3" />
+              <div className="text-3xl font-bold text-foreground mb-2">{completedCourses.length}</div>
+              <div className="text-sm text-muted-foreground">Completati</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm hover:shadow-educational-lg transition-all duration-300">
+            <CardContent className="p-6 text-center">
+              <Target className="h-10 w-10 text-secondary mx-auto mb-3" />
+              <div className="text-3xl font-bold text-foreground mb-2">{myCourses.length}</div>
+              <div className="text-sm text-muted-foreground">Totali</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm hover:shadow-educational-lg transition-all duration-300">
+            <CardContent className="p-6 text-center">
+              <TrendingUp className="h-10 w-10 text-focus mx-auto mb-3" />
+              <div className="text-3xl font-bold text-foreground mb-2">{totalProgress}%</div>
+              <div className="text-sm text-muted-foreground">Progresso Medio</div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Overall Progress */}
+        {myCourses.length > 0 && (
+          <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="text-xl">Progresso Complessivo</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <Progress value={totalProgress} className="h-3" />
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>{completedCourses.length} di {myCourses.length} corsi completati</span>
+                  <span>{totalProgress}% completato</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* In Progress Courses */}
+        {inProgressCourses.length > 0 && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-foreground">Corsi in Corso</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {inProgressCourses.map((course) => (
+                <CourseCardById key={course.id} courseId={course.id} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Completed Courses */}
+        {completedCourses.length > 0 && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-foreground">Corsi Completati</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {completedCourses.map((course) => (
+                <CourseCardById key={course.id} courseId={course.id} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {myCourses.length === 0 && (
+          <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
+            <CardContent className="text-center py-16">
+              <div className="w-24 h-24 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                <BookOpen className="w-12 h-12 text-muted-foreground" />
+              </div>
+              <h3 className="text-2xl font-semibold text-foreground mb-4">Nessun corso iniziato</h3>
+              <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                Inizia il tuo percorso di apprendimento esplorando le nostre aree di competenza
+              </p>
+              <Button 
+                onClick={() => navigate('/areas')}
+                className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-8 py-3 rounded-full font-medium transition-all duration-200 hover:scale-105"
+              >
+                Esplora Corsi
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
-
-      {/* Progress Overview */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-8">
-        <h2 className="text-xl font-semibold text-slate-800 mb-4">Panoramica Progressi</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">{inProgressCourses.length}</div>
-            <div className="text-slate-600">In Corso</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-green-600 mb-2">{completedCourses.length}</div>
-            <div className="text-slate-600">Completati</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-orange-600 mb-2">{myCourses.length}</div>
-            <div className="text-slate-600">Totali</div>
-          </div>
-        </div>
-      </div>
-
-      {/* In Progress Courses */}
-      {inProgressCourses.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-800 mb-6">Corsi in Corso</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {inProgressCourses.map((course) => (
-              <CourseCard 
-                key={course.id} 
-                title={course.title}
-                description={course.description}
-                duration={course.duration}
-                progress={course.progress}
-                type={course.course_type as 'text' | 'video' | 'arcade'}
-                image="photo-1516321318423-f06f85e504b3"
-                level={course.level as 'Principiante' | 'Intermedio' | 'Avanzato'}
-                requiresPayment={course.requires_payment}
-                price={course.price}
-                courseId={course.id}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Completed Courses */}
-      {completedCourses.length > 0 && (
-        <div>
-          <h2 className="text-2xl font-bold text-slate-800 mb-6">Corsi Completati</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {completedCourses.map((course) => (
-              <CourseCard 
-                key={course.id} 
-                title={course.title}
-                description={course.description}
-                duration={course.duration}
-                progress={course.progress}
-                type={course.course_type as 'text' | 'video' | 'arcade'}
-                image="photo-1516321318423-f06f85e504b3"
-                level={course.level as 'Principiante' | 'Intermedio' | 'Avanzato'}
-                requiresPayment={course.requires_payment}
-                price={course.price}
-                courseId={course.id}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {myCourses.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-slate-400 mb-4">
-            <svg className="w-24 h-24 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-          </div>
-          <h3 className="text-xl font-semibold text-slate-600 mb-2">Nessun corso iniziato</h3>
-          <p className="text-slate-500 mb-6">Inizia il tuo percorso di apprendimento esplorando le nostre aree di competenza</p>
-          <button 
-            onClick={() => navigate('/areas')}
-            className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:from-blue-700 hover:to-blue-600 transition-all duration-200"
-          >
-            Esplora Corsi
-          </button>
-        </div>
-      )}
     </div>
   );
 };

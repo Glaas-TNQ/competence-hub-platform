@@ -16,6 +16,11 @@ import { Goals } from './pages/Goals';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { LearningPaths } from '@/pages/LearningPaths';
 import { LearningPathView } from '@/pages/LearningPathView';
+import { Badges } from '@/pages/Badges';
+import { Analytics } from '@/pages/Analytics';
+import { Certificates } from '@/pages/Certificates';
+import { Notes } from '@/pages/Notes';
+import { Collaboration } from '@/pages/Collaboration';
 import { Auth } from './pages/Auth';
 
 const queryClient = new QueryClient();
@@ -39,12 +44,17 @@ function App() {
                           <Routes>
                             <Route path="/" element={<Dashboard />} />
                             <Route path="/dashboard" element={<Dashboard />} />
+                            <Route path="/areas" element={<CompetenceAreas />} />
                             <Route path="/my-learning" element={<MyLearning />} />
                             <Route path="/course/:courseId" element={<CourseView />} />
-                            <Route path="/competence-areas" element={<CompetenceAreas />} />
                             <Route path="/learning-paths" element={<LearningPaths />} />
                             <Route path="/learning-path/:id" element={<LearningPathView />} />
+                            <Route path="/badges" element={<Badges />} />
+                            <Route path="/analytics" element={<Analytics />} />
+                            <Route path="/certificates" element={<Certificates />} />
+                            <Route path="/notes" element={<Notes />} />
                             <Route path="/goals" element={<Goals />} />
+                            <Route path="/collaboration" element={<Collaboration />} />
                             <Route path="/settings" element={<Settings />} />
                             <Route path="/admin" element={<AdminDashboard />} />
                           </Routes>
