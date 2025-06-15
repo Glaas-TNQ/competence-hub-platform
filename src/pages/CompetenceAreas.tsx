@@ -1,70 +1,40 @@
 import React, { useState } from 'react';
-import { CourseCard } from "@/components/CourseCard";
-import { useCourses, useCompetenceAreas, useUserProgress } from "@/hooks/useSupabase";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 import { 
-  Search, 
+  Target, 
+  BookOpen, 
+  Clock, 
+  Users, 
+  TrendingUp,
+  Award,
   Filter,
-  X,
-  GraduationCap,
-  BookOpen
+  Search,
+  ChevronRight
 } from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { useCompetenceAreas, useCourses, useUserProgress } from '@/hooks/useSupabase';
+import { CourseCard } from '@/components/CourseCard';
 import { useNavigate } from 'react-router-dom';
 
 export const CompetenceAreas = () => {
-  const { data: courses, isLoading, error } = useCourses();
-  const { data: competenceAreas } = useCompetenceAreas();
-  const { data: userProgress } = useUserProgress();
+  const [selectedArea, setSelectedArea] = useState<string | null>(null);
+  const [filterCompleted, setFilterCompleted] = useState<'all' | 'completed' | 'in-progress'>('all');
   const navigate = useNavigate();
   
-  const [selectedArea, setSelectedArea] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  
-  const [completionFilter, setCompletionFilter] = useState<string>('all');
+  const { data: competenceAreas, isLoading: areasLoading } = useCompetenceAreas();
+  const { data: courses, isLoading: coursesLoading } = useCourses();
+  const { data: userProgress } = useUserProgress();
 
-  const handleResetFilters = () => {
-    setSelectedArea('all');
-    setSearchTerm('');
-  };
-
-  const filteredCourses = courses?.filter((course) => {
-    const matchesArea = selectedArea === 'all' || course.competence_area_id === selectedArea;
-    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         course.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    // Check completion status
-    let matchesCompletion = true;
-    if (completionFilter !== 'all') {
-      const courseProgress = userProgress?.find(p => p.course_id === course.id);
-      const isCompleted = courseProgress?.progress_percentage === 100;
-      
-      if (completionFilter === 'completed') {
-        matchesCompletion = isCompleted;
-      } else if (completionFilter === 'not-completed') {
-        matchesCompletion = !isCompleted;
-      }
-    }
-    
-    return matchesArea && matchesSearch && matchesCompletion;
-  }) || [];
-
-  if (isLoading) {
+  if (areasLoading || coursesLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-64 bg-card/50 rounded-3xl animate-pulse"></div>
+              <div key={i} className="h-48 bg-card/50 rounded-3xl animate-pulse"></div>
             ))}
           </div>
         </div>
@@ -72,16 +42,163 @@ export const CompetenceAreas = () => {
     );
   }
 
-  if (error) {
+  // Safe array access
+  const safeCompetenceAreas = Array.isArray(competenceAreas) ? competenceAreas : [];
+  const safeCourses = Array.isArray(courses) ? courses : [];
+  const safeUserProgress = Array.isArray(userProgress) ? userProgress : [];
+
+  // Calculate stats for each competence area
+  const areasWithStats = safeCompetenceAreas.map(area => {
+    const areaCourses = safeCourses.filter(course => course.competence_area_id === area.id);
+    const completedCourses = areaCourses.filter(course => 
+      safeUserProgress.some(p => p.course_id === course.id && p.progress_percentage === 100)
+    );
+    const inProgressCourses = areaCourses.filter(course => 
+      safeUserProgress.some(p => p.course_id === course.id && p.progress_percentage > 0 && p.progress_percentage < 100)
+    );
+    
+    const progressPercentage = areaCourses.length > 0 
+      ? Math.round((completedCourses.length / areaCourses.length) * 100)
+      : 0;
+
+    return {
+      ...area,
+      coursesCount: areaCourses.length,
+      completedCount: completedCourses.length,
+      inProgressCount: inProgressCourses.length,
+      progressPercentage,
+      courses: areaCourses
+    };
+  });
+
+  const selectedAreaData = selectedArea 
+    ? areasWithStats.find(area => area.id === selectedArea)
+    : null;
+
+  const filteredCourses = selectedAreaData?.courses.filter(course => {
+    const courseProgress = safeUserProgress.find(p => p.course_id === course.id);
+    const progressPercentage = courseProgress?.progress_percentage || 0;
+    
+    switch (filterCompleted) {
+      case 'completed':
+        return progressPercentage === 100;
+      case 'in-progress':
+        return progressPercentage > 0 && progressPercentage < 100;
+      default:
+        return true;
+    }
+  }) || [];
+
+  if (selectedArea && selectedAreaData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-8">
-        <div className="max-w-4xl mx-auto text-center py-20">
-          <h2 className="text-3xl font-bold text-destructive mb-6">
-            Errore nel caricamento
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            Si è verificato un errore durante il caricamento dei dati.
-          </p>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <div className="max-w-7xl mx-auto p-8">
+          {/* Back Button */}
+          <Button 
+            variant="ghost" 
+            onClick={() => setSelectedArea(null)}
+            className="mb-6 rounded-full hover:bg-muted/50"
+          >
+            <ChevronRight className="h-4 w-4 mr-2 rotate-180" />
+            Torna alle Aree di Competenza
+          </Button>
+
+          {/* Area Header */}
+          <div className="mb-8">
+            <div className="flex items-start justify-between mb-6">
+              <div className="space-y-4">
+                <h1 className="text-4xl font-bold text-foreground">{selectedAreaData.name}</h1>
+                <p className="text-lg text-muted-foreground max-w-3xl">
+                  {selectedAreaData.description}
+                </p>
+              </div>
+              <Badge 
+                variant="secondary" 
+                className="bg-primary/10 text-primary border-primary/20 px-4 py-2 rounded-full"
+              >
+                {selectedAreaData.coursesCount} corsi
+              </Badge>
+            </div>
+
+            {/* Progress Overview */}
+            <Card className="border-0 shadow-sm bg-card/50 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-primary mb-2">
+                      {selectedAreaData.progressPercentage}%
+                    </div>
+                    <div className="text-sm text-muted-foreground">Completamento</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-success mb-2">
+                      {selectedAreaData.completedCount}
+                    </div>
+                    <div className="text-sm text-muted-foreground">Completati</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-warning mb-2">
+                      {selectedAreaData.inProgressCount}
+                    </div>
+                    <div className="text-sm text-muted-foreground">In Corso</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-muted-foreground mb-2">
+                      {selectedAreaData.coursesCount - selectedAreaData.completedCount - selectedAreaData.inProgressCount}
+                    </div>
+                    <div className="text-sm text-muted-foreground">Da Iniziare</div>
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <Progress value={selectedAreaData.progressPercentage} className="h-2" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Filters */}
+          <div className="flex gap-4 mb-8">
+            <Button
+              variant={filterCompleted === 'all' ? 'default' : 'outline'}
+              onClick={() => setFilterCompleted('all')}
+              className="rounded-full"
+            >
+              Tutti i Corsi
+            </Button>
+            <Button
+              variant={filterCompleted === 'in-progress' ? 'default' : 'outline'}
+              onClick={() => setFilterCompleted('in-progress')}
+              className="rounded-full"
+            >
+              In Corso
+            </Button>
+            <Button
+              variant={filterCompleted === 'completed' ? 'default' : 'outline'}
+              onClick={() => setFilterCompleted('completed')}
+              className="rounded-full"
+            >
+              Completati
+            </Button>
+          </div>
+
+          {/* Courses Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCourses.map((course) => (
+              <CourseCard key={course.id} courseId={course.id} />
+            ))}
+          </div>
+
+          {filteredCourses.length === 0 && (
+            <div className="text-center py-12">
+              <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-2">
+                Nessun corso trovato
+              </h3>
+              <p className="text-muted-foreground">
+                Non ci sono corsi che corrispondono ai filtri selezionati.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -91,154 +208,89 @@ export const CompetenceAreas = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <div className="max-w-7xl mx-auto p-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-primary/10 rounded-2xl">
-              <Filter className="h-8 w-8 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-foreground">
-                Aree di Competenza
-              </h1>
-              <p className="text-lg text-muted-foreground">
-                Esplora i corsi disponibili per ogni area
-              </p>
-            </div>
-          </div>
+        <div className="mb-12">
+          <h1 className="text-4xl font-bold text-foreground mb-4">
+            Aree di Competenza
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Esplora le diverse aree di competenza e sviluppa le tue skills
+          </p>
         </div>
 
-        {/* Filters */}
-        <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm mb-8">
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {/* Search */}
-              <div className="space-y-2">
-                <Label htmlFor="search" className="text-sm font-medium">
-                  Cerca corsi
-                </Label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="search"
-                    placeholder="Titolo o descrizione..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 rounded-full"
-                  />
-                </div>
-              </div>
-
-              {/* Area Filter */}
-              <div className="space-y-2">
-                <Label htmlFor="area-filter" className="text-sm font-medium">
-                  Area di competenza
-                </Label>
-                <Select value={selectedArea} onValueChange={setSelectedArea}>
-                  <SelectTrigger id="area-filter">
-                    <SelectValue placeholder="Seleziona area" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Tutte le aree</SelectItem>
-                    {competenceAreas?.map((area) => (
-                      <SelectItem key={area.id} value={area.id}>
-                        {area.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Completion Filter */}
-              <div className="space-y-2">
-                <Label htmlFor="completion-filter" className="text-sm font-medium">
-                  Completamento
-                </Label>
-                <Select value={completionFilter} onValueChange={setCompletionFilter}>
-                  <SelectTrigger id="completion-filter">
-                    <SelectValue placeholder="Seleziona stato" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Tutti i corsi</SelectItem>
-                    <SelectItem value="completed">Completati</SelectItem>
-                    <SelectItem value="not-completed">Non completati</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Reset Filters */}
-              <div className="flex items-end">
-                <Button 
-                  variant="outline" 
-                  onClick={handleResetFilters}
-                  className="rounded-full w-full"
-                  disabled={!selectedArea && !searchTerm}
-                >
-                  <X className="h-4 w-4 mr-2" />
-                  Reset Filtri
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Learning Paths Section */}
-        <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <GraduationCap className="h-6 w-6 text-primary" />
-              Percorsi di Apprendimento
-            </CardTitle>
-            <p className="text-muted-foreground">
-              Segui percorsi strutturati per un apprendimento guidato
-            </p>
-          </CardHeader>
-          <CardContent>
-            <Button 
-              onClick={() => navigate('/learning-paths')}
-              variant="outline"
-              className="w-full rounded-full border-dashed"
+        {/* Competence Areas Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {areasWithStats.map((area) => (
+            <Card 
+              key={area.id}
+              className="border-0 shadow-sm bg-card/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300 cursor-pointer group"
+              onClick={() => setSelectedArea(area.id)}
             >
-              <BookOpen className="h-4 w-4 mr-2" />
-              Esplora Percorsi di Apprendimento
-            </Button>
-          </CardContent>
-        </Card>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="space-y-2">
+                    <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                      {area.name}
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {area.description}
+                    </p>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                </div>
+              </CardHeader>
+              
+              <CardContent className="space-y-4">
+                {/* Stats */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium">{area.coursesCount} corsi</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Award className="h-4 w-4 text-success" />
+                    <span className="text-sm font-medium">{area.completedCount} completati</span>
+                  </div>
+                </div>
 
-        {/* Results */}
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-semibold">
-              {filteredCourses.length} {filteredCourses.length === 1 ? 'corso trovato' : 'corsi trovati'}
-            </h2>
-          </div>
+                {/* Progress */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Progresso</span>
+                    <span className="text-sm font-medium">{area.progressPercentage}%</span>
+                  </div>
+                  <Progress value={area.progressPercentage} className="h-2" />
+                </div>
 
-          {filteredCourses.length === 0 ? (
-            <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <BookOpen className="h-16 w-16 mx-auto mb-4 text-muted-foreground/40" />
-                <h3 className="text-xl font-medium mb-2">
-                  Nessun corso trovato
-                </h3>
-                <p className="text-muted-foreground">
-                  Prova a modificare i filtri di ricerca
-                </p>
-                <Button 
-                  variant="outline" 
-                  onClick={handleResetFilters}
-                  className="mt-4 rounded-full"
-                >
-                  Reset Filtri
-                </Button>
+                {/* Status Badge */}
+                {area.progressPercentage === 100 ? (
+                  <Badge variant="default" className="bg-success/10 text-success border-success/20">
+                    Completato
+                  </Badge>
+                ) : area.progressPercentage > 0 ? (
+                  <Badge variant="default" className="bg-warning/10 text-warning border-warning/20">
+                    In Corso
+                  </Badge>
+                ) : (
+                  <Badge variant="outline">
+                    Da Iniziare
+                  </Badge>
+                )}
               </CardContent>
             </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredCourses.map((course) => (
-                <CourseCard key={course.id} course={course} />
-              ))}
-            </div>
-          )}
+          ))}
         </div>
+
+        {areasWithStats.length === 0 && (
+          <div className="text-center py-12">
+            <Target className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-foreground mb-2">
+              Nessuna area di competenza disponibile
+            </h3>
+            <p className="text-muted-foreground">
+              Le aree di competenza verranno caricate a breve.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

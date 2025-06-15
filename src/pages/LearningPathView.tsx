@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -88,7 +87,7 @@ export const LearningPathView = () => {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="border-0 shadow-educational-sm bg-card/50 backdrop-blur-sm">
+          <Card className="border-0 shadow-sm bg-card/50 backdrop-blur-sm">
             <CardContent className="p-6 text-center">
               <BookOpen className="h-8 w-8 text-primary mx-auto mb-2" />
               <div className="text-2xl font-bold">{stats.totalCount}</div>
@@ -96,7 +95,7 @@ export const LearningPathView = () => {
             </CardContent>
           </Card>
           
-          <Card className="border-0 shadow-educational-sm bg-card/50 backdrop-blur-sm">
+          <Card className="border-0 shadow-sm bg-card/50 backdrop-blur-sm">
             <CardContent className="p-6 text-center">
               <Clock className="h-8 w-8 text-secondary mx-auto mb-2" />
               <div className="text-2xl font-bold">{stats.totalHours}h</div>
@@ -104,17 +103,17 @@ export const LearningPathView = () => {
             </CardContent>
           </Card>
           
-          <Card className="border-0 shadow-educational-sm bg-card/50 backdrop-blur-sm">
+          <Card className="border-0 shadow-sm bg-card/50 backdrop-blur-sm">
             <CardContent className="p-6 text-center">
-              <Target className="h-8 w-8 text-orange-500 mx-auto mb-2" />
+              <Target className="h-8 w-8 text-warning mx-auto mb-2" />
               <div className="text-2xl font-bold">{stats.progressPercentage}%</div>
               <div className="text-sm text-muted-foreground">Completamento</div>
             </CardContent>
           </Card>
           
-          <Card className="border-0 shadow-educational-sm bg-card/50 backdrop-blur-sm">
+          <Card className="border-0 shadow-sm bg-card/50 backdrop-blur-sm">
             <CardContent className="p-6 text-center">
-              <Trophy className="h-8 w-8 text-yellow-500 mx-auto mb-2" />
+              <Trophy className="h-8 w-8 text-success mx-auto mb-2" />
               <div className="text-2xl font-bold">{stats.completedCount}</div>
               <div className="text-sm text-muted-foreground">Completati</div>
             </CardContent>
@@ -123,7 +122,7 @@ export const LearningPathView = () => {
 
         {/* Progress Bar */}
         {stats.progressPercentage > 0 && (
-          <Card className="border-0 shadow-educational-sm bg-card/50 backdrop-blur-sm mb-8">
+          <Card className="border-0 shadow-sm bg-card/50 backdrop-blur-sm mb-8">
             <CardContent className="p-6">
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
@@ -139,7 +138,7 @@ export const LearningPathView = () => {
         )}
 
         {/* Content Types */}
-        <Card className="border-0 shadow-educational-sm bg-card/50 backdrop-blur-sm mb-8">
+        <Card className="border-0 shadow-sm bg-card/50 backdrop-blur-sm mb-8">
           <CardHeader>
             <CardTitle>Tipi di Contenuto</CardTitle>
           </CardHeader>
@@ -173,7 +172,7 @@ export const LearningPathView = () => {
                       <CheckCircle className="h-8 w-8 text-success bg-background rounded-full" />
                     </div>
                   )}
-                  <CourseCard course={course} />
+                  <CourseCard courseId={course.id} />
                 </div>
               );
             })}

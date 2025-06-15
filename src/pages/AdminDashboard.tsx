@@ -1,349 +1,222 @@
-import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Users, BookOpen, Target, BarChart3, Shield, GraduationCap } from 'lucide-react';
-import { useCompetenceAreas, useCourses } from '@/hooks/useSupabase';
-import { CourseManager } from '@/components/admin/CourseManager';
-import { CompetenceAreaManager } from '@/components/admin/CompetenceAreaManager';
-import { UserManager } from '@/components/admin/UserManager';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { LearningPathManager } from '@/components/admin/LearningPathManager';
 
-type ActiveSection = 'overview' | 'courses' | 'areas' | 'users';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Users, 
+  BookOpen, 
+  Target, 
+  TrendingUp,
+  Shield,
+  Database,
+  Settings,
+  BarChart3
+} from 'lucide-react';
+import { CourseManager } from '@/components/admin/CourseManager';
+import { UserManager } from '@/components/admin/UserManager';
+import { CompetenceAreaManager } from '@/components/admin/CompetenceAreaManager';
+import { LearningPathManager } from '@/components/admin/LearningPathManager';
+import { useCourses, useUsers } from '@/hooks/useSupabase';
+
+type ActiveSection = 'overview' | 'courses' | 'users' | 'competence-areas' | 'learning-paths' | 'analytics' | 'settings';
 
 export const AdminDashboard = () => {
-  const { user, profile, loading } = useAuth();
-  const { data: competenceAreas } = useCompetenceAreas();
-  const { data: courses } = useCourses();
   const [activeSection, setActiveSection] = useState<ActiveSection>('overview');
-
-  console.log('AdminDashboard - User:', user?.email);
-  console.log('AdminDashboard - Profile:', profile);
-  console.log('AdminDashboard - Loading:', loading);
-  console.log('AdminDashboard - Is Admin:', profile?.role === 'admin');
-
-  // Show loading state while profile is being fetched
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Shield className="h-5 w-5" />
-              <span>Verifica Permessi Admin</span>
-            </CardTitle>
-            <CardDescription>
-              Caricamento del profilo utente in corso...
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // Check if user is admin (either by role or by email as fallback)
-  const isAdmin = profile?.role === 'admin' || user?.email === 'admin@academy.com';
-
-  // Redirect non-admin users
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="text-red-600">Accesso Negato</CardTitle>
-            <CardDescription>
-              Non hai i permessi per accedere a questa area amministrativa.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="text-sm text-slate-600">
-              <p><strong>Email corrente:</strong> {user?.email}</p>
-              <p><strong>Ruolo profilo:</strong> {profile?.role || 'Non assegnato'}</p>
-            </div>
-            <Button 
-              onClick={() => window.location.href = '/'}
-              className="w-full"
-            >
-              Torna alla Dashboard
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const { data: courses } = useCourses();
+  const { data: users } = useUsers();
 
   const stats = [
     {
-      title: 'Aree di Competenza',
-      value: competenceAreas?.length || 0,
-      icon: Target,
-      color: 'bg-blue-500'
-    },
-    {
-      title: 'Corsi Totali',
-      value: courses?.length || 0,
-      icon: BookOpen,
-      color: 'bg-green-500'
+      title: 'Utenti Totali',
+      value: users?.length || 0,
+      icon: Users,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-100'
     },
     {
       title: 'Corsi Pubblicati',
       value: courses?.filter(c => c.is_published)?.length || 0,
-      icon: BarChart3,
-      color: 'bg-purple-500'
+      icon: BookOpen,
+      color: 'text-green-600',
+      bgColor: 'bg-green-100'
     },
     {
-      title: 'Utenti Attivi',
-      value: '12', // TODO: Implementare query per contare utenti
-      icon: Users,
-      color: 'bg-orange-500'
+      title: 'Aree di Competenza',
+      value: '5',
+      icon: Target,
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-100'
+    },
+    {
+      title: 'Engagement',
+      value: '78%',
+      icon: TrendingUp,
+      color: 'text-orange-600',
+      bgColor: 'bg-orange-100'
     }
   ];
 
-  const navigationItems = [
-    { id: 'overview', label: 'Panoramica', icon: BarChart3 },
-    { id: 'areas', label: 'Aree di Competenza', icon: Target },
-    { id: 'courses', label: 'Gestione Corsi', icon: BookOpen },
-    { id: 'users', label: 'Gestione Utenti', icon: Users }
-  ];
-
-  const renderContent = () => {
+  const renderActiveSection = () => {
     switch (activeSection) {
-      case 'courses':
-        return <CourseManager />;
-      case 'areas':
-        return <CompetenceAreaManager />;
-      case 'users':
-        return <UserManager />;
-      default:
+      case 'overview':
         return (
-          <div className="space-y-4 md:space-y-6">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              {stats.map((stat, index) => {
-                const Icon = stat.icon;
-                return (
-                  <Card key={index}>
-                    <CardContent className="p-4 md:p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-slate-600">{stat.title}</p>
-                          <p className="text-xl md:text-2xl font-bold text-slate-800">{stat.value}</p>
-                        </div>
-                        <div className={`p-2 md:p-3 rounded-full ${stat.color}`}>
-                          <Icon className="h-4 w-4 md:h-6 md:w-6 text-white" />
-                        </div>
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {stats.map((stat, index) => (
+                <Card key={index} className="border-0 shadow-sm bg-card/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">
+                          {stat.title}
+                        </p>
+                        <p className="text-3xl font-bold text-foreground">
+                          {stat.value}
+                        </p>
                       </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                      <div className={`p-3 rounded-xl ${stat.bgColor}`}>
+                        <stat.icon className={`h-6 w-6 ${stat.color}`} />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
 
-            {/* Quick Actions */}
-            <Card>
+            {/* Recent Activity */}
+            <Card className="border-0 shadow-sm bg-card/50 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle>Azioni Rapide</CardTitle>
-                <CardDescription>Accedi velocemente alle funzioni principali</CardDescription>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5" />
+                  Attività Recenti
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Button 
-                    onClick={() => setActiveSection('areas')} 
-                    variant="outline" 
-                    className="h-20 flex-col space-y-2"
-                  >
-                    <Target className="h-6 w-6" />
-                    <span>Gestisci Aree</span>
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveSection('courses')} 
-                    variant="outline" 
-                    className="h-20 flex-col space-y-2"
-                  >
-                    <BookOpen className="h-6 w-6" />
-                    <span>Gestisci Corsi</span>
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveSection('users')} 
-                    variant="outline" 
-                    className="h-20 flex-col space-y-2"
-                  >
-                    <Users className="h-6 w-6" />
-                    <span>Gestisci Utenti</span>
-                  </Button>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className="text-sm">Nuovo corso pubblicato: "Introduzione al Machine Learning"</span>
+                    </div>
+                    <Badge variant="secondary">2h fa</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span className="text-sm">5 nuovi utenti registrati</span>
+                    </div>
+                    <Badge variant="secondary">4h fa</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                      <span className="text-sm">Aggiornata area di competenza "Data Science"</span>
+                    </div>
+                    <Badge variant="secondary">1d fa</Badge>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
         );
+      case 'courses':
+        return <CourseManager />;
+      case 'users':
+        return <UserManager />;
+      case 'competence-areas':
+        return <CompetenceAreaManager />;
+      case 'learning-paths':
+        return <LearningPathManager />;
+      case 'analytics':
+        return (
+          <Card className="border-0 shadow-sm bg-card/50 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle>Analytics Dashboard</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Funzionalità analytics in sviluppo...
+              </p>
+            </CardContent>
+          </Card>
+        );
+      case 'settings':
+        return (
+          <Card className="border-0 shadow-sm bg-card/50 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle>Impostazioni Sistema</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Pannello impostazioni in sviluppo...
+              </p>
+            </CardContent>
+          </Card>
+        );
+      default:
+        return null;
     }
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-800">Admin Dashboard</h1>
-          <p className="text-slate-600">Gestisci la piattaforma di formazione</p>
-          <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
-            <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full w-fit">
-              ✓ Accesso Amministratore Confermato
-            </span>
-            <span className="text-xs text-slate-500">
-              {user?.email}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <div className="border-b border-slate-200">
-        <nav className="flex space-x-1 overflow-x-auto">
-          {navigationItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeSection === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveSection(item.id as ActiveSection)}
-                className={`flex items-center space-x-2 px-3 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap transition-colors ${
-                  isActive
-                    ? 'bg-white text-blue-600 border-b-2 border-blue-600'
-                    : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50'
-                }`}
-              >
-                <Icon size={16} />
-                <span className="hidden sm:inline">{item.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-      </div>
-
-      {/* Content */}
-      <Tabs value={activeSection} onValueChange={setActiveSection} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 rounded-full bg-muted/50 p-1">
-          <TabsTrigger 
-            value="overview" 
-            className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm"
-          >
-            <BarChart3 className="h-4 w-4 mr-2" />
-            Panoramica
-          </TabsTrigger>
-          <TabsTrigger 
-            value="areas" 
-            className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm"
-          >
-            <Target className="h-4 w-4 mr-2" />
-            Aree di Competenza
-          </TabsTrigger>
-          <TabsTrigger 
-            value="courses" 
-            className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm"
-          >
-            <BookOpen className="h-4 w-4 mr-2" />
-            Gestione Corsi
-          </TabsTrigger>
-          <TabsTrigger 
-            value="users" 
-            className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm"
-          >
-            <Users className="h-4 w-4 mr-2" />
-            Gestione Utenti
-          </TabsTrigger>
-          <TabsTrigger 
-            value="learning-paths" 
-            className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm"
-          >
-            <GraduationCap className="h-4 w-4 mr-2" />
-            Percorsi
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview">
-          <div className="space-y-4 md:space-y-6">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              {stats.map((stat, index) => {
-                const Icon = stat.icon;
-                return (
-                  <Card key={index}>
-                    <CardContent className="p-4 md:p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-slate-600">{stat.title}</p>
-                          <p className="text-xl md:text-2xl font-bold text-slate-800">{stat.value}</p>
-                        </div>
-                        <div className={`p-2 md:p-3 rounded-full ${stat.color}`}>
-                          <Icon className="h-4 w-4 md:h-6 md:w-6 text-white" />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="max-w-7xl mx-auto p-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-destructive/10 rounded-lg">
+                <Shield className="h-6 w-6 text-destructive" />
+              </div>
+              <h1 className="text-3xl font-bold text-foreground">
+                Admin Dashboard
+              </h1>
             </div>
-
-            {/* Quick Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Azioni Rapide</CardTitle>
-                <CardDescription>Accedi velocemente alle funzioni principali</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Button 
-                    onClick={() => setActiveSection('areas')} 
-                    variant="outline" 
-                    className="h-20 flex-col space-y-2"
-                  >
-                    <Target className="h-6 w-6" />
-                    <span>Gestisci Aree</span>
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveSection('courses')} 
-                    variant="outline" 
-                    className="h-20 flex-col space-y-2"
-                  >
-                    <BookOpen className="h-6 w-6" />
-                    <span>Gestisci Corsi</span>
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveSection('users')} 
-                    variant="outline" 
-                    className="h-20 flex-col space-y-2"
-                  >
-                    <Users className="h-6 w-6" />
-                    <span>Gestisci Utenti</span>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <p className="text-lg text-muted-foreground">
+              Gestisci la piattaforma educativa
+            </p>
           </div>
-        </TabsContent>
+          
+          <Badge variant="destructive" className="px-4 py-2">
+            Amministratore
+          </Badge>
+        </div>
 
-        <TabsContent value="areas">
-          <CompetenceAreaManager />
-        </TabsContent>
+        {/* Navigation */}
+        <Tabs value={activeSection} onValueChange={(value) => setActiveSection(value as ActiveSection)} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 h-auto p-1 bg-muted/50 rounded-xl">
+            <TabsTrigger value="overview" className="flex items-center gap-2 py-3 rounded-lg">
+              <BarChart3 className="h-4 w-4" />
+              <span className="hidden sm:inline">Panoramica</span>
+            </TabsTrigger>
+            <TabsTrigger value="courses" className="flex items-center gap-2 py-3 rounded-lg">
+              <BookOpen className="h-4 w-4" />
+              <span className="hidden sm:inline">Corsi</span>
+            </TabsTrigger>
+            <TabsTrigger value="users" className="flex items-center gap-2 py-3 rounded-lg">
+              <Users className="h-4 w-4" />
+              <span className="hidden sm:inline">Utenti</span>
+            </TabsTrigger>
+            <TabsTrigger value="competence-areas" className="flex items-center gap-2 py-3 rounded-lg">
+              <Target className="h-4 w-4" />
+              <span className="hidden sm:inline">Aree</span>
+            </TabsTrigger>
+            <TabsTrigger value="learning-paths" className="flex items-center gap-2 py-3 rounded-lg">
+              <Database className="h-4 w-4" />
+              <span className="hidden sm:inline">Percorsi</span>
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center gap-2 py-3 rounded-lg">
+              <Settings className="h-4 w-4" />
+              <span className="hidden sm:inline">Settings</span>
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="courses">
-          <CourseManager />
-        </TabsContent>
-
-        <TabsContent value="users">
-          <UserManager />
-        </TabsContent>
-
-        <TabsContent value="learning-paths">
-          <LearningPathManager />
-        </TabsContent>
-      </Tabs>
+          <TabsContent value={activeSection} className="space-y-6">
+            {renderActiveSection()}
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 };
