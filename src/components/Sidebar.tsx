@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { 
@@ -13,19 +14,25 @@ import {
   Shield,
   Menu,
   X,
-  Trophy
+  Trophy,
+  StickyNote,
+  TrendingUp,
+  Users
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 
 const menuItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/' },
+  { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/dashboard' },
   { id: 'areas', label: 'Aree di Competenza', icon: Target, path: '/areas' },
   { id: 'my-learning', label: 'I Miei Corsi', icon: BookOpen, path: '/my-learning' },
   { id: 'badges', label: 'Badge', icon: Trophy, path: '/badges' },
-  { id: 'progress', label: 'Progressi', icon: BarChart3, path: '/progress' },
+  { id: 'analytics', label: 'Analytics', icon: TrendingUp, path: '/analytics' },
   { id: 'certificates', label: 'Certificati', icon: Award, path: '/certificates' },
+  { id: 'notes', label: 'Note', icon: StickyNote, path: '/notes' },
+  { id: 'goals', label: 'Obiettivi', icon: BarChart3, path: '/goals' },
+  { id: 'collaboration', label: 'Collaborazione', icon: Users, path: '/collaboration' },
   { id: 'settings', label: 'Impostazioni', icon: Settings, path: '/settings' }
 ];
 

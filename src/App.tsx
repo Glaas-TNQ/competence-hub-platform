@@ -22,6 +22,8 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { Notes } from './pages/Notes';
 import { Goals } from './pages/Goals';
 import { Analytics } from './pages/Analytics';
+import { Collaboration } from './pages/Collaboration';
+import { Settings } from './pages/Settings';
 import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -55,6 +57,8 @@ function App() {
                             <Route path="/notes" element={<Notes />} />
                             <Route path="/goals" element={<Goals />} />
                             <Route path="/analytics" element={<Analytics />} />
+                            <Route path="/collaboration" element={<Collaboration />} />
+                            <Route path="/settings" element={<Settings />} />
                             <Route path="/admin" element={<AdminDashboard />} />
                             <Route path="*" element={<NotFound />} />
                           </Routes>
