@@ -1,3 +1,4 @@
+
 {
   "common": {
     "save": "Salva",
@@ -260,6 +261,17 @@
       "levelMilestone": "Raggiungi il livello {{level}}",
       "totalChapters": "Completa {{count}} capitoli in totale",
       "competenceAreaMastery": "Completa tutti i corsi di {{area}}"
+    },
+    "names": {
+      "Primo Passo": "Primo Passo",
+      "Professore": "Professore",
+      "Punto di Riferimento": "Punto di Riferimento",
+      "Specialista Tech": "Specialista Tech",
+      "Studente Costante": "Studente Costante",
+      "Studente Dedicato": "Studente Dedicato",
+      "Studente Modello": "Studente Modello",
+      "Velocista": "Velocista",
+      "Velocità della Luce": "Velocità della Luce"
     }
   },
   "certificates": {

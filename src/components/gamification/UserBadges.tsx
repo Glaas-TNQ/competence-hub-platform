@@ -41,6 +41,13 @@ export const UserBadges = ({ limit = 6 }: { limit?: number }) => {
     );
   }
 
+  const getBadgeName = (badgeName: string) => {
+    const nameKey = `badges.names.${badgeName}`;
+    const translatedName = t(nameKey);
+    // If translation key doesn't exist, return original name
+    return translatedName === nameKey ? badgeName : translatedName;
+  };
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
       {displayBadges.map((userBadge) => {
@@ -57,7 +64,7 @@ export const UserBadges = ({ limit = 6 }: { limit?: number }) => {
             <div className="flex items-center justify-center mb-2">
               <IconComponent className="h-8 w-8" />
             </div>
-            <h4 className="font-semibold text-sm text-center mb-1">{badge.name}</h4>
+            <h4 className="font-semibold text-sm text-center mb-1">{getBadgeName(badge.name)}</h4>
             <p className="text-xs text-center opacity-75">{badge.description}</p>
             <div className="mt-2 text-center">
               <span className="text-xs px-2 py-1 rounded-full bg-white/50">

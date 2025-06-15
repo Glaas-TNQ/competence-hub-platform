@@ -1,3 +1,4 @@
+
 {
   "common": {
     "save": "Save",
@@ -260,6 +261,17 @@
       "levelMilestone": "Reach level {{level}}",
       "totalChapters": "Complete {{count}} total chapters",
       "competenceAreaMastery": "Complete all courses in {{area}}"
+    },
+    "names": {
+      "Primo Passo": "First Step",
+      "Professore": "Professor",
+      "Punto di Riferimento": "Reference Point",
+      "Specialista Tech": "Tech Specialist",
+      "Studente Costante": "Consistent Student",
+      "Studente Dedicato": "Dedicated Student",
+      "Studente Modello": "Model Student",
+      "Velocista": "Speedster",
+      "Velocità della Luce": "Speed of Light"
     }
   },
   "certificates": {
