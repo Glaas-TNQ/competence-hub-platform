@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, Users, BookOpen, Play, CheckCircle, Lock } from 'lucide-react';
+import { ArrowLeft, Clock, Users, BookOpen, Play, CheckCircle, Lock, Trophy, Zap } from 'lucide-react';
 import { useCourses, useUserProgress, useUpdateProgress } from '../hooks/useSupabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useUserTotalPoints } from '../hooks/useGamification';
 import { Button } from '../components/ui/button';
 
 type Chapter = {
@@ -21,6 +22,7 @@ export const CourseView = () => {
   const { user, profile } = useAuth();
   const { data: courses } = useCourses();
   const { data: userProgress } = useUserProgress();
+  const { data: userPoints } = useUserTotalPoints();
   const updateProgressMutation = useUpdateProgress();
 
   const course = courses?.find(c => c.id === courseId);
@@ -101,6 +103,24 @@ export const CourseView = () => {
           <div className="p-6">
             <p className="text-slate-600 mb-4">{course.description}</p>
             
+            {/* Gamification Info */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="bg-blue-50 rounded-lg p-3 text-center">
+                <Zap className="h-6 w-6 text-blue-600 mx-auto mb-1" />
+                <div className="text-lg font-bold text-blue-800">+10</div>
+                <div className="text-xs text-blue-600">Punti per capitolo</div>
+              </div>
+              <div className="bg-green-50 rounded-lg p-3 text-center">
+                <Trophy className="h-6 w-6 text-green-600 mx-auto mb-1" />
+                <div className="text-lg font-bold text-green-800">+50</div>
+                <div className="text-xs text-green-600">Punti completamento</div>
+              </div>
+              <div className="bg-purple-50 rounded-lg p-3 text-center">
+                <div className="text-lg font-bold text-purple-800">Liv. {userPoints?.level || 1}</div>
+                <div className="text-xs text-purple-600">Il tuo livello</div>
+              </div>
+            </div>
+            
             {progress && (
               <div className="mb-4">
                 <div className="flex justify-between text-sm mb-2">
@@ -180,6 +200,12 @@ export const CourseView = () => {
                   <div className="flex items-center gap-2 text-sm text-slate-500">
                     {chapter.duration && (
                       <span>{chapter.duration}</span>
+                    )}
+                    {isAccessible && !isCompleted && (
+                      <div className="flex items-center gap-1 text-blue-600">
+                        <Zap size={12} />
+                        <span className="text-xs">+10 pt</span>
+                      </div>
                     )}
                     {isCompleted && (
                       <CheckCircle size={16} className="text-green-600" />

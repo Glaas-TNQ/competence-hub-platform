@@ -1,141 +1,154 @@
 
-import { BookOpen, Clock, Award, TrendingUp, Users, Target, Laptop } from 'lucide-react';
+import React from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useCourses, useUserProgress } from '../hooks/useSupabase';
 import { CourseCard } from '../components/CourseCard';
-import { StatsCard } from '../components/StatsCard';
-import { userStats, recentActivity } from '../data/mockData';
-import { useCourses, useCompetenceAreas } from '@/hooks/useSupabase';
+import { UserLevel } from '../components/gamification/UserLevel';
+import { UserBadges } from '../components/gamification/UserBadges';
+import { BookOpen, Trophy, Target, Clock } from 'lucide-react';
 
 export const Dashboard = () => {
+  const { user, profile } = useAuth();
   const { data: courses } = useCourses();
-  const { data: competenceAreas } = useCompetenceAreas();
+  const { data: userProgress } = useUserProgress();
 
-  // Show only the first 3 published courses
-  const featuredCourses = courses?.filter(course => course.is_published).slice(0, 3) || [];
+  // Filter courses based on user access
+  const accessibleCourses = courses?.filter(course => {
+    if (!course.requires_payment) return true;
+    return profile?.purchased_courses?.includes(course.id) || 
+           profile?.accessible_courses?.includes(course.id) ||
+           profile?.role === 'admin';
+  }) || [];
+
+  // Get courses in progress
+  const coursesInProgress = accessibleCourses.filter(course => {
+    const progress = userProgress?.find(p => p.course_id === course.id);
+    return progress && progress.progress_percentage > 0 && progress.progress_percentage < 100;
+  });
+
+  // Get completed courses
+  const completedCourses = userProgress?.filter(p => p.progress_percentage === 100) || [];
 
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
+      {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">Benvenuto nella tua Academy</h1>
-        <p className="text-slate-600">Continua il tuo percorso di apprendimento</p>
+        <h1 className="text-3xl font-bold text-slate-800 mb-2">
+          Ciao, {profile?.full_name || user?.email}! 👋
+        </h1>
+        <p className="text-slate-600">Ecco il tuo progresso di apprendimento.</p>
+      </div>
+
+      {/* Gamification Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* User Level */}
+        <div className="lg:col-span-1">
+          <UserLevel />
+        </div>
+        
+        {/* User Badges */}
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Trophy className="h-5 w-5 text-yellow-600" />
+              <h2 className="text-lg font-semibold text-slate-800">Badge Guadagnati</h2>
+            </div>
+            <UserBadges limit={6} />
+          </div>
+        </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatsCard
-          title="Corsi Disponibili"
-          value={courses?.filter(c => c.is_published)?.length?.toString() || "0"}
-          icon={<BookOpen size={24} />}
-          color="blue"
-        />
-        <StatsCard
-          title="Aree di Competenza"
-          value={competenceAreas?.length?.toString() || "0"}
-          icon={<Target size={24} />}
-          color="green"
-        />
-        <StatsCard
-          title="Certificati"
-          value={userStats.certificatesEarned.toString()}
-          icon={<Award size={24} />}
-          color="purple"
-        />
-        <StatsCard
-          title="Ore di Studio"
-          value={userStats.hoursLearned.toString()}
-          icon={<Clock size={24} />}
-          color="orange"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Featured Courses */}
-        <div className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-slate-800">Corsi in Evidenza</h2>
-            <button className="text-blue-600 hover:text-blue-700 font-medium">Vedi tutti</button>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <BookOpen className="h-6 w-6 text-blue-600" />
+            </div>
+            <div>
+              <p className="text-sm text-slate-600">Corsi Disponibili</p>
+              <p className="text-2xl font-bold text-slate-800">{accessibleCourses.length}</p>
+            </div>
           </div>
-          
-          {featuredCourses.length > 0 ? (
-            <div className="grid gap-6">
-              {featuredCourses.map((course) => (
-                <CourseCard 
-                  key={course.id} 
-                  title={course.title}
-                  description={course.description}
-                  duration={course.duration}
-                  participants={0}
-                  type={course.course_type as 'text' | 'video' | 'arcade'}
-                  image="photo-1516321318423-f06f85e504b3"
-                  level={course.level as 'Principiante' | 'Intermedio' | 'Avanzato'}
-                  requiresPayment={course.requires_payment}
-                  price={course.price}
-                  courseId={course.id}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 bg-white rounded-xl border border-slate-100">
-              <BookOpen className="mx-auto h-12 w-12 text-slate-400 mb-4" />
-              <h3 className="text-lg font-medium text-slate-800 mb-2">Nessun corso disponibile</h3>
-              <p className="text-slate-600">I corsi pubblicati appariranno qui</p>
-            </div>
-          )}
         </div>
 
-        {/* Sidebar Content */}
-        <div className="space-y-6">
-          {/* Quick Access */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-            <h3 className="text-lg font-semibold text-slate-800 mb-4">Aree di Competenza</h3>
-            {competenceAreas && competenceAreas.length > 0 ? (
-              <div className="space-y-3">
-                {competenceAreas.map((area) => {
-                  const icons = { users: Users, target: Target, laptop: Laptop };
-                  const IconComponent = icons[area.icon as keyof typeof icons] || Target;
-                  
-                  return (
-                    <button
-                      key={area.id}
-                      className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-50 transition-colors text-left"
-                    >
-                      <div className={`w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white`}>
-                        <IconComponent size={20} />
-                      </div>
-                      <div>
-                        <p className="font-medium text-slate-800">{area.name}</p>
-                        <p className="text-sm text-slate-500">{area.description}</p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="text-slate-500 text-sm">Nessuna area di competenza configurata</p>
-            )}
+        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-yellow-100 rounded-lg">
+              <Clock className="h-6 w-6 text-yellow-600" />
+            </div>
+            <div>
+              <p className="text-sm text-slate-600">In Corso</p>
+              <p className="text-2xl font-bold text-slate-800">{coursesInProgress.length}</p>
+            </div>
           </div>
+        </div>
 
-          {/* Recent Activity */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-            <h3 className="text-lg font-semibold text-slate-800 mb-4">Attività Recente</h3>
-            {recentActivity.length > 0 ? (
-              <div className="space-y-4">
-                {recentActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                    <div>
-                      <p className="text-slate-800 font-medium">{activity.title}</p>
-                      <p className="text-sm text-slate-500">{activity.timestamp}</p>
-                      <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full mt-1">
-                        +{activity.points} punti
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-slate-500 text-sm">Nessuna attività recente</p>
-            )}
+        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <Target className="h-6 w-6 text-green-600" />
+            </div>
+            <div>
+              <p className="text-sm text-slate-600">Completati</p>
+              <p className="text-2xl font-bold text-slate-800">{completedCourses.length}</p>
+            </div>
           </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <Trophy className="h-6 w-6 text-purple-600" />
+            </div>
+            <div>
+              <p className="text-sm text-slate-600">Badge</p>
+              <p className="text-2xl font-bold text-slate-800">{userProgress?.length || 0}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Continue Learning Section */}
+      {coursesInProgress.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-slate-800 mb-6">Continua a Studiare</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {coursesInProgress.slice(0, 3).map((course) => {
+              const progress = userProgress?.find(p => p.course_id === course.id);
+              return (
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                  progress={progress?.progress_percentage || 0}
+                  showProgress={true}
+                />
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Recommended Courses */}
+      <div>
+        <h2 className="text-2xl font-bold text-slate-800 mb-6">
+          {coursesInProgress.length > 0 ? 'Altri Corsi' : 'Inizia a Imparare'}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {accessibleCourses
+            .filter(course => !coursesInProgress.some(cp => cp.id === course.id))
+            .slice(0, 6)
+            .map((course) => {
+              const progress = userProgress?.find(p => p.course_id === course.id);
+              return (
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                  progress={progress?.progress_percentage || 0}
+                  showProgress={!!progress}
+                />
+              );
+            })}
         </div>
       </div>
     </div>

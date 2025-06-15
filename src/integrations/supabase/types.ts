@@ -39,6 +39,45 @@ export type Database = {
         }
         Relationships: []
       }
+      badges: {
+        Row: {
+          category: string
+          created_at: string
+          criteria: Json
+          description: string
+          icon: string
+          id: string
+          is_active: boolean
+          name: string
+          points_reward: number
+          rarity: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          criteria: Json
+          description: string
+          icon: string
+          id?: string
+          is_active?: boolean
+          name: string
+          points_reward?: number
+          rarity?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          criteria?: Json
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          points_reward?: number
+          rarity?: string
+        }
+        Relationships: []
+      }
       categorie: {
         Row: {
           colore: string | null
@@ -348,6 +387,68 @@ export type Database = {
         }
         Relationships: []
       }
+      user_badges: {
+        Row: {
+          badge_id: string
+          created_at: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          created_at?: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          created_at?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_points: {
+        Row: {
+          activity_id: string | null
+          activity_type: string
+          created_at: string
+          earned_at: string
+          id: string
+          points: number
+          user_id: string
+        }
+        Insert: {
+          activity_id?: string | null
+          activity_type: string
+          created_at?: string
+          earned_at?: string
+          id?: string
+          points?: number
+          user_id: string
+        }
+        Update: {
+          activity_id?: string | null
+          activity_type?: string
+          created_at?: string
+          earned_at?: string
+          id?: string
+          points?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           completed_at: string | null
@@ -426,12 +527,53 @@ export type Database = {
         }
         Relationships: []
       }
+      user_total_points: {
+        Row: {
+          created_at: string
+          id: string
+          level: number
+          points_to_next_level: number
+          total_points: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          level?: number
+          points_to_next_level?: number
+          total_points?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          level?: number
+          points_to_next_level?: number
+          total_points?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_level_from_points: {
+        Args: { points: number }
+        Returns: number
+      }
+      points_to_next_level: {
+        Args: { current_points: number }
+        Returns: number
+      }
+      update_user_total_points: {
+        Args: { p_user_id: string; p_points: number }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
