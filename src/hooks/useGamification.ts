@@ -115,7 +115,7 @@ export const useUserBadges = () => {
         ...item,
         badges: {
           ...item.badges,
-          criteria: item.badges.criteria as BadgeCriteria
+          criteria: (item.badges.criteria as unknown) as BadgeCriteria
         }
       })) as UserBadge[];
     },
@@ -138,7 +138,7 @@ export const useAllBadges = () => {
       // Transform the data to match our interface
       return data.map(badge => ({
         ...badge,
-        criteria: badge.criteria as BadgeCriteria
+        criteria: (badge.criteria as unknown) as BadgeCriteria
       })) as Badge[];
     },
   });
@@ -225,7 +225,7 @@ export const useCheckAndAwardBadges = () => {
         // Transform to our Badge interface
         const badge: Badge = {
           ...badgeData,
-          criteria: badgeData.criteria as BadgeCriteria
+          criteria: (badgeData.criteria as unknown) as BadgeCriteria
         };
         
         const criteria = badge.criteria;
