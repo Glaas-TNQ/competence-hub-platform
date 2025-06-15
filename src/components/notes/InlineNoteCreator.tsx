@@ -2,11 +2,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useCreateNote } from '@/hooks/useUserNotes';
-import { BookOpen, Bookmark, Edit, Plus, X } from 'lucide-react';
+import { BookOpen, Bookmark, FileText, Plus, X, Send } from 'lucide-react';
 
 interface InlineNoteCreatorProps {
   courseId: string;
@@ -64,100 +62,104 @@ export const InlineNoteCreator: React.FC<InlineNoteCreatorProps> = ({
     return (
       <Button
         variant="outline"
-        size="sm"
+        size="default"
         onClick={() => setIsOpen(true)}
-        className={`flex items-center gap-2 ${className}`}
+        className={`gap-2 border-dashed hover:border-solid transition-all ${className}`}
       >
         <Plus className="h-4 w-4" />
-        Aggiungi Nota
+        Aggiungi una nota veloce
       </Button>
     );
   }
 
   return (
-    <Card className={`w-full max-w-md ${className}`}>
-      <CardContent className="p-4 space-y-4">
-        <div className="flex items-center justify-between">
-          <h4 className="text-sm font-medium">Nuova Nota</h4>
+    <div className={`bg-card/80 border border-border rounded-xl p-6 space-y-6 ${className}`}>
+      <div className="flex items-center justify-between">
+        <h4 className="text-lg font-semibold text-foreground">Nuova Nota</h4>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleCancel}
+          className="h-8 w-8 p-0 hover:bg-muted"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      </div>
+
+      <div className="flex gap-2">
+        <Button
+          variant={noteType === 'personal' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setNoteType('personal')}
+          className="gap-2"
+        >
+          <FileText className="h-4 w-4" />
+          Nota Personale
+        </Button>
+        <Button
+          variant={noteType === 'bookmark' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setNoteType('bookmark')}
+          className="gap-2"
+        >
+          <Bookmark className="h-4 w-4" />
+          Bookmark
+        </Button>
+        <Button
+          variant={noteType === 'highlight' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setNoteType('highlight')}
+          className="gap-2"
+        >
+          <BookOpen className="h-4 w-4" />
+          Highlight
+        </Button>
+      </div>
+
+      <Textarea
+        placeholder="Scrivi la tua nota qui..."
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        className="min-h-[120px] resize-none focus:ring-2"
+      />
+
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <Switch
+            id="inline-share"
+            checked={isShared}
+            onCheckedChange={setIsShared}
+          />
+          <label htmlFor="inline-share" className="text-sm text-muted-foreground">
+            Condividi con altri studenti
+          </label>
+        </div>
+
+        <div className="flex gap-3">
           <Button
-            variant="ghost"
-            size="sm"
+            variant="outline"
+            size="default"
             onClick={handleCancel}
-            className="h-6 w-6 p-0"
           >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-
-        <div className="flex gap-1">
-          <Button
-            variant={noteType === 'personal' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setNoteType('personal')}
-            className="h-8 px-2"
-          >
-            <Edit className="h-3 w-3 mr-1" />
-            Nota
+            Annulla
           </Button>
           <Button
-            variant={noteType === 'bookmark' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setNoteType('bookmark')}
-            className="h-8 px-2"
+            size="default"
+            onClick={handleCreateNote}
+            disabled={!content.trim() || createNote.isPending}
+            className="gap-2"
           >
-            <Bookmark className="h-3 w-3 mr-1" />
-            Bookmark
-          </Button>
-          <Button
-            variant={noteType === 'highlight' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setNoteType('highlight')}
-            className="h-8 px-2"
-          >
-            <BookOpen className="h-3 w-3 mr-1" />
-            Highlight
+            {createNote.isPending ? (
+              'Salvando...'
+            ) : (
+              <>
+                <Send className="h-4 w-4" />
+                Salva Nota
+              </>
+            )}
           </Button>
         </div>
-
-        <Textarea
-          placeholder="Scrivi la tua nota..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="min-h-[80px] text-sm"
-        />
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="inline-share"
-              checked={isShared}
-              onCheckedChange={setIsShared}
-            />
-            <label htmlFor="inline-share" className="text-xs text-gray-600">
-              Condividi
-            </label>
-          </div>
-
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCancel}
-              className="h-8 px-3 text-xs"
-            >
-              Annulla
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleCreateNote}
-              disabled={!content.trim() || createNote.isPending}
-              className="h-8 px-3 text-xs"
-            >
-              {createNote.isPending ? 'Salvando...' : 'Salva'}
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };

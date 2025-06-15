@@ -260,133 +260,160 @@ export const ChapterView = () => {
   const currentProgress = Math.round((completedChaptersCount / chapters.length) * 100);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <button
-          onClick={() => navigate(`/course/${courseId}`)}
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4 transition-colors"
-        >
-          <ArrowLeft size={20} />
-          Torna al corso
-        </button>
-        
-        <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-educational-sm border p-6">
-          <div className="flex items-center gap-3 mb-4">
-            {getChapterIcon(currentChapter.type)}
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">
-                {currentChapter.title || `Capitolo ${chapterIdx + 1}`}
-              </h1>
-              <p className="text-muted-foreground">{course.title}</p>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="max-w-7xl mx-auto p-6 space-y-8">
+        {/* Header */}
+        <div className="space-y-6">
+          <button
+            onClick={() => navigate(`/course/${courseId}`)}
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft size={20} />
+            Torna al corso
+          </button>
+          
+          <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-lg border p-8">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-4">
+                {getChapterIcon(currentChapter.type)}
+                <div>
+                  <h1 className="text-3xl font-bold text-foreground mb-2">
+                    {currentChapter.title || `Capitolo ${chapterIdx + 1}`}
+                  </h1>
+                  <p className="text-lg text-muted-foreground mb-4">{course.title}</p>
+                  
+                  <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Clock size={16} />
+                      {currentChapter.duration || '5 min'}
+                    </div>
+                    <span>Capitolo {chapterIdx + 1} di {chapters.length}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {isChapterCompleted && (
+                <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-2 rounded-full">
+                  <CheckCircle size={20} />
+                  <span className="font-medium">Completato</span>
+                </div>
+              )}
             </div>
-            {isChapterCompleted && (
-              <CheckCircle className="text-green-600 ml-auto" size={24} />
+            
+            {currentChapter.description && (
+              <p className="text-muted-foreground mt-4 text-lg leading-relaxed">
+                {currentChapter.description}
+              </p>
             )}
           </div>
-          
-          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-            <div className="flex items-center gap-1">
-              <Clock size={16} />
-              {currentChapter.duration || '5 min'}
-            </div>
-            <span>Capitolo {chapterIdx + 1} di {chapters.length}</span>
-          </div>
-          
-          {currentChapter.description && (
-            <p className="text-muted-foreground">{currentChapter.description}</p>
-          )}
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Main Content */}
-        <div className="lg:col-span-3 space-y-6">
-          {/* Chapter Content */}
-          <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-educational-sm border p-6">
-            <div className="prose max-w-none dark:prose-invert">
-              {renderChapterContent()}
-            </div>
-            
-            {/* Inline Note Creator */}
-            <div className="mt-8 pt-6 border-t border-border">
-              <InlineNoteCreator
-                courseId={courseId!}
-                chapterIndex={chapterIdx}
-                className="w-full max-w-sm"
-              />
-            </div>
-          </div>
-
-          {/* Navigation Controls */}
-          <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-educational-sm border p-6">
-            <div className="flex items-center justify-between">
-              <Button
-                onClick={handlePreviousChapter}
-                variant="outline"
-                disabled={chapterIdx === 0}
-              >
-                <ArrowLeft size={16} className="mr-2" />
-                Capitolo Precedente
-              </Button>
-
-              <div className="flex items-center gap-3">
-                <Button
-                  onClick={handleMarkAsCompleted}
-                  variant={isChapterCompleted ? "secondary" : "outline"}
-                  className="gap-2"
-                  disabled={isChapterCompleted || markChapterComplete.isPending}
-                >
-                  <CheckCircle size={16} />
-                  {isChapterCompleted ? 'Completato' : 'Segna come Completato'}
-                </Button>
-
-                <Button
-                  onClick={handleNextChapter}
-                  className="gap-2"
-                >
-                  {chapterIdx < chapters.length - 1 ? (
-                    <>
-                      Prossimo Capitolo
-                      <ArrowLeft size={16} className="rotate-180" />
-                    </>
-                  ) : (
-                    <>
-                      Completa Corso
-                      <CheckCircle size={16} />
-                    </>
-                  )}
-                </Button>
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+          {/* Main Content */}
+          <div className="xl:col-span-3 space-y-8">
+            {/* Chapter Content */}
+            <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-lg border overflow-hidden">
+              <div className="p-8">
+                <div className="prose max-w-none dark:prose-invert prose-lg">
+                  {renderChapterContent()}
+                </div>
               </div>
-            </div>
-            
-            {/* Progress indicator */}
-            <div className="mt-4">
-              <div className="flex justify-between text-sm mb-2">
-                <span className="text-muted-foreground">Progresso del corso</span>
-                <span className="text-foreground font-medium">
-                  {currentProgress}% ({completedChaptersCount}/{chapters.length} capitoli)
-                </span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div 
-                  className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${currentProgress}%` }}
+              
+              {/* Inline Note Creator */}
+              <div className="border-t border-border bg-muted/30 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-foreground">Aggiungi una Nota</h3>
+                </div>
+                <InlineNoteCreator
+                  courseId={courseId!}
+                  chapterIndex={chapterIdx}
+                  className="w-full"
                 />
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Sidebar with Chapter Notes */}
-        <div className="lg:col-span-1">
-          <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-educational-sm border p-4">
-            <h3 className="text-lg font-semibold mb-4 text-foreground">Note del Capitolo</h3>
-            <NotesManager 
-              courseId={courseId}
-              chapterIndex={chapterIdx}
-              className="space-y-3"
-            />
+            {/* Navigation Controls */}
+            <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-lg border p-6">
+              <div className="flex items-center justify-between mb-6">
+                <Button
+                  onClick={handlePreviousChapter}
+                  variant="outline"
+                  size="lg"
+                  disabled={chapterIdx === 0}
+                  className="gap-2"
+                >
+                  <ArrowLeft size={18} />
+                  Capitolo Precedente
+                </Button>
+
+                <div className="flex items-center gap-4">
+                  <Button
+                    onClick={handleMarkAsCompleted}
+                    variant={isChapterCompleted ? "secondary" : "outline"}
+                    size="lg"
+                    className="gap-2"
+                    disabled={isChapterCompleted || markChapterComplete.isPending}
+                  >
+                    <CheckCircle size={18} />
+                    {isChapterCompleted ? 'Completato' : 'Segna come Completato'}
+                  </Button>
+
+                  <Button
+                    onClick={handleNextChapter}
+                    size="lg"
+                    className="gap-2"
+                  >
+                    {chapterIdx < chapters.length - 1 ? (
+                      <>
+                        Prossimo Capitolo
+                        <ArrowLeft size={18} className="rotate-180" />
+                      </>
+                    ) : (
+                      <>
+                        Completa Corso
+                        <CheckCircle size={18} />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Progress indicator */}
+              <div className="space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground font-medium">Progresso del corso</span>
+                  <span className="text-foreground font-semibold">
+                    {currentProgress}% ({completedChaptersCount}/{chapters.length} capitoli)
+                  </span>
+                </div>
+                <div className="w-full bg-muted rounded-full h-3">
+                  <div 
+                    className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${currentProgress}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar with Chapter Notes */}
+          <div className="xl:col-span-1">
+            <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-lg border overflow-hidden sticky top-6">
+              <div className="border-b border-border bg-muted/30 p-6">
+                <h3 className="text-xl font-semibold text-foreground">Note del Capitolo</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Le tue annotazioni per questo capitolo
+                </p>
+              </div>
+              
+              <div className="p-6">
+                <NotesManager 
+                  courseId={courseId}
+                  chapterIndex={chapterIdx}
+                  className="space-y-4"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
