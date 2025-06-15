@@ -16,6 +16,7 @@ import { Goals } from './pages/Goals';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { LearningPaths } from '@/pages/LearningPaths';
 import { LearningPathView } from '@/pages/LearningPathView';
+import { Auth } from './pages/Auth';
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ function App() {
           <Router>
             <div className="min-h-screen bg-background">
               <Routes>
+                <Route path="/auth" element={<Auth />} />
                 <Route path="/" element={<>
                   <ProtectedRoute>
                     <>
