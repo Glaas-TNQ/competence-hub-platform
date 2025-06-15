@@ -257,12 +257,17 @@ export const useCheckAndAwardBadges = () => {
           
           let shouldAward = false;
           
-          if (badge.criteria?.min_points && userPointsTotal >= badge.criteria.min_points) {
-            shouldAward = true;
-          }
-          
-          if (badge.criteria?.min_courses_completed && coursesCompleted >= badge.criteria.min_courses_completed) {
-            shouldAward = true;
+          // Type guard and check for criteria
+          if (badge.criteria && typeof badge.criteria === 'object' && badge.criteria !== null) {
+            const criteria = badge.criteria as Record<string, any>;
+            
+            if (criteria.min_points && typeof criteria.min_points === 'number' && userPointsTotal >= criteria.min_points) {
+              shouldAward = true;
+            }
+            
+            if (criteria.min_courses_completed && typeof criteria.min_courses_completed === 'number' && coursesCompleted >= criteria.min_courses_completed) {
+              shouldAward = true;
+            }
           }
           
           if (shouldAward) {
