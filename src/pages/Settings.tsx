@@ -64,7 +64,7 @@ export const Settings: React.FC = () => {
   const handleLanguageChange = (newLanguage: string) => {
     const validLanguage = newLanguage as Language;
     setLanguage(validLanguage);
-    setFormData({...formData, language: newLanguage});
+    setFormData({...formData, language: validLanguage});
   };
 
   return (
