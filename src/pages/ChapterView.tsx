@@ -52,16 +52,29 @@ export const ChapterView = () => {
   }
 
   // Parse course content to get chapters - handle different possible structures
-  let chapters = [];
+  let chapters: any[] = [];
   if (course.content) {
     if (Array.isArray(course.content)) {
       chapters = course.content;
-    } else if (typeof course.content === 'object' && course.content.chapters) {
-      chapters = course.content.chapters;
+    } else if (typeof course.content === 'object' && course.content !== null) {
+      // Handle object content
+      const contentObj = course.content as any;
+      if (contentObj.chapters && Array.isArray(contentObj.chapters)) {
+        chapters = contentObj.chapters;
+      } else {
+        // If it's an object but doesn't have chapters array, treat it as empty
+        chapters = [];
+      }
     } else if (typeof course.content === 'string') {
       try {
         const parsed = JSON.parse(course.content);
-        chapters = Array.isArray(parsed) ? parsed : (parsed.chapters || []);
+        if (Array.isArray(parsed)) {
+          chapters = parsed;
+        } else if (parsed && typeof parsed === 'object' && parsed.chapters && Array.isArray(parsed.chapters)) {
+          chapters = parsed.chapters;
+        } else {
+          chapters = [];
+        }
       } catch (e) {
         console.error('Error parsing course content:', e);
         chapters = [];
@@ -129,21 +142,24 @@ export const ChapterView = () => {
     // Handle different content structures
     let contentToRender = '';
     
-    if (typeof currentChapter.content === 'string') {
+    if (!currentChapter.content) {
+      contentToRender = '';
+    } else if (typeof currentChapter.content === 'string') {
       contentToRender = currentChapter.content;
     } else if (Array.isArray(currentChapter.content)) {
       // If content is an array, join the elements
       contentToRender = currentChapter.content.map(item => {
         if (typeof item === 'string') return item;
-        if (typeof item === 'object') return JSON.stringify(item);
+        if (typeof item === 'object' && item !== null) return JSON.stringify(item);
         return String(item);
       }).join('\n\n');
-    } else if (typeof currentChapter.content === 'object') {
+    } else if (typeof currentChapter.content === 'object' && currentChapter.content !== null) {
       // If content is an object, try to extract meaningful text
-      if (currentChapter.content.text) {
-        contentToRender = currentChapter.content.text;
-      } else if (currentChapter.content.html) {
-        contentToRender = currentChapter.content.html;
+      const contentObj = currentChapter.content as any;
+      if (contentObj.text) {
+        contentToRender = contentObj.text;
+      } else if (contentObj.html) {
+        contentToRender = contentObj.html;
       } else {
         contentToRender = JSON.stringify(currentChapter.content, null, 2);
       }
