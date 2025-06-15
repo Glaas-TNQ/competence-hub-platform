@@ -1,19 +1,26 @@
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
-type RegisterFormData = {
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+const registerSchema = z.object({
+  email: z.string().email('Inserisci un email valida'),
+  password: z.string().min(8, 'La password deve essere di almeno 8 caratteri'),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'Le password non corrispondono',
+  path: ['confirmPassword']
+});
+
+type RegisterFormData = z.infer<typeof registerSchema>;
 
 export const RegisterForm = () => {
   const form = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -32,13 +39,6 @@ export const RegisterForm = () => {
         <FormField
           control={form.control}
           name="email"
-          rules={{
-            required: 'Email è richiesta',
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: 'Inserisci un email valida'
-            }
-          }}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
@@ -57,13 +57,6 @@ export const RegisterForm = () => {
         <FormField
           control={form.control}
           name="password"
-          rules={{
-            required: 'Password è richiesta',
-            minLength: {
-              value: 6,
-              message: 'La password deve essere di almeno 6 caratteri'
-            }
-          }}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Password</FormLabel>
@@ -81,13 +74,6 @@ export const RegisterForm = () => {
         <FormField
           control={form.control}
           name="confirmPassword"
-          rules={{
-            required: 'Conferma password è richiesta',
-            validate: (value) => {
-              const password = form.getValues('password');
-              return value === password || 'Le password non corrispondono';
-            }
-          }}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Conferma Password</FormLabel>
