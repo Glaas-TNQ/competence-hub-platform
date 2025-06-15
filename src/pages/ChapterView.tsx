@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, BookOpen, Play, CheckCircle } from 'lucide-react';
-import { useCourses, useUpdateProgress } from '../hooks/useSupabase';
+import { useCourses } from '../hooks/useSupabase';
+import { useChapterProgress, useMarkChapterComplete, useCalculateProgress } from '../hooks/useChapterProgress';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/button';
 import { BlockRenderer } from '../components/chapter/BlockRenderer';
@@ -11,7 +13,9 @@ export const ChapterView = () => {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
   const { data: courses } = useCourses();
-  const updateProgressMutation = useUpdateProgress();
+  const { data: chapterProgress } = useChapterProgress(courseId!);
+  const markChapterComplete = useMarkChapterComplete();
+  const calculateProgress = useCalculateProgress();
 
   const course = courses?.find(c => c.id === courseId);
   const chapterIdx = parseInt(chapterIndex || '0');
@@ -101,14 +105,31 @@ export const ChapterView = () => {
     );
   }
 
-  const handleMarkAsCompleted = () => {
-    // Calculate progress based on chapter completion
-    const newProgress = Math.round(((chapterIdx + 1) / chapters.length) * 100);
+  // Check if current chapter is completed
+  const isChapterCompleted = chapterProgress?.some(
+    progress => progress.chapter_index === chapterIdx
+  );
+
+  const handleMarkAsCompleted = async () => {
+    if (isChapterCompleted) return;
     
-    updateProgressMutation.mutate({
-      courseId: course.id,
-      progressPercentage: newProgress
-    });
+    try {
+      // Mark chapter as completed
+      await markChapterComplete.mutateAsync({
+        courseId: course.id,
+        chapterIndex: chapterIdx
+      });
+      
+      // Update overall course progress
+      await calculateProgress.mutateAsync({
+        courseId: course.id,
+        totalChapters: chapters.length
+      });
+      
+      console.log('Chapter marked as completed successfully');
+    } catch (error) {
+      console.error('Error marking chapter as completed:', error);
+    }
   };
 
   const handleNextChapter = () => {
@@ -232,6 +253,10 @@ export const ChapterView = () => {
     return <BlockRenderer blocks={blocks} />;
   };
 
+  // Calculate current progress based on completed chapters
+  const completedChaptersCount = chapterProgress?.length || 0;
+  const currentProgress = Math.round((completedChaptersCount / chapters.length) * 100);
+
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
       {/* Header */}
@@ -253,6 +278,9 @@ export const ChapterView = () => {
               </h1>
               <p className="text-slate-600">{course.title}</p>
             </div>
+            {isChapterCompleted && (
+              <CheckCircle className="text-green-600 ml-auto" size={24} />
+            )}
           </div>
           
           <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
@@ -291,11 +319,12 @@ export const ChapterView = () => {
           <div className="flex items-center gap-3">
             <Button
               onClick={handleMarkAsCompleted}
-              variant="outline"
+              variant={isChapterCompleted ? "secondary" : "outline"}
               className="gap-2"
+              disabled={isChapterCompleted || markChapterComplete.isPending}
             >
               <CheckCircle size={16} />
-              Segna come Completato
+              {isChapterCompleted ? 'Completato' : 'Segna come Completato'}
             </Button>
 
             <Button
@@ -322,13 +351,13 @@ export const ChapterView = () => {
           <div className="flex justify-between text-sm mb-2">
             <span className="text-slate-600">Progresso del corso</span>
             <span className="text-slate-800 font-medium">
-              {Math.round(((chapterIdx + 1) / chapters.length) * 100)}%
+              {currentProgress}% ({completedChaptersCount}/{chapters.length} capitoli)
             </span>
           </div>
           <div className="w-full bg-slate-200 rounded-full h-2">
             <div 
               className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${Math.round(((chapterIdx + 1) / chapters.length) * 100)}%` }}
+              style={{ width: `${currentProgress}%` }}
             />
           </div>
         </div>
