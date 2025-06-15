@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useUserBadges, useAllBadges } from '@/hooks/useGamification';
 import { Badge } from '@/components/ui/badge';
+import { useTranslation } from '@/contexts/LanguageContext';
 import * as Icons from 'lucide-react';
 
 const rarityColors = {
@@ -42,6 +43,7 @@ interface UserBadgeType {
 }
 
 export const BadgeExplorer = () => {
+  const { t } = useTranslation();
   const { data: userBadges } = useUserBadges();
   const { data: allBadges } = useAllBadges();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -60,23 +62,28 @@ export const BadgeExplorer = () => {
 
   const categories = ['all', ...new Set((allBadges as BadgeType[])?.map(b => b.category) || [])];
 
+  const getCategoryLabel = (category: string) => {
+    if (category === 'all') return t('badges.all');
+    return t(`badges.${category}`) || category;
+  };
+
   const getBadgeDescription = (badge: BadgeType) => {
     const criteria = badge.criteria;
     if (!criteria || typeof criteria !== 'object') return badge.description;
     
     switch (criteria.type) {
       case 'chapter_completion':
-        return `Completa ${criteria.count} capitoli`;
+        return t('badges.criteria.completeChapters', { count: criteria.count });
       case 'course_completion':
-        return `Completa ${criteria.count} corsi`;
+        return t('badges.criteria.completeCourses', { count: criteria.count });
       case 'daily_streak':
-        return `Studia per ${criteria.days} giorni consecutivi`;
+        return t('badges.criteria.dailyStreak', { days: criteria.days });
       case 'level_milestone':
-        return `Raggiungi il livello ${criteria.level}`;
+        return t('badges.criteria.levelMilestone', { level: criteria.level });
       case 'total_chapters':
-        return `Completa ${criteria.count} capitoli in totale`;
+        return t('badges.criteria.totalChapters', { count: criteria.count });
       case 'competence_area_mastery':
-        return `Completa tutti i corsi di ${criteria.competence_area}`;
+        return t('badges.criteria.competenceAreaMastery', { area: criteria.competence_area });
       default:
         return badge.description;
     }
@@ -87,41 +94,40 @@ export const BadgeExplorer = () => {
       {/* Header */}
       <div className="space-y-4">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-          Esplora Badge
+          {t('badges.exploreBadges')}
         </h1>
         <p className="text-lg text-muted-foreground">
-          Scopri tutti i badge disponibili e i tuoi progressi
+          {t('badges.subtitle2')}
         </p>
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-4">
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">Categoria</label>
+          <label className="block text-sm font-medium text-foreground mb-2">{t('badges.category')}</label>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
             className="px-4 py-2 border-0 bg-background/50 rounded-xl text-sm text-foreground"
           >
-            <option value="all">Tutte</option>
-            {categories.slice(1).map(category => (
+            {categories.map(category => (
               <option key={category} value={category}>
-                {categoryLabels[category as keyof typeof categoryLabels] || category}
+                {getCategoryLabel(category)}
               </option>
             ))}
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">Stato</label>
+          <label className="block text-sm font-medium text-foreground mb-2">{t('badges.status')}</label>
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
             className="px-4 py-2 border-0 bg-background/50 rounded-xl text-sm text-foreground"
           >
-            <option value="all">Tutti</option>
-            <option value="earned">Guadagnati</option>
-            <option value="available">Disponibili</option>
+            <option value="all">{t('badges.all')}</option>
+            <option value="earned">{t('badges.earned')}</option>
+            <option value="available">{t('badges.available')}</option>
           </select>
         </div>
       </div>
@@ -130,17 +136,17 @@ export const BadgeExplorer = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-gradient-to-r from-success/10 to-success/20 border border-success/20 rounded-2xl p-6 text-center shadow-educational">
           <div className="text-3xl font-bold text-success">{userBadges?.length || 0}</div>
-          <div className="text-sm text-success/80 font-medium">Badge Guadagnati</div>
+          <div className="text-sm text-success/80 font-medium">{t('badges.badgesEarned')}</div>
         </div>
         <div className="bg-gradient-to-r from-primary/10 to-primary/20 border border-primary/20 rounded-2xl p-6 text-center shadow-educational">
           <div className="text-3xl font-bold text-primary">{allBadges?.length || 0}</div>
-          <div className="text-sm text-primary/80 font-medium">Badge Totali</div>
+          <div className="text-sm text-primary/80 font-medium">{t('badges.totalBadges')}</div>
         </div>
         <div className="bg-gradient-to-r from-secondary/10 to-secondary/20 border border-secondary/20 rounded-2xl p-6 text-center shadow-educational">
           <div className="text-3xl font-bold text-secondary">
             {allBadges ? Math.round(((userBadges?.length || 0) / allBadges.length) * 100) : 0}%
           </div>
-          <div className="text-sm text-secondary/80 font-medium">Completamento</div>
+          <div className="text-sm text-secondary/80 font-medium">{t('badges.completionRate')}</div>
         </div>
       </div>
 
@@ -181,17 +187,17 @@ export const BadgeExplorer = () => {
               {/* Rarity and points */}
               <div className="flex items-center justify-between text-sm">
                 <Badge variant="outline" className="text-xs border-current">
-                  {rarityLabels[badge.rarity as keyof typeof rarityLabels] || badge.rarity}
+                  {t(`badges.rarity.${badge.rarity}`) || badge.rarity}
                 </Badge>
                 <span className="font-medium">
-                  {badge.points_reward} punti
+                  {badge.points_reward} {t('badges.points')}
                 </span>
               </div>
               
               {/* Category */}
               <div className="mt-3 text-center">
                 <span className="text-xs px-3 py-1 rounded-full bg-background/50 backdrop-blur-sm border border-border">
-                  {categoryLabels[badge.category as keyof typeof categoryLabels] || badge.category}
+                  {getCategoryLabel(badge.category)}
                 </span>
               </div>
             </div>
@@ -205,10 +211,10 @@ export const BadgeExplorer = () => {
             <Icons.Search className="h-12 w-12 text-muted-foreground" />
           </div>
           <h3 className="text-xl font-semibold text-foreground mb-4">
-            Nessun badge trovato
+            {t('badges.noBadgesFound')}
           </h3>
           <p className="text-muted-foreground">
-            Nessun badge trovato con i filtri selezionati.
+            {t('badges.noBadgesDesc')}
           </p>
         </div>
       )}

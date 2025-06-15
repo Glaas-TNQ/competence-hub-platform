@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Award, Download, Share2, CheckCircle } from 'lucide-react';
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
+import { useTranslation } from '@/contexts/LanguageContext';
 
 interface CertificateViewerProps {
   certificate: any;
@@ -18,6 +19,9 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({
   open,
   onOpenChange,
 }) => {
+  const { t, language } = useTranslation();
+  const dateLocale = language === 'it' ? it : enUS;
+
   if (!certificate) return null;
 
   const cert = certificate.certificates;
@@ -29,7 +33,7 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Award className="h-5 w-5" />
-            Visualizza Certificato
+            {t('certificates.viewCertificate')}
           </DialogTitle>
         </DialogHeader>
 
@@ -48,7 +52,7 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({
                 <Award className="h-8 w-8" style={{ color: templateColor }} />
               </div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                CERTIFICATO DI RICONOSCIMENTO
+                {t('certificates.certificateOfRecognition')}
               </h1>
               <div className="w-24 h-1 mx-auto rounded" style={{ backgroundColor: templateColor }}></div>
             </div>
@@ -57,7 +61,7 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({
             <div className="text-center space-y-6">
               <div>
                 <p className="text-lg text-gray-600 mb-4">
-                  Si certifica che
+                  {t('certificates.certifiedThat')}
                 </p>
                 <div 
                   className="text-4xl font-bold mb-4 border-b-2 pb-2 inline-block"
@@ -66,7 +70,7 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({
                   [Nome Utente]
                 </div>
                 <p className="text-lg text-gray-600">
-                  ha completato con successo
+                  {t('certificates.hasSuccessfullyCompleted')}
                 </p>
               </div>
 
@@ -85,7 +89,7 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({
                   style={{ backgroundColor: templateColor }}
                 >
                   <CheckCircle className="h-4 w-4 mr-2" />
-                  Certificato Ufficiale
+                  {t('certificates.officialCertificate')}
                 </Badge>
               </div>
             </div>
@@ -93,11 +97,11 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({
             {/* Footer */}
             <div className="mt-12 flex justify-between items-end text-sm text-gray-600">
               <div>
-                <p className="font-semibold">Data di rilascio:</p>
-                <p>{format(new Date(certificate.issued_at), 'dd MMMM yyyy', { locale: it })}</p>
+                <p className="font-semibold">{t('certificates.issueDate')}:</p>
+                <p>{format(new Date(certificate.issued_at), 'dd MMMM yyyy', { locale: dateLocale })}</p>
               </div>
               <div className="text-right">
-                <p className="font-semibold">Codice di verifica:</p>
+                <p className="font-semibold">{t('certificates.verificationCode')}:</p>
                 <p className="font-mono">{certificate.verification_code}</p>
               </div>
             </div>
@@ -107,31 +111,31 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({
           <div className="flex justify-center gap-4">
             <Button className="flex items-center gap-2">
               <Download className="h-4 w-4" />
-              Scarica PDF
+              {t('certificates.downloadPdf')}
             </Button>
             <Button variant="outline" className="flex items-center gap-2">
               <Share2 className="h-4 w-4" />
-              Condividi
+              {t('certificates.share')}
             </Button>
           </div>
 
           {/* Certificate Details */}
           <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm">
-            <h3 className="font-semibold">Dettagli del Certificato:</h3>
+            <h3 className="font-semibold">{t('certificates.certificateDetails')}:</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <strong>Tipo:</strong> {cert.certificate_type}
+                <strong>{t('certificates.type')}:</strong> {t(`certificates.types.${cert.certificate_type}`) || cert.certificate_type}
               </div>
               <div>
-                <strong>ID Certificato:</strong> {cert.id}
+                <strong>{t('certificates.certificateId')}:</strong> {cert.id}
               </div>
               {cert.points_required > 0 && (
                 <div>
-                  <strong>Punti richiesti:</strong> {cert.points_required}
+                  <strong>{t('certificates.pointsRequired')}:</strong> {cert.points_required}
                 </div>
               )}
               <div>
-                <strong>Stato:</strong> <span className="text-green-600">Valido</span>
+                <strong>{t('certificates.status')}:</strong> <span className="text-green-600">{t('certificates.valid')}</span>
               </div>
             </div>
           </div>

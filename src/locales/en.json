@@ -1,4 +1,3 @@
-
 {
   "common": {
     "save": "Save",
@@ -16,7 +15,8 @@
     "previous": "Previous",
     "yes": "Yes",
     "no": "No",
-    "refreshPage": "Refresh Page"
+    "refreshPage": "Refresh Page",
+    "of": "of"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -229,15 +229,107 @@
     "title": "Badges",
     "subtitle": "Your achievements and recognitions",
     "earned": "Earned",
-    "available": "Available"
+    "available": "Available",
+    "exploreBadges": "Explore Badges",
+    "subtitle2": "Discover all available badges and your progress",
+    "category": "Category",
+    "status": "Status",
+    "all": "All",
+    "completion": "Completion",
+    "competency": "Competency",
+    "temporal": "Temporal",
+    "special": "Special",
+    "badgesEarned": "Badges Earned",
+    "totalBadges": "Total Badges",
+    "completionRate": "Completion",
+    "noBadgesFound": "No badges found",
+    "noBadgesDesc": "No badges found with the selected filters.",
+    "rarity": {
+      "common": "Common",
+      "rare": "Rare",
+      "epic": "Epic",
+      "legendary": "Legendary"
+    },
+    "points": "points",
+    "criteria": {
+      "completeChapters": "Complete {{count}} chapters",
+      "completeCourses": "Complete {{count}} courses",
+      "dailyStreak": "Study for {{days}} consecutive days",
+      "levelMilestone": "Reach level {{level}}",
+      "totalChapters": "Complete {{count}} total chapters",
+      "competenceAreaMastery": "Complete all courses in {{area}}"
+    }
   },
   "certificates": {
     "title": "Certificates",
-    "subtitle": "Your certificates and credentials"
+    "subtitle": "Your certificates and credentials",
+    "manageCertificates": "Manage your certificates and discover new achievements",
+    "myCertificates": "My Certificates",
+    "available": "Available",
+    "checkNewCertificates": "Check for New Certificates",
+    "checking": "Checking...",
+    "searchCertificates": "Search certificates...",
+    "noCertificatesFound": "No certificates found",
+    "noCertificatesDesc": "You haven't earned any certificates yet.",
+    "noCertificatesSearchDesc": "No certificates match your search.",
+    "checkAvailableCertificates": "Check Available Certificates",
+    "issuedOn": "Issued on",
+    "verificationCode": "Verification code",
+    "view": "View",
+    "downloadPdf": "Download PDF",
+    "viewCertificate": "View Certificate",
+    "certificateOfRecognition": "CERTIFICATE OF RECOGNITION",
+    "certifiedThat": "This certifies that",
+    "hasSuccessfullyCompleted": "has successfully completed",
+    "officialCertificate": "Official Certificate",
+    "issueDate": "Issue date",
+    "share": "Share",
+    "certificateDetails": "Certificate Details",
+    "type": "Type",
+    "certificateId": "Certificate ID",
+    "pointsRequired": "Points required",
+    "status": "Status",
+    "valid": "Valid",
+    "types": {
+      "course_completion": "Course Completion",
+      "competence_mastery": "Competency Mastery",
+      "excellence": "Excellence",
+      "special_event": "Special Event"
+    },
+    "requirements": {
+      "course_completion": "Complete required courses",
+      "competence_mastery": "Complete all courses in a competency",
+      "excellence": "Reach {{points}} points",
+      "special_event": "Participate in special events"
+    }
   },
   "goals": {
     "title": "Goals",
-    "subtitle": "Manage your learning objectives"
+    "subtitle": "Manage your learning objectives",
+    "myGoals": "My Goals",
+    "createAndTrack": "Create and track your learning objectives",
+    "newGoal": "New Goal",
+    "createNewGoal": "Create New Goal",
+    "activeGoals": "Active Goals",
+    "completedGoals": "Completed Goals",
+    "noActiveGoals": "No active goals",
+    "noActiveGoalsDesc": "Create your first goal to start tracking progress!",
+    "createFirstGoal": "Create First Goal",
+    "goalType": "Goal Type",
+    "selectGoalType": "Select goal type",
+    "targetValue": "Target Value",
+    "targetValuePlaceholder": "e.g. 5",
+    "creating": "Creating...",
+    "createGoal": "Create Goal",
+    "progress": "Progress",
+    "completed": "completed",
+    "ends": "Ends",
+    "types": {
+      "courses_completed": "Courses Completed",
+      "study_days": "Study Days",
+      "points_earned": "Points Earned",
+      "chapters_completed": "Chapters Completed"
+    }
   },
   "settings": {
     "title": "Settings",

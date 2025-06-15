@@ -7,11 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Award, Download, Eye, Search, CheckCircle, Clock, Star } from 'lucide-react';
 import { useUserCertificates, useAvailableCertificates, useCheckCertificates } from '@/hooks/useCertificates';
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it, enUS } from 'date-fns/locale';
 import { CertificateViewer } from './CertificateViewer';
 import { Input } from '@/components/ui/input';
+import { useTranslation } from '@/contexts/LanguageContext';
 
 export const CertificateManager = () => {
+  const { t, language } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCertificate, setSelectedCertificate] = useState<any>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -19,6 +21,8 @@ export const CertificateManager = () => {
   const { data: userCertificates, isLoading: loadingUserCerts } = useUserCertificates();
   const { data: availableCertificates, isLoading: loadingAvailable } = useAvailableCertificates();
   const checkCertificates = useCheckCertificates();
+
+  const dateLocale = language === 'it' ? it : enUS;
 
   const handleCheckForNewCertificates = () => {
     checkCertificates.mutate();
@@ -48,18 +52,18 @@ export const CertificateManager = () => {
       'special_event': 'outline'
     } as const;
 
-    const labels = {
-      'course_completion': 'Completamento Corso',
-      'competence_mastery': 'Maestria Competenza',
-      'excellence': 'Eccellenza',
-      'special_event': 'Evento Speciale'
-    };
-
     return (
       <Badge variant={variants[type as keyof typeof variants] || 'default'}>
-        {labels[type as keyof typeof labels] || type}
+        {t(`certificates.types.${type}`) || type}
       </Badge>
     );
+  };
+
+  const getCertificateRequirements = (type: string, pointsRequired?: number) => {
+    if (type === 'excellence' && pointsRequired) {
+      return t('certificates.requirements.excellence', { points: pointsRequired });
+    }
+    return t(`certificates.requirements.${type}`) || type;
   };
 
   const filteredAvailable = availableCertificates?.filter(cert =>
@@ -79,10 +83,10 @@ export const CertificateManager = () => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Certificati
+              {t('certificates.title')}
             </h1>
             <p className="text-lg text-muted-foreground mt-2">
-              Gestisci i tuoi certificati e scopri nuovi traguardi
+              {t('certificates.manageCertificates')}
             </p>
           </div>
           <Button 
@@ -91,7 +95,7 @@ export const CertificateManager = () => {
             className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white rounded-xl"
           >
             <Award className="h-4 w-4 mr-2" />
-            {checkCertificates.isPending ? 'Verificando...' : 'Verifica Nuovi Certificati'}
+            {checkCertificates.isPending ? t('certificates.checking') : t('certificates.checkNewCertificates')}
           </Button>
         </div>
 
@@ -100,7 +104,7 @@ export const CertificateManager = () => {
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
-              placeholder="Cerca certificati..."
+              placeholder={t('certificates.searchCertificates')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 border-0 bg-background/50 rounded-xl"
@@ -116,14 +120,14 @@ export const CertificateManager = () => {
             className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
           >
             <Award className="w-4 h-4 mr-2" />
-            I Miei Certificati ({userCertificates?.length || 0})
+            {t('certificates.myCertificates')} ({userCertificates?.length || 0})
           </TabsTrigger>
           <TabsTrigger 
             value="available"
             className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
           >
             <Clock className="w-4 h-4 mr-2" />
-            Disponibili ({availableCertificates?.length || 0})
+            {t('certificates.available')} ({availableCertificates?.length || 0})
           </TabsTrigger>
         </TabsList>
 
@@ -149,17 +153,17 @@ export const CertificateManager = () => {
                   <Award className="w-12 h-12 text-muted-foreground" />
                 </div>
                 <h3 className="text-xl font-semibold text-foreground mb-4">
-                  Nessun certificato trovato
+                  {t('certificates.noCertificatesFound')}
                 </h3>
                 <p className="text-muted-foreground mb-6">
-                  {searchTerm ? 'Nessun certificato corrisponde alla tua ricerca.' : 'Non hai ancora ottenuto certificati.'}
+                  {searchTerm ? t('certificates.noCertificatesSearchDesc') : t('certificates.noCertificatesDesc')}
                 </p>
                 {!searchTerm && (
                   <Button 
                     onClick={handleCheckForNewCertificates}
                     className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white rounded-xl"
                   >
-                    Verifica Certificati Disponibili
+                    {t('certificates.checkAvailableCertificates')}
                   </Button>
                 )}
               </CardContent>
@@ -181,10 +185,10 @@ export const CertificateManager = () => {
                   <CardContent>
                     <div className="space-y-3">
                       <div className="text-sm text-muted-foreground">
-                        <strong className="text-foreground">Rilasciato il:</strong> {format(new Date(userCert.issued_at), 'dd MMMM yyyy', { locale: it })}
+                        <strong className="text-foreground">{t('certificates.issuedOn')}:</strong> {format(new Date(userCert.issued_at), 'dd MMMM yyyy', { locale: dateLocale })}
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        <strong className="text-foreground">Codice verifica:</strong> 
+                        <strong className="text-foreground">{t('certificates.verificationCode')}:</strong> 
                         <code className="bg-muted/30 px-2 py-1 rounded text-xs ml-2">{userCert.verification_code}</code>
                       </div>
                       <div className="flex gap-2 pt-2">
@@ -195,7 +199,7 @@ export const CertificateManager = () => {
                           className="flex items-center gap-1 border-0 bg-background/50 hover:bg-background/80 rounded-xl"
                         >
                           <Eye className="h-3 w-3" />
-                          Visualizza
+                          {t('certificates.view')}
                         </Button>
                         <Button 
                           variant="outline" 
@@ -203,7 +207,7 @@ export const CertificateManager = () => {
                           className="flex items-center gap-1 border-0 bg-background/50 hover:bg-background/80 rounded-xl"
                         >
                           <Download className="h-3 w-3" />
-                          Scarica PDF
+                          {t('certificates.downloadPdf')}
                         </Button>
                       </div>
                     </div>
@@ -247,16 +251,13 @@ export const CertificateManager = () => {
                     <div className="space-y-3">
                       {cert.points_required > 0 && (
                         <div className="text-sm text-muted-foreground">
-                          <strong className="text-foreground">Punti richiesti:</strong> {cert.points_required}
+                          <strong className="text-foreground">{t('certificates.pointsRequired')}:</strong> {cert.points_required}
                         </div>
                       )}
                       <div className="text-sm text-muted-foreground">
-                        <strong className="text-foreground">Requisiti:</strong>
+                        <strong className="text-foreground">{t('certificates.requirements')}:</strong>
                         <div className="mt-1 text-xs bg-muted/30 p-2 rounded">
-                          {cert.certificate_type === 'course_completion' && 'Completa i corsi richiesti'}
-                          {cert.certificate_type === 'competence_mastery' && 'Completa tutti i corsi di una competenza'}
-                          {cert.certificate_type === 'excellence' && `Raggiungi ${cert.points_required} punti`}
-                          {cert.certificate_type === 'special_event' && 'Partecipa agli eventi speciali'}
+                          {getCertificateRequirements(cert.certificate_type, cert.points_required)}
                         </div>
                       </div>
                     </div>

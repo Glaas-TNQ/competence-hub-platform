@@ -1,4 +1,3 @@
-
 {
   "common": {
     "save": "Salva",
@@ -16,7 +15,8 @@
     "previous": "Precedente",
     "yes": "Sì",
     "no": "No",
-    "refreshPage": "Aggiorna Pagina"
+    "refreshPage": "Aggiorna Pagina",
+    "of": "di"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -229,15 +229,107 @@
     "title": "Badge",
     "subtitle": "I tuoi risultati e riconoscimenti",
     "earned": "Ottenuti",
-    "available": "Disponibili"
+    "available": "Disponibili",
+    "exploreBadges": "Esplora Badge",
+    "subtitle2": "Scopri tutti i badge disponibili e i tuoi progressi",
+    "category": "Categoria",
+    "status": "Stato",
+    "all": "Tutti",
+    "completion": "Completamento",
+    "competency": "Competenza",
+    "temporal": "Temporale",
+    "special": "Speciale",
+    "badgesEarned": "Badge Ottenuti",
+    "totalBadges": "Badge Totali",
+    "completionRate": "Completamento",
+    "noBadgesFound": "Nessun badge trovato",
+    "noBadgesDesc": "Nessun badge trovato con i filtri selezionati.",
+    "rarity": {
+      "common": "Comune",
+      "rare": "Raro",
+      "epic": "Epico",
+      "legendary": "Leggendario"
+    },
+    "points": "punti",
+    "criteria": {
+      "completeChapters": "Completa {{count}} capitoli",
+      "completeCourses": "Completa {{count}} corsi",
+      "dailyStreak": "Studia per {{days}} giorni consecutivi",
+      "levelMilestone": "Raggiungi il livello {{level}}",
+      "totalChapters": "Completa {{count}} capitoli in totale",
+      "competenceAreaMastery": "Completa tutti i corsi di {{area}}"
+    }
   },
   "certificates": {
     "title": "Certificati",
-    "subtitle": "I tuoi certificati e attestati"
+    "subtitle": "I tuoi certificati e attestati",
+    "manageCertificates": "Gestisci i tuoi certificati e scopri nuovi traguardi",
+    "myCertificates": "I Miei Certificati",
+    "available": "Disponibili",
+    "checkNewCertificates": "Verifica Nuovi Certificati",
+    "checking": "Verificando...",
+    "searchCertificates": "Cerca certificati...",
+    "noCertificatesFound": "Nessun certificato trovato",
+    "noCertificatesDesc": "Non hai ancora ottenuto certificati.",
+    "noCertificatesSearchDesc": "Nessun certificato corrisponde alla tua ricerca.",
+    "checkAvailableCertificates": "Verifica Certificati Disponibili",
+    "issuedOn": "Rilasciato il",
+    "verificationCode": "Codice verifica",
+    "view": "Visualizza",
+    "downloadPdf": "Scarica PDF",
+    "viewCertificate": "Visualizza Certificato",
+    "certificateOfRecognition": "CERTIFICATO DI RICONOSCIMENTO",
+    "certifiedThat": "Si certifica che",
+    "hasSuccessfullyCompleted": "ha completato con successo",
+    "officialCertificate": "Certificato Ufficiale",
+    "issueDate": "Data di rilascio",
+    "share": "Condividi",
+    "certificateDetails": "Dettagli del Certificato",
+    "type": "Tipo",
+    "certificateId": "ID Certificato",
+    "pointsRequired": "Punti richiesti",
+    "status": "Stato",
+    "valid": "Valido",
+    "types": {
+      "course_completion": "Completamento Corso",
+      "competence_mastery": "Maestria Competenza",
+      "excellence": "Eccellenza",
+      "special_event": "Evento Speciale"
+    },
+    "requirements": {
+      "course_completion": "Completa i corsi richiesti",
+      "competence_mastery": "Completa tutti i corsi di una competenza",
+      "excellence": "Raggiungi {{points}} punti",
+      "special_event": "Partecipa agli eventi speciali"
+    }
   },
   "goals": {
     "title": "Obiettivi",
-    "subtitle": "Gestisci i tuoi obiettivi di apprendimento"
+    "subtitle": "Gestisci i tuoi obiettivi di apprendimento",
+    "myGoals": "I Miei Obiettivi",
+    "createAndTrack": "Crea e traccia i tuoi obiettivi di apprendimento",
+    "newGoal": "Nuovo Obiettivo",
+    "createNewGoal": "Crea Nuovo Obiettivo",
+    "activeGoals": "Obiettivi Attivi",
+    "completedGoals": "Obiettivi Completati",
+    "noActiveGoals": "Nessun obiettivo attivo",
+    "noActiveGoalsDesc": "Crea il tuo primo obiettivo per iniziare a tracciare i progressi!",
+    "createFirstGoal": "Crea Primo Obiettivo",
+    "goalType": "Tipo di Obiettivo",
+    "selectGoalType": "Seleziona tipo di obiettivo",
+    "targetValue": "Valore Obiettivo",
+    "targetValuePlaceholder": "es. 5",
+    "creating": "Creando...",
+    "createGoal": "Crea Obiettivo",
+    "progress": "Progresso",
+    "completed": "completato",
+    "ends": "Scade",
+    "types": {
+      "courses_completed": "Corsi Completati",
+      "study_days": "Giorni di Studio",
+      "points_earned": "Punti Guadagnati",
+      "chapters_completed": "Capitoli Completati"
+    }
   },
   "settings": {
     "title": "Impostazioni",

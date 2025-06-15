@@ -5,6 +5,7 @@ import { useUserGoals } from '@/hooks/useUserGoals';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { format, isValid } from 'date-fns';
+import { useTranslation } from '@/contexts/LanguageContext';
 
 interface Goal {
   id: string;
@@ -18,21 +19,11 @@ interface Goal {
 }
 
 export const GoalsWidget = () => {
+  const { t } = useTranslation();
   const { data: goals = [], isLoading } = useUserGoals();
 
   const getGoalTypeLabel = (type: string) => {
-    switch (type) {
-      case 'courses_completed':
-        return 'Courses Completed';
-      case 'study_days':
-        return 'Study Days';
-      case 'points_earned':
-        return 'Points Earned';
-      case 'chapters_completed':
-        return 'Chapters Completed';
-      default:
-        return type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-    }
+    return t(`goals.types.${type}`) || type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
   const getGoalIcon = (type: string) => {
@@ -65,7 +56,7 @@ export const GoalsWidget = () => {
     return (
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">My Goals</h3>
+          <h3 className="text-lg font-semibold">{t('goals.myGoals')}</h3>
         </div>
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
@@ -84,11 +75,11 @@ export const GoalsWidget = () => {
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold flex items-center gap-2">
           <Target className="h-5 w-5" />
-          My Goals
+          {t('goals.myGoals')}
         </h3>
         <Button size="sm" variant="outline" className="gap-2">
           <Plus className="h-4 w-4" />
-          Add Goal
+          {t('goals.newGoal')}
         </Button>
       </div>
 
@@ -96,8 +87,8 @@ export const GoalsWidget = () => {
         {activeGoals.length === 0 && completedGoals.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <Target className="h-12 w-12 mx-auto mb-3 opacity-50" />
-            <p>No goals set yet</p>
-            <p className="text-sm">Create your first goal to track progress</p>
+            <p>{t('goals.noActiveGoals')}</p>
+            <p className="text-sm">{t('goals.noActiveGoalsDesc')}</p>
           </div>
         ) : (
           <>
@@ -128,7 +119,7 @@ export const GoalsWidget = () => {
                 </div>
                 
                 <div className="text-xs text-muted-foreground">
-                  Ends: {formatDate(goal.period_end)}
+                  {t('goals.ends')}: {formatDate(goal.period_end)}
                 </div>
               </div>
             ))}
@@ -137,7 +128,7 @@ export const GoalsWidget = () => {
               <div className="border-t pt-4">
                 <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
                   <CheckCircle className="h-4 w-4" />
-                  Completed Goals
+                  {t('goals.completedGoals')}
                 </h4>
                 <div className="space-y-2">
                   {completedGoals.slice(0, 3).map((goal) => (
