@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { NotesManager } from '@/components/notes/NotesManager';
 import { useUserNotes } from '@/hooks/useUserNotes';
 import { useCourses } from '@/hooks/useSupabase';
-import { BookOpen, Search, Filter, FileText, Bookmark, Highlight } from 'lucide-react';
+import { BookOpen, Search, Filter, FileText, Bookmark, Highlighter } from 'lucide-react';
 
 export const Notes = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -39,7 +38,7 @@ export const Notes = () => {
   const noteTypeStats = [
     { type: 'personal', label: 'Personali', count: allNotes?.filter(n => n.note_type === 'personal').length || 0, icon: FileText },
     { type: 'bookmark', label: 'Bookmark', count: allNotes?.filter(n => n.note_type === 'bookmark').length || 0, icon: Bookmark },
-    { type: 'highlight', label: 'Highlight', count: allNotes?.filter(n => n.note_type === 'highlight').length || 0, icon: Highlight },
+    { type: 'highlight', label: 'Highlight', count: allNotes?.filter(n => n.note_type === 'highlight').length || 0, icon: Highlighter },
   ];
 
   if (notesLoading) {
@@ -285,7 +284,7 @@ export const Notes = () => {
                   className="w-full justify-start border-0 bg-background/50 hover:bg-background/80 rounded-xl"
                   onClick={() => setSelectedType('highlight')}
                 >
-                  <Highlight className="h-4 w-4 mr-2" />
+                  <Highlighter className="h-4 w-4 mr-2" />
                   Vedi tutti gli Highlight
                 </Button>
                 <Button
