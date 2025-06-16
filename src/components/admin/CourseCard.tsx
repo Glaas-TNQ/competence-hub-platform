@@ -55,15 +55,14 @@ export const CourseCard = ({
   };
 
   return (
-    <Card className="hover:shadow-lg transition-shadow">
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="text-lg">{course.title}</CardTitle>
-            <CardDescription className="mt-2">{course.description}</CardDescription>
-          </div>
+    <Card className="hover:shadow-lg transition-shadow h-full flex flex-col">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg line-clamp-2">{course.title}</CardTitle>
+        
+        {/* Sub-header con pulsanti di azione */}
+        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
           <div className="flex space-x-1">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" title="Visualizza">
               <Eye className="h-4 w-4" />
             </Button>
             <Button 
@@ -74,48 +73,69 @@ export const CourseCard = ({
             >
               <FileText className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" title="Modifica corso">
               <Edit className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" title="Elimina">
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
+          
+          <div className="text-xs text-muted-foreground">
+            {course.content && Object.keys(course.content).length > 0 
+              ? `${Object.keys(course.content).length} capitoli` 
+              : 'Nessun contenuto'
+            }
+          </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="flex flex-wrap gap-2">
-          <Badge className={getTypeColor(course.course_type)}>
-            {course.course_type}
-          </Badge>
-          <Badge className={getLevelColor(course.level)}>
-            {course.level}
-          </Badge>
-          {getStatusBadge(course)}
-          {course.requires_payment && (
-            <Badge className="bg-purple-100 text-purple-800">
-              <Lock className="h-3 w-3 mr-1" />
-              Premium
+      
+      <CardContent className="flex-1 flex flex-col space-y-4">
+        {/* Descrizione che occupa lo spazio disponibile */}
+        <div className="flex-1">
+          <CardDescription className="text-sm leading-relaxed">
+            {course.description}
+          </CardDescription>
+        </div>
+        
+        {/* Badges e informazioni del corso */}
+        <div className="space-y-3">
+          <div className="flex flex-wrap gap-2">
+            <Badge className={getTypeColor(course.course_type)}>
+              {course.course_type}
             </Badge>
-          )}
+            <Badge className={getLevelColor(course.level)}>
+              {course.level}
+            </Badge>
+            {getStatusBadge(course)}
+            {course.requires_payment && (
+              <Badge className="bg-purple-100 text-purple-800">
+                <Lock className="h-3 w-3 mr-1" />
+                Premium
+              </Badge>
+            )}
+          </div>
+          
+          <div className="text-sm text-slate-600 space-y-1">
+            <p>Durata: {course.duration}</p>
+            <p>Area: {getCompetenceAreaName(course)}</p>
+            {course.requires_payment && course.price > 0 && (
+              <p className="flex items-center gap-1 text-purple-600 font-medium">
+                <Euro className="h-3 w-3" />
+                {course.price}
+              </p>
+            )}
+          </div>
         </div>
-        <div className="text-sm text-slate-600">
-          <p>Durata: {course.duration}</p>
-          <p>Area: {getCompetenceAreaName(course)}</p>
-          {course.requires_payment && course.price > 0 && (
-            <p className="flex items-center gap-1 text-purple-600 font-medium">
-              <Euro className="h-3 w-3" />
-              {course.price}
-            </p>
-          )}
-        </div>
-        <div className="flex justify-between items-center pt-2 border-t">
+        
+        {/* Pulsante di pubblicazione */}
+        <div className="pt-2 border-t">
           <Button
             variant={course.is_published ? "destructive" : "default"}
             size="sm"
             onClick={() => onTogglePublished(course.id, course.is_published)}
             disabled={isUpdating}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 w-full"
           >
             {course.is_published ? (
               <>
@@ -129,12 +149,6 @@ export const CourseCard = ({
               </>
             )}
           </Button>
-          <div className="text-xs text-muted-foreground">
-            {course.content && Object.keys(course.content).length > 0 
-              ? `${Object.keys(course.content).length} capitoli` 
-              : 'Nessun contenuto'
-            }
-          </div>
         </div>
       </CardContent>
     </Card>

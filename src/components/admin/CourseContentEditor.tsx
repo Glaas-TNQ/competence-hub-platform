@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -47,6 +46,7 @@ export const CourseContentEditor: React.FC<CourseContentEditorProps> = ({
   const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
   const [isAddingChapter, setIsAddingChapter] = useState(false);
   const [newChapterTitle, setNewChapterTitle] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const addChapter = () => {
     if (!newChapterTitle.trim()) {
@@ -151,17 +151,30 @@ export const CourseContentEditor: React.FC<CourseContentEditorProps> = ({
     setChapters(updatedChapters);
   };
 
-  const handleSave = () => {
-    const courseContent = {
-      chapters,
-      lastUpdated: new Date().toISOString()
-    };
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const courseContent = {
+        chapters,
+        lastUpdated: new Date().toISOString()
+      };
 
-    onSave(courseContent);
-    toast({
-      title: "Successo",
-      description: "Contenuto del corso salvato con successo"
-    });
+      await onSave(courseContent);
+      
+      toast({
+        title: "Salvataggio completato",
+        description: "Le modifiche al corso sono state salvate con successo",
+        variant: "default"
+      });
+    } catch (error) {
+      toast({
+        title: "Errore nel salvataggio",
+        description: "Si è verificato un errore durante il salvataggio",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const selectedChapterData = chapters.find(c => c.id === selectedChapter);
@@ -182,9 +195,13 @@ export const CourseContentEditor: React.FC<CourseContentEditorProps> = ({
           <h2 className="text-2xl font-bold text-slate-800">Editor Contenuti</h2>
           <p className="text-slate-600">Corso: {courseTitle}</p>
         </div>
-        <Button onClick={handleSave} className="flex items-center space-x-2">
+        <Button 
+          onClick={handleSave} 
+          className="flex items-center space-x-2"
+          disabled={isSaving}
+        >
           <Save className="h-4 w-4" />
-          <span>Salva Contenuti</span>
+          <span>{isSaving ? 'Salvataggio...' : 'Salva Contenuti'}</span>
         </Button>
       </div>
 
