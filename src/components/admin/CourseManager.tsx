@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Edit, Trash2, Eye, FileText, Euro, Lock, AlertCircle } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, FileText, Euro, Lock, AlertCircle, Check, X } from 'lucide-react';
 import { useCourses, useCompetenceAreas, useCreateCourse, useUpdateCourse } from '@/hooks/useSupabase';
 import { CourseContentEditor } from './CourseContentEditor';
 import { toast } from '@/hooks/use-toast';
@@ -142,19 +142,46 @@ export const CourseManager = () => {
     try {
       requireAdmin();
       
-      await updateCourseMutation.mutateAsync({
+      console.log('Salvando contenuto per corso:', courseId, content);
+      
+      const result = await updateCourseMutation.mutateAsync({
         id: courseId,
         updates: { content }
       });
+      
+      console.log('Risultato salvataggio:', result);
       
       toast({
         title: "Successo", 
         description: "Contenuto del corso salvato con successo"
       });
     } catch (error) {
+      console.error('Errore nel salvataggio:', error);
       toast({
         title: "Errore",
         description: "Errore nel salvataggio del contenuto",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleTogglePublished = async (courseId: string, currentStatus: boolean) => {
+    try {
+      requireAdmin();
+      
+      await updateCourseMutation.mutateAsync({
+        id: courseId,
+        updates: { is_published: !currentStatus }
+      });
+      
+      toast({
+        title: "Successo",
+        description: !currentStatus ? "Corso pubblicato con successo" : "Corso rimosso dalla pubblicazione"
+      });
+    } catch (error) {
+      toast({
+        title: "Errore",
+        description: "Errore nell'aggiornamento dello stato del corso",
         variant: "destructive"
       });
     }
@@ -181,6 +208,16 @@ export const CourseManager = () => {
       case 'Intermedio': return 'bg-yellow-100 text-yellow-800';
       case 'Avanzato': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStatusBadge = (course: any) => {
+    if (course.is_published) {
+      return <Badge className="bg-green-100 text-green-800">Pubblicato</Badge>;
+    } else if (course.content && Object.keys(course.content).length > 0) {
+      return <Badge className="bg-yellow-100 text-yellow-800">In Revisione</Badge>;
+    } else {
+      return <Badge variant="secondary">Bozza</Badge>;
     }
   };
 
@@ -405,9 +442,7 @@ export const CourseManager = () => {
                 <Badge className={getLevelColor(course.level)}>
                   {course.level}
                 </Badge>
-                <Badge variant={course.is_published ? "default" : "secondary"}>
-                  {course.is_published ? "Pubblicato" : "Bozza"}
-                </Badge>
+                {getStatusBadge(course)}
                 {course.requires_payment && (
                   <Badge className="bg-purple-100 text-purple-800">
                     <Lock className="h-3 w-3 mr-1" />
@@ -424,6 +459,33 @@ export const CourseManager = () => {
                     {course.price}
                   </p>
                 )}
+              </div>
+              <div className="flex justify-between items-center pt-2 border-t">
+                <Button
+                  variant={course.is_published ? "destructive" : "default"}
+                  size="sm"
+                  onClick={() => handleTogglePublished(course.id, course.is_published)}
+                  disabled={updateCourseMutation.isPending}
+                  className="flex items-center gap-2"
+                >
+                  {course.is_published ? (
+                    <>
+                      <X className="h-4 w-4" />
+                      Sospendi
+                    </>
+                  ) : (
+                    <>
+                      <Check className="h-4 w-4" />
+                      Pubblica
+                    </>
+                  )}
+                </Button>
+                <div className="text-xs text-muted-foreground">
+                  {course.content && Object.keys(course.content).length > 0 
+                    ? `${Object.keys(course.content).length} capitoli` 
+                    : 'Nessun contenuto'
+                  }
+                </div>
               </div>
             </CardContent>
           </Card>
