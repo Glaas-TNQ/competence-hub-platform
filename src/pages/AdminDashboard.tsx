@@ -85,41 +85,6 @@ export const AdminDashboard = () => {
                 </Card>
               ))}
             </div>
-
-            {/* Recent Activity */}
-            <Card className="border-0 shadow-sm bg-card/50 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5" />
-                  Attività Recenti
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="text-sm">Nuovo corso pubblicato: "Introduzione al Machine Learning"</span>
-                    </div>
-                    <Badge variant="secondary">2h fa</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <span className="text-sm">5 nuovi utenti registrati</span>
-                    </div>
-                    <Badge variant="secondary">4h fa</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                      <span className="text-sm">Aggiornata area di competenza "Data Science"</span>
-                    </div>
-                    <Badge variant="secondary">1d fa</Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         );
       case 'courses':

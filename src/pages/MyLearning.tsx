@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { BookOpen, TrendingUp, Target, Trophy } from 'lucide-react';
+import { BookOpen, TrendingUp, Target, Trophy, Search } from 'lucide-react';
 import { CourseCardById } from '../components/CourseCardById';
 import { useUserProgress, useCourses } from '../hooks/useSupabase';
 import { useTranslation } from '@/contexts/LanguageContext';
@@ -49,13 +49,25 @@ export const MyLearning = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <div className="max-w-7xl mx-auto p-8 space-y-8">
         {/* Header */}
-        <div className="space-y-4">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            {t('myLearning.title')}
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            {t('myLearning.subtitle')}
-          </p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-4">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              {t('myLearning.title')}
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              {t('myLearning.subtitle')}
+            </p>
+          </div>
+          
+          {/* Pulsante sempre visibile per esplorare i corsi */}
+          <Button 
+            onClick={() => navigate('/areas')}
+            className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-6 py-3 rounded-full font-medium transition-all duration-200 hover:scale-105 shadow-lg"
+            size="lg"
+          >
+            <Search className="h-5 w-5 mr-2" />
+            Esplora i Corsi
+          </Button>
         </div>
 
         {/* Progress Overview */}

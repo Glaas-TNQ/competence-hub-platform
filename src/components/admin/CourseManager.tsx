@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Edit, Trash2, Eye, FileText, Euro, Lock, AlertCircle, Check, X } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, FileText, Euro, Lock, AlertCircle, Check, X, Search, Filter } from 'lucide-react';
 import { useCourses, useCompetenceAreas, useCreateCourse, useUpdateCourse } from '@/hooks/useSupabase';
 import { CourseContentEditor } from './CourseContentEditor';
 import { toast } from '@/hooks/use-toast';
@@ -25,6 +25,8 @@ export const CourseManager = () => {
   
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingCourse, setEditingCourse] = useState<any>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -221,6 +223,28 @@ export const CourseManager = () => {
     }
   };
 
+  const getCourseStatus = (course: any) => {
+    if (course.is_published) return 'published';
+    if (course.content && Object.keys(course.content).length > 0) return 'review';
+    return 'draft';
+  };
+
+  // Filter courses based on search term and status
+  const filteredCourses = courses?.filter(course => {
+    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         course.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    if (statusFilter === 'all') return matchesSearch;
+    
+    const courseStatus = getCourseStatus(course);
+    return matchesSearch && courseStatus === statusFilter;
+  }) || [];
+
+  const handleResetFilters = () => {
+    setSearchTerm('');
+    setStatusFilter('all');
+  };
+
   if (coursesLoading) {
     return <div>Caricamento corsi...</div>;
   }
@@ -258,6 +282,66 @@ export const CourseManager = () => {
           Nuovo Corso
         </Button>
       </div>
+
+      {/* Filtri */}
+      <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* Ricerca */}
+            <div className="space-y-2">
+              <Label htmlFor="search" className="text-sm font-medium">
+                Cerca corsi
+              </Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="search"
+                  placeholder="Titolo o descrizione..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+
+            {/* Filtro Status */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Stato corso</Label>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Tutti" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Tutti</SelectItem>
+                  <SelectItem value="published">Pubblicati</SelectItem>
+                  <SelectItem value="review">In Revisione</SelectItem>
+                  <SelectItem value="draft">Bozze</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Reset Filtri */}
+            <div className="flex items-end">
+              <Button 
+                variant="outline" 
+                onClick={handleResetFilters}
+                className="w-full"
+                disabled={!searchTerm && statusFilter === 'all'}
+              >
+                <Filter className="h-4 w-4 mr-2" />
+                Reset Filtri
+              </Button>
+            </div>
+
+            {/* Contatore risultati */}
+            <div className="flex items-end">
+              <div className="text-sm text-muted-foreground">
+                {filteredCourses.length} di {courses?.length || 0} corsi
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {showCreateForm && (
         <Card>
@@ -405,7 +489,7 @@ export const CourseManager = () => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {courses?.map((course) => (
+        {filteredCourses.map((course) => (
           <Card key={course.id} className="hover:shadow-lg transition-shadow">
             <CardHeader>
               <div className="flex items-start justify-between">
