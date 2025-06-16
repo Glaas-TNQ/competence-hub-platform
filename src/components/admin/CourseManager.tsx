@@ -1,15 +1,12 @@
+
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Plus, Edit, Trash2, Eye, FileText, Euro, Lock, AlertCircle, Check, X, Search, Filter } from 'lucide-react';
+import { Plus, AlertCircle } from 'lucide-react';
 import { useCourses, useCompetenceAreas, useCreateCourse, useUpdateCourse } from '@/hooks/useSupabase';
 import { CourseContentEditor } from './CourseContentEditor';
+import { CourseFilters } from './CourseFilters';
+import { CourseForm } from './CourseForm';
+import { CourseCard } from './CourseCard';
 import { toast } from '@/hooks/use-toast';
 import { sanitizeText, validateImageUrl, sanitizeUrl } from '@/utils/security';
 import { useAdminSecurity } from '@/hooks/useAdminSecurity';
@@ -189,40 +186,6 @@ export const CourseManager = () => {
     }
   };
 
-  const getCompetenceAreaName = (course: any) => {
-    if (!course.competence_area_id || !competenceAreas) return 'N/A';
-    const area = competenceAreas.find(area => area.id === course.competence_area_id);
-    return area?.name || 'N/A';
-  };
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'video': return 'bg-red-100 text-red-800';
-      case 'text': return 'bg-blue-100 text-blue-800';
-      case 'arcade': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case 'Principiante': return 'bg-green-100 text-green-800';
-      case 'Intermedio': return 'bg-yellow-100 text-yellow-800';
-      case 'Avanzato': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStatusBadge = (course: any) => {
-    if (course.is_published) {
-      return <Badge className="bg-green-100 text-green-800">Pubblicato</Badge>;
-    } else if (course.content && Object.keys(course.content).length > 0) {
-      return <Badge className="bg-yellow-100 text-yellow-800">In Revisione</Badge>;
-    } else {
-      return <Badge variant="secondary">Bozza</Badge>;
-    }
-  };
-
   const getCourseStatus = (course: any) => {
     if (course.is_published) return 'published';
     if (course.content && Object.keys(course.content).length > 0) return 'review';
@@ -284,295 +247,37 @@ export const CourseManager = () => {
       </div>
 
       {/* Filtri */}
-      <Card className="border-0 shadow-educational bg-card/50 backdrop-blur-sm">
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* Ricerca */}
-            <div className="space-y-2">
-              <Label htmlFor="search" className="text-sm font-medium">
-                Cerca corsi
-              </Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="search"
-                  placeholder="Titolo o descrizione..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-
-            {/* Filtro Status */}
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Stato corso</Label>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Tutti" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tutti</SelectItem>
-                  <SelectItem value="published">Pubblicati</SelectItem>
-                  <SelectItem value="review">In Revisione</SelectItem>
-                  <SelectItem value="draft">Bozze</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Reset Filtri */}
-            <div className="flex items-end">
-              <Button 
-                variant="outline" 
-                onClick={handleResetFilters}
-                className="w-full"
-                disabled={!searchTerm && statusFilter === 'all'}
-              >
-                <Filter className="h-4 w-4 mr-2" />
-                Reset Filtri
-              </Button>
-            </div>
-
-            {/* Contatore risultati */}
-            <div className="flex items-end">
-              <div className="text-sm text-muted-foreground">
-                {filteredCourses.length} di {courses?.length || 0} corsi
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <CourseFilters
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        onResetFilters={handleResetFilters}
+        filteredCount={filteredCourses.length}
+        totalCount={courses?.length || 0}
+      />
 
       {showCreateForm && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Crea Nuovo Corso</CardTitle>
-            <CardDescription>Inserisci i dettagli del nuovo corso</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleCreateCourse} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Titolo *</Label>
-                  <Input
-                    id="title"
-                    value={formData.title}
-                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="Titolo del corso"
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="duration">Durata *</Label>
-                  <Input
-                    id="duration"
-                    value={formData.duration}
-                    onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
-                    placeholder="es. 2 ore"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">Descrizione *</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="Descrizione del corso"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label>Area di Competenza *</Label>
-                  <Select value={formData.competence_area_id} onValueChange={(value) => setFormData(prev => ({ ...prev, competence_area_id: value }))}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleziona area" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {competenceAreas?.map((area) => (
-                        <SelectItem key={area.id} value={area.id}>{area.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Tipo Corso *</Label>
-                  <Select value={formData.course_type} onValueChange={(value) => setFormData(prev => ({ ...prev, course_type: value }))}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleziona tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="text">Testuale</SelectItem>
-                      <SelectItem value="video">Video</SelectItem>
-                      <SelectItem value="arcade">Arcade</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Livello *</Label>
-                  <Select value={formData.level} onValueChange={(value) => setFormData(prev => ({ ...prev, level: value }))}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleziona livello" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Principiante">Principiante</SelectItem>
-                      <SelectItem value="Intermedio">Intermedio</SelectItem>
-                      <SelectItem value="Avanzato">Avanzato</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="image_url">URL Immagine</Label>
-                <Input
-                  id="image_url"
-                  value={formData.image_url}
-                  onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-                  placeholder="https://example.com/image.jpg"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="requires_payment"
-                    checked={formData.requires_payment}
-                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, requires_payment: checked }))}
-                  />
-                  <Label htmlFor="requires_payment">Corso a pagamento</Label>
-                </div>
-                
-                {formData.requires_payment && (
-                  <div className="space-y-2">
-                    <Label htmlFor="price">Prezzo (€)</Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={formData.price}
-                      onChange={(e) => setFormData(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
-                      placeholder="0.00"
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="published"
-                  checked={formData.is_published}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_published: checked }))}
-                />
-                <Label htmlFor="published">Pubblica immediatamente</Label>
-              </div>
-
-              <div className="flex space-x-2">
-                <Button type="submit" disabled={createCourseMutation.isPending}>
-                  {createCourseMutation.isPending ? 'Creazione...' : 'Crea Corso'}
-                </Button>
-                <Button type="button" variant="outline" onClick={() => setShowCreateForm(false)}>
-                  Annulla
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+        <CourseForm
+          formData={formData}
+          setFormData={setFormData}
+          competenceAreas={competenceAreas}
+          onSubmit={handleCreateCourse}
+          onCancel={() => setShowCreateForm(false)}
+          isSubmitting={createCourseMutation.isPending}
+        />
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCourses.map((course) => (
-          <Card key={course.id} className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <CardTitle className="text-lg">{course.title}</CardTitle>
-                  <CardDescription className="mt-2">{course.description}</CardDescription>
-                </div>
-                <div className="flex space-x-1">
-                  <Button variant="ghost" size="sm">
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => setEditingCourse(course)}
-                    title="Modifica contenuti"
-                  >
-                    <FileText className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex flex-wrap gap-2">
-                <Badge className={getTypeColor(course.course_type)}>
-                  {course.course_type}
-                </Badge>
-                <Badge className={getLevelColor(course.level)}>
-                  {course.level}
-                </Badge>
-                {getStatusBadge(course)}
-                {course.requires_payment && (
-                  <Badge className="bg-purple-100 text-purple-800">
-                    <Lock className="h-3 w-3 mr-1" />
-                    Premium
-                  </Badge>
-                )}
-              </div>
-              <div className="text-sm text-slate-600">
-                <p>Durata: {course.duration}</p>
-                <p>Area: {getCompetenceAreaName(course)}</p>
-                {course.requires_payment && course.price > 0 && (
-                  <p className="flex items-center gap-1 text-purple-600 font-medium">
-                    <Euro className="h-3 w-3" />
-                    {course.price}
-                  </p>
-                )}
-              </div>
-              <div className="flex justify-between items-center pt-2 border-t">
-                <Button
-                  variant={course.is_published ? "destructive" : "default"}
-                  size="sm"
-                  onClick={() => handleTogglePublished(course.id, course.is_published)}
-                  disabled={updateCourseMutation.isPending}
-                  className="flex items-center gap-2"
-                >
-                  {course.is_published ? (
-                    <>
-                      <X className="h-4 w-4" />
-                      Sospendi
-                    </>
-                  ) : (
-                    <>
-                      <Check className="h-4 w-4" />
-                      Pubblica
-                    </>
-                  )}
-                </Button>
-                <div className="text-xs text-muted-foreground">
-                  {course.content && Object.keys(course.content).length > 0 
-                    ? `${Object.keys(course.content).length} capitoli` 
-                    : 'Nessun contenuto'
-                  }
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <CourseCard
+            key={course.id}
+            course={course}
+            competenceAreas={competenceAreas}
+            onEdit={setEditingCourse}
+            onTogglePublished={handleTogglePublished}
+            isUpdating={updateCourseMutation.isPending}
+          />
         ))}
       </div>
     </div>
